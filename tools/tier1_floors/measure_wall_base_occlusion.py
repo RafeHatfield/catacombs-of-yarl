@@ -20,11 +20,29 @@ Both measured on the DELIVERED frame, in luminance levels and in Weber contrast 
 ruled floor of 0.1440. The ratio lane/flank is the number the complaint is about: at 1.00 the seam
 reads the same wherever it is, and below it the lane is eating the boundary.
 
-⚠ NORTH EDGES ONLY, AND THAT IS NOT A SHORTCUT. The four occlusion sprites are not symmetric — N
-and W carry a ramp from 0.72 alpha at the edge to zero seven art-pixels in, while E and S carry a
-flat ~0.05 wash (measured off the shipped PNGs). The wall-base seam the walk is about is the one
-under a wall's SOUTH FACE, which is the N edge of the floor cell below it. Pooling the four would
-average the seam with three washes and report a smaller effect than exists.
+⚠ ALL FOUR SIDES — AND THE CLAIM THAT SAID OTHERWISE WAS MINE AND WAS WRONG.
+
+This header used to read: *"the four occlusion sprites are not symmetric — N and W carry a ramp
+from 0.72 alpha at the edge to zero seven art-pixels in, while E and S carry a flat ~0.05 wash."*
+**That is false.** All four sprites are symmetric and carry the same 0.72 ramp; E's lies along its
+LAST columns and S's along its LAST rows, and the reading that produced the claim printed only the
+first four rows/columns of each — the far end from E's and S's ramps. `compose_family.build_occlusion`
+builds all four from one expression and always did.
+
+    side   ramp at            first 4                last 4
+    N      top rows           0.72 0.52 0.36 0.23    0.00 0.00 0.00 0.00
+    E      last columns       0.00 0.00 0.00 0.00    0.23 0.36 0.52 0.72
+    S      last rows          0.00 0.00 0.00 0.00    0.23 0.36 0.52 0.72
+    W      first columns      0.72 0.53 0.36 0.23    0.00 0.00 0.00 0.00
+
+It is recorded rather than quietly deleted because the false version was cited as evidence in a
+filed issue and in a routing, and a correction that leaves no trace teaches nothing. §13.10's
+standard cuts both ways: a measurement that convicts a witness needs the witness's proof standard,
+and this one convicted the composer of an asymmetry it never had.
+
+So the seam is measured on EVERY side a wall actually adjoins. The reference band is taken across
+the cell's middle on the axis perpendicular to the edge, so each side is compared against its own
+interior rather than against a fixed strip.
 
 ⚠ AND IT READS THE ENGINE'S OWN FIELD FOR BOTH THE WALLS AND THE ROUTE (§13.10). The route-strength
 map in the capture log marks solid cells '#'; the tile origin comes from the engine's legibility
@@ -40,6 +58,8 @@ import json
 import os
 import sys
 
+import re
+
 import numpy as np
 from PIL import Image
 
@@ -52,13 +72,57 @@ import measure_traffic_read as MTR       # noqa: E402
 
 T = 64            # screen px per tile (32 art at 2x)
 CONTACT = 8       # screen rows at the wall foot: art rows 0-3, alpha 0.72/0.52/0.36/0.23
-REF0, REF1 = 24, 48   # the cell's own interior, clear of the seam and of the far edge
+LOCAL = 12            # the strip just inside the seam -- the ground a viewer compares it to
+REF0, REF1 = 24, 48   # retained: the mid-cell band, no longer used as the reference
 FLOOR = 0.1440    # §13.8's ruled perceptual floor, in Weber contrast
 LIT = 60          # below this the cell is not being judged: dark illegibility is design (§8.2.1)
 
 
-def cells(png, log):
-    """Wall-adjacent floor cells, as (route_level, contact_band, reference_band)."""
+PLAYER_RE = re.compile(r"player=\((\d+),(\d+)\)")
+
+
+def _player(log):
+    """The station, from the engine's own log rather than from an assumption (S13.10)."""
+    txt = open(log, errors="ignore").read()
+    m = PLAYER_RE.search(txt)
+    if m:
+        return int(m.group(1)), int(m.group(2))
+    m = re.search(r"--corridor-scene res://(\S+\.json)", txt)
+    if not m:
+        return None
+    d = json.load(open(os.path.join(REPO, m.group(1))))
+    return d["player"]["x"], d["player"]["y"]
+
+
+SIDES = {"N": (0, -1), "E": (1, 0), "S": (0, 1), "W": (-1, 0)}
+
+
+def _bands(blk, side):
+    """(contact band, reference band) for one side of one cell.
+
+    THE REFERENCE IS LOCAL, and the mid-cell reference it replaces was an artefact factory.
+    It compared the contact band against the cell's MIDDLE, 24-48px away, and a 64px cell
+    under a carried lamp has a steep gradient across it. On the corridor-mouth cell (8,11)
+    the west edge faces the lamp: contact 103.4, mid-cell 109.4, but the strip just inside
+    the edge 161.2. The seam measured 0.0546 against the middle and 0.3582 against its own
+    neighbourhood -- a 6.5x understatement that read as a missing boundary and WAS FILED AS
+    A DEFECT (#199).
+
+    A seam is a LOCAL step, so it is measured against the ground immediately inside it,
+    which is also what a viewer compares it to. The lamp's gradient then falls out of both
+    terms instead of landing entirely in one.
+    """
+    if side == "N":
+        return blk[:CONTACT, :], blk[CONTACT:CONTACT + LOCAL, :]
+    if side == "S":
+        return blk[-CONTACT:, :], blk[-CONTACT - LOCAL:-CONTACT, :]
+    if side == "W":
+        return blk[:, :CONTACT], blk[:, CONTACT:CONTACT + LOCAL]
+    return blk[:, -CONTACT:], blk[:, -CONTACT - LOCAL:-CONTACT]
+
+
+def cells(png, log, side="N"):
+    """Floor cells with a wall on `side`, as (route_level, contact_band, reference_band, pos)."""
     L = MPF.lum(np.asarray(Image.open(png).convert("RGB")).astype(float))
     f = MTR.read_field(log)
     if f is None:
@@ -69,22 +133,33 @@ def cells(png, log):
     if o is None:
         return None
     ox, oy = o
+    player = _player(log)
     out = []
     for ty in range(1, fh):
         for tx in range(fw):
             lv = int(f[ty, tx])
             if lv < 0:                      # this cell is solid
                 continue
-            if int(f[ty - 1, tx]) >= 0:     # no wall to the north: no seam to measure
+            # THE PLAYER'S OWN CELL IS EXCLUDED -- A SPRITE STANDS IN IT. The second
+            # artefact behind #199: at (6,12) the hero occupies the north contact band, so
+            # its mean is lifted by pixels that are not floor -- 131.5 against 113.3 and
+            # 126.3 at the two neighbours on a similar reference, pushing the seam to
+            # 0.1289 and reading as a cell whose boundary had gone. A floor's contact seam
+            # cannot be measured through a figure standing on it.
+            if player and (tx, ty) == player:
                 continue
+            dx, dy = SIDES[side]
+            nx, ny = tx + dx, ty + dy
+            if not (0 <= ny < fh and 0 <= nx < fw) or int(f[ny, nx]) >= 0:
+                continue                     # no wall on that side: no seam to measure
             y0, x0 = oy + ty * T, ox + tx * T
             if y0 < 0 or x0 < 0 or y0 + T > H or x0 + T > W:
                 continue
             blk = L[y0:y0 + T, x0:x0 + T]
-            ref = blk[REF0:REF1, :]
+            contact, ref = _bands(blk, side)
             if np.median(ref) < LIT:
                 continue
-            out.append((lv, blk[:CONTACT, :], ref, (tx, ty)))
+            out.append((lv, contact, ref, (tx, ty)))
     return out
 
 
@@ -113,8 +188,8 @@ def band(rows):
                 below_floor=sum(1 for w in webers if w < FLOOR))
 
 
-def measure(png, log):
-    cs = cells(png, log)
+def measure(png, log, side="N"):
+    cs = cells(png, log, side)
     if not cs:
         return None
     lane = [c for c in cs if c[0] >= 7]
@@ -132,10 +207,10 @@ def main():
     ap.add_argument("stems", nargs="+")
     ap.add_argument("--json-out", default="evidence/WALL-BASE-OCCLUSION.json")
     a = ap.parse_args()
-    print("§12.1's CONTACT OCCLUSION ON THE DELIVERED FRAME — north edges, "
+    print("§12.1's CONTACT OCCLUSION ON THE DELIVERED FRAME — every side a wall adjoins, "
           "against §13.8's %.4f\n" % FLOOR)
-    print("  %-22s %-6s %5s %9s %8s %9s %8s %8s"
-          % ("capture", "band", "n", "weber", "levels", "worst", "wlevels", "<floor"))
+    print("  %-18s %-4s %-6s %5s %9s %8s %9s %8s"
+          % ("capture", "side", "band", "n", "weber", "levels", "worst", "worst cell"))
     out = {}
     for stem in a.stems:
         png = os.path.join(HERE, "evidence", stem + ".png")
@@ -143,23 +218,24 @@ def main():
         if not (os.path.exists(png) and os.path.exists(log)):
             print("  %-22s (missing capture or log)" % stem)
             continue
-        r = measure(png, log)
-        if r is None:
-            print("  %-22s (no wall-adjacent lit floor cell in view)" % stem)
-            continue
-        out[stem] = r
-        for key in ("all", "lane", "flank"):
-            b = r[key]
-            if not b:
-                print("  %-22s %-6s (none)" % (stem if key == "all" else "", key))
+        out[stem] = {}
+        first = True
+        for side in ("N", "E", "S", "W"):
+            r = measure(png, log, side)
+            if r is None:
                 continue
-            print("  %-22s %-6s %5d %9.4f%s %8.2f %9.4f %8.2f %4d/%d"
-                  % (stem if key == "all" else "", key, b["n"],
-                     b["weber_mean"], " " if b["weber_mean"] >= FLOOR else "!",
-                     b["levels_mean"], b["worst_weber"], b["worst_levels"],
-                     b["below_floor"], b["n"]))
-        print("  %-22s lane/flank = %s"
-              % ("", "n/a" if r["lane_over_flank"] is None else "%.3f" % r["lane_over_flank"]))
+            out[stem][side] = r
+            for key in ("all", "lane", "flank"):
+                b = r[key]
+                if not b:
+                    continue
+                print("  %-18s %-4s %-6s %5d %9.4f%s %8.2f %9.4f %8s"
+                      % (stem if first else "", side if key == "all" else "", key, b["n"],
+                         b["weber_mean"], " " if b["weber_mean"] >= FLOOR else "!",
+                         b["levels_mean"], b["worst_weber"], str(tuple(b["worst_cell"]))))
+                first = False
+        if not out[stem]:
+            print("  %-18s (no wall-adjacent lit floor cell in view)" % stem)
     p = os.path.join(HERE, a.json_out)
     os.makedirs(os.path.dirname(p), exist_ok=True)
     json.dump(dict(commit=FL.git_commit(), floor=FLOOR, contact_rows=CONTACT,

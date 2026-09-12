@@ -120,6 +120,38 @@ uniform float polish_gain = 1.0;
 uniform float shoulder_knee = 0.75;
 uniform float shoulder_ceiling = 0.92;
 
+// ── #198: AN ADDITIVE SPECULAR DESTROYS CONTRAST; A PROPORTIONAL ONE PRESERVES IT ────────────
+//
+// The halo is not a blur and there is nothing soft in the source art. It is the floor's own
+// texture LOSING RELATIVE CONTRAST exactly where the light is strongest, which reads as a
+// smeared pool with no edge and no cause. Measured by null control on the shipped build, as
+// mean|grad| / mean luminance over floor cells, core (0.5-1.2 tiles) against mid-field
+// (2.0-2.8):
+//
+//     as shipped      0.677     the light costs the surface a third of its contrast
+//     shoulder null   0.819     the shoulder compresses: |grad| 7.72 -> 11.03, mean 156 -> 173
+//     specular null   0.858     the specular dilutes: |grad| 7.72 -> 8.63, mean 156 -> 124
+//
+// The two signatures are different and that is what identifies them. Nulling the SHOULDER lifts
+// absolute variation and the mean together — a compression released. Nulling the SPECULAR barely
+// moves absolute variation while dropping the mean 20% — a term that was adding LIGHT WITHOUT
+// ADDING TEXTURE. That is the larger of the two, and it is the one this fixes.
+//
+// Weber is the whole argument. A term added to every fragment of a face alike raises the
+// denominator and leaves the numerator, so contrast falls by exactly the share the term carries
+// — 18.8% of delivered value at the standing case, which is where the frame reads flattest. A
+// term PROPORTIONAL to what the fragment already is multiplies both and contrast survives.
+//
+// ⚠ THE MAGNITUDE IS NOT BEING RETUNED, ONLY ITS DISTRIBUTION. The scale is normalised by the
+// family's own median albedo, so a fragment at the median gets exactly what it got before, the
+// mean specular contribution over the surface is preserved, and #184's measured specular share
+// is not quietly moved by a change that claims to be about texture. Above the median a stone
+// takes more shine, below it less — which is also what a worn face does.
+//
+// Null control: `spec_shade = 0.0` is the identity, byte-for-byte the term this replaces.
+uniform float spec_shade = 1.0;
+uniform float albedo_median = 0.446;
+
 void light() {
 	// THE DELIVERED-LIGHT SCALAR — the fraction of full illumination this fragment actually
 	// receives, and the quantity §13.9 rules on.
@@ -158,19 +190,47 @@ void light() {
 	float polish = texture(polish_tex, UV).r;
 	float spec = polish * polish_gain * pow(delivered, polish_exp);
 
+	// #198. The stone's own value, relative to the family's median, scales the shine. Clamped at
+	// 2.0 so a blown texel cannot double the term, and mixed by `spec_shade` so the null is exact.
+	float albedo = dot(COLOR.rgb, vec3(0.2126, 0.7152, 0.0722));
+	float shade = clamp(albedo / max(albedo_median, 1e-4), 0.0, 2.0);
+	spec *= mix(1.0, shade, spec_shade);
+
 	vec3 lit = diffuse.rgb + LIGHT_COLOR.rgb * spec;
 
 	// THE SHOULDER. `m` is what actually lands: the first channel to clip, after the blend's
 	// alpha. Below the knee `s == m` and the scale is exactly 1.0, so those fragments are
 	// byte-identical to the un-shouldered build — which the round proves rather than asserts.
 	float a = diffuse.a;
-	float m = max(max(lit.r, lit.g), lit.b) * a;
-	float s = m;
-	if (m > shoulder_knee) {
+
+	// ── #198: THE SCALE IS COMPUTED FROM THE LIGHT, NOT FROM THE COMPOSITE ───────────────────
+	//
+	// `m` used to be `max(lit) * a` — the composite, albedo included. That makes the compression
+	// a function of HOW BRIGHT THE STONE IS, so a pale stone is squashed harder than the dark one
+	// beside it and the difference between them shrinks. That difference is the surface's texture,
+	// and losing it exactly where the light is strongest IS the halo this issue is about.
+	//
+	// Measured, on this build: the shoulder costs 0.137 of the core-to-mid contrast ratio (0.644
+	// with it, 0.781 without). The KNEE is not the lever — 0.75 to 0.88 buys 0.014 — because the
+	// knee only decides where compression starts; the CEILING decides how hard, and everything
+	// above the knee is pulled toward it whatever its albedo.
+	//
+	// ⚠ AND THE SHOULDER MUST NOT SIMPLY GO. Nulled, the floor's p99 leaps 205.50 -> 247.85 and
+	// 1324 pixels pile within two levels of the max — the flat top §6.2 exists to prevent. So the
+	// question is not whether to roll the top end off but WHAT TO MEASURE IT ON.
+	//
+	// Measuring it on the DELIVERED LIGHT makes the scale a function of distance from the lamp
+	// rather than of albedo: two neighbouring stones at the same range get the SAME scale, so
+	// their ratio survives untouched, while the pool's top end still rolls off because the light
+	// itself does. It is the same argument the specular fix runs — multiplying preserves Weber
+	// contrast, and anything that varies with albedo destroys it.
+	float ml = clamp(delivered, 0.0, 1.0);
+	float sl = ml;
+	if (ml > shoulder_knee) {
 		float d = max(shoulder_ceiling - shoulder_knee, 1e-4);
-		s = shoulder_knee + d * (1.0 - exp(-(m - shoulder_knee) / d));
+		sl = shoulder_knee + d * (1.0 - exp(-(ml - shoulder_knee) / d));
 	}
-	lit *= (m > 1e-6) ? (s / m) : 1.0;
+	lit *= (ml > 1e-6) ? (sl / ml) : 1.0;
 
 	LIGHT = vec4(lit, a);
 }

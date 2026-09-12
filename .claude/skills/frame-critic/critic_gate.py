@@ -72,7 +72,34 @@ RUN = ".claude/skills/frame-critic/run_frame_critic.sh"
 #
 # Everything is printed and stamped, on the same principle as ROUTED: a disposition Rafe does not
 # recognise is on his own screen while he is holding the build.
-FLAG_STATES = ("ROUTED", "CLOSED", "PARKED", "ROUTED-ALREADY", "MEASURED-FALSE")
+#   n/a              says "this asks about art that does not exist yet". RULED (Rafe, 2026-09-11)
+#                    for exactly one case: the hero's APPEARANCE.
+#
+# ── WHY `N/A` EXISTS, AND THE ONE THING IT MUST NOT BECOME ────────────────────────────────────
+#
+#     "the hero light-response engine term stays (Sasha inherits it); all hero-appearance work
+#      stops — the current sprite is the Oryx placeholder and is not worked; close the
+#      placeholder-look flags as N/A; no hero rounds until the Sasha session against his card."
+#
+# The figure in every frame is the Oryx placeholder. A seat asked to judge a picture will judge
+# what is in it, and some of what is in it is a sprite standing in for a character who has not
+# been designed. Routing those flags pretends there is somewhere to route them; CLOSING them
+# says a human decided against them, which is not what happened either. They are answered by a
+# session that has not run yet.
+#
+# ⚠ THE RISK IS OBVIOUS AND IT IS GUARDED. `N/A` is a way to make a criticism disappear, so it is
+# the narrowest state here: it needs Rafe's words AND a resolving citation AND a statement of
+# what the flag was about, and the check below refuses it outright when the flag reads as a
+# LIGHTING complaint. Exposure and value response on the figure belong to hero_light.gdshader
+# and are fully live; colour, shape, silhouette and kit belong to a character nobody has drawn.
+# The morgue's own `lamp-clip-figure` plant sits on that line and its entry says so.
+FLAG_STATES = ("ROUTED", "CLOSED", "PARKED", "ROUTED-ALREADY", "MEASURED-FALSE", "N/A")
+
+# Words that mean the flag is about LIGHT rather than about design. A disposition claiming a
+# flag is placeholder-appearance while the flag itself talks about exposure is refused: that is
+# the one way this state could be used to duck a live finding.
+_LIGHTING_WORDS = ("blown", "clip", "clipped", "washed out", "overexposed", "exposure",
+                   "too bright", "too dark", "value separation", "lit", "unlit", "luminance")
 
 
 def _clause_exists(ref):
@@ -102,10 +129,41 @@ def _issue_cited(ref):
     if not num.isdigit():
         return False
     import subprocess
-    r = subprocess.run(["git", "-C", REPO, "grep", "-rl", "--", "#" + num,
-                        "docs/", ".claude/skills/frame-critic/history/"],
+    # ⚠ THE SEARCH MUST NOT LIE ABOUT ITSELF. `git grep` exits 128 — not 1 — when ANY path it is
+    # given is absent from the working tree, and one missing path fails the whole call. This ran
+    # for real: `RUN-REPORT.md` had been deleted (by `prove_build_id`, since fixed), and the gate
+    # reported that #194, #193 and #201 "appear nowhere in the repository's record" when it had
+    # not looked at anything. It refused, which is the safe direction, but it refused with a false
+    # reason — and a check whose failure mode is indistinguishable from its finding is not a check.
+    # So: only existing paths are searched, and a nonzero exit that is not git's "no match" (1) is
+    # raised rather than read as an answer.
+    where = [w for w in ("docs/", ".claude/skills/frame-critic/history/",
+                         "RUN-REPORT.md", "ROUTING-TABLE.json")
+             if os.path.exists(os.path.join(REPO, w))]
+    if not where:
+        raise RuntimeError("the citation record is missing entirely — nothing to resolve against")
+    r = subprocess.run(["git", "-C", REPO, "grep", "-rl", "--", "#" + num] + where,
                        capture_output=True, text=True)
+    if r.returncode > 1:
+        raise RuntimeError("git grep failed while resolving %s: %s"
+                           % (ref, (r.stderr or "").strip()))
     return bool(r.stdout.strip())
+
+
+def _bad_citation(i, cite):
+    """One citation, checked. Shared by ROUTED and ROUTED-ALREADY so the two cannot drift apart."""
+    if cite.startswith("§") or cite.startswith("S"):
+        if not _clause_exists(cite):
+            return ["disposition %d: cited clause %s does not resolve in the bible or the "
+                    "process law" % (i, cite)]
+    elif cite.startswith("#"):
+        if not _issue_cited(cite):
+            return ["disposition %d: cited issue %s appears nowhere in the repository's record"
+                    % (i, cite)]
+    else:
+        return ["disposition %d: citation %r is neither a clause (§x.y) nor an issue (#nnn)"
+                % (i, cite)]
+    return []
 
 
 def check_dispositions(disp, flips):
@@ -120,28 +178,58 @@ def check_dispositions(disp, flips):
             bad.append("disposition %d: state %r is not one of %s"
                        % (i, state, ", ".join(FLAG_STATES)))
             continue
-        if state in ("ROUTED", "CLOSED", "PARKED"):
+        if state == "ROUTED":
+            # ── THE BUILDER ROUTES, BY VERIFIED CITATION — RULED (Rafe, 2026-09-08) ───────────
+            #
+            #     "CC routes flags to issues with verified citations. Routing is no longer a
+            #      human-only act; the citation verifier is the laundering guard. Rafe audits the
+            #      routing table at the walk."
+            #
+            # What replaces the human signature is not trust, it is RESOLVABILITY: a routing whose
+            # citation cannot be looked up is refused here, by machine, rather than by someone
+            # remembering. A quoted Rafe ruling still authorises a routing on its own — his word
+            # needs no citation — so both forms are lawful and one of them must be present.
+            if not (d.get("lane") or "").strip():
+                bad.append("disposition %d: ROUTED with no destination lane" % i)
+            cite = (d.get("cites") or "").strip()
+            if not cite and not (d.get("ruling") or "").strip():
+                bad.append("disposition %d: ROUTED with neither a verified citation nor a quoted "
+                           "ruling — the citation verifier is what replaced the signature" % i)
+            elif cite:
+                bad += _bad_citation(i, cite)
+        elif state in ("CLOSED", "PARKED"):
+            # Unchanged, and deliberately: CLOSED says "ruled not to be chased" and PARKED says
+            # "awaiting Rafe's eye". Both are statements about what a HUMAN decided, so both still
+            # need his words. Routing says "this belongs over there", which is checkable.
             if not (d.get("ruling") or "").strip():
                 bad.append("disposition %d (%s): no quoted ruling — only Rafe creates these"
                            % (i, state))
-            if state == "ROUTED" and not (d.get("lane") or "").strip():
-                bad.append("disposition %d: ROUTED with no destination lane" % i)
         elif state == "ROUTED-ALREADY":
             cite = (d.get("cites") or "").strip()
             if not cite:
                 bad.append("disposition %d: ROUTED-ALREADY must CITE the issue or clause it "
                            "matches" % i)
-            elif cite.startswith("§") or cite.startswith("S"):
-                if not _clause_exists(cite):
-                    bad.append("disposition %d: cited clause %s does not resolve in the bible or "
-                               "the process law" % (i, cite))
-            elif cite.startswith("#"):
-                if not _issue_cited(cite):
-                    bad.append("disposition %d: cited issue %s appears nowhere in the "
-                               "repository's record" % (i, cite))
             else:
-                bad.append("disposition %d: citation %r is neither a clause (§x.y) nor an issue "
-                           "(#nnn)" % (i, cite))
+                bad += _bad_citation(i, cite)
+        elif state == "N/A":
+            # Rafe's words, because only he creates this state — same bar as CLOSED and PARKED.
+            if not (d.get("ruling") or "").strip():
+                bad.append("disposition %d (N/A): no quoted ruling — only Rafe creates these"
+                           % i)
+            # and a citation, so the standing ruling can be looked up by someone else.
+            cite = (d.get("cites") or "").strip()
+            if not cite:
+                bad.append("disposition %d: N/A must CITE where the standing ruling lives" % i)
+            else:
+                bad += _bad_citation(i, cite)
+            # and the flag has to actually be about appearance.
+            item = (d.get("item") or "").lower()
+            hit = [w for w in _LIGHTING_WORDS if w in item]
+            if hit:
+                bad.append("disposition %d: N/A on a flag that talks about LIGHT (%s). The "
+                           "re-scope stops hero APPEARANCE work and keeps the light-response "
+                           "term live — a flip about exposure on the figure is not N/A, it is "
+                           "hero_light.gdshader's." % (i, ", ".join(sorted(set(hit)))))
         elif state == "MEASURED-FALSE":
             if not (d.get("measured") or "").strip():
                 bad.append("disposition %d: MEASURED-FALSE with no measurement — the whole state "
@@ -247,7 +335,115 @@ def check():
     # The gate re-derives the two conditions from the verdict's own recorded numbers rather than
     # trusting the label — a verdict that merely SAYS PASS-INSTALL proves nothing, and this file
     # is the one place an install can be authorised.
-    if v.get("verdict") == "PASS-INSTALL":
+    # ── INSTALL-LATEST — RULED (Rafe, 2026-09-08). NON-REGRESSION, NOT VICTORY. ─────────────
+    #
+    #     "INSTALL-LATEST = majority of seats do not rank the build below the seeded reference
+    #      (above or tied), AND the item's own measured exit is met, AND no unrouted flags.
+    #      Beating the reference is not required to install; seeding a new reference is Rafe's
+    #      walk only — seats never move approved_capture."
+    #
+    # Requiring the build to BEAT its reference made the gate un-passable for incremental polish:
+    # two rounds on IDENTICAL BYTES gave 3-of-3 above and then 1-of-3, because rank carries a
+    # measured 40% flip rate (§13.13). "Better than the frame it came from" was a coin toss
+    # dressed as a threshold. Non-regression is the honest bar, and THE ITEM'S MEASURED EXIT is
+    # what stops it meaning "not different".
+    #
+    # ⚠ SEATS NEVER MOVE `approved_capture`. Nothing in this file or in frame_critic writes it;
+    # it is edited by hand when Rafe's walk seeds one. An install bar that could re-seed its own
+    # reference would ratchet: each build becomes the thing the next is measured against, and the
+    # gate drifts wherever the work drifts.
+    if v.get("verdict") == "INSTALL-LATEST":
+        pr = v.get("progress") or {}
+        panel = v.get("panel") or {}
+        bad = []
+        if pr.get("approved_position") is None:
+            bad.append("no approved frame in this round's deck — INSTALL-LATEST is defined "
+                       "against a SEEDED reference and there is nothing here to be level with")
+        seats = panel.get("per_seat") or []
+        if seats:
+            # ── STRONG-MAJORITY REGRESSION — RULED (Rafe, 2026-09-09) ────────────────────────
+            #
+            #     "block only on strong-majority regression (>=4 of 5 rank below the reference);
+            #      else install if exit met and plant caught."
+            #
+            # RE-DERIVED HERE FROM per_seat rather than read off `panel.strong_regression`, for
+            # the same reason every other term in this file is: a verdict that merely SAYS it
+            # passed proves nothing. Expressed as a ratio so a panel of another size means the
+            # same standard — four fifths, not "four".
+            nb = sum(1 for x in seats if x.get("not_below"))
+            below = len(seats) - nb
+            if below * 5 >= len(seats) * 4:
+                bad.append("%d of %d seats ranked the build BELOW the reference — a strong "
+                           "majority, which is the one thing that blocks an install"
+                           % (below, len(seats)))
+        else:
+            pos, app = pr.get("rank_position"), pr.get("approved_position")
+            if pos is None or app is None or pos > app + 1:
+                bad.append("build ranked %s against a reference at %s — below it" % (pos, app))
+        ie = v.get("item_exit") or {}
+        if not ie.get("met"):
+            bad.append("the item's own measured exit is not recorded as met — a build installs "
+                       "because it DID THE THING, not merely because it cost nothing")
+        if not str(ie.get("measured") or "").strip():
+            bad.append("the item's exit carries no measurement — 'met' without a number is an "
+                       "assertion, and this state is the one place it would go unchecked")
+        bad += check_dispositions(list(v.get("dispositions", [])), list(v.get("flip_list", [])))
+        if panel.get("flagged_by") and not v.get("dispositions"):
+            bad.append("%d of %s seats flagged the build and there are NO dispositions — 'no "
+                       "unrouted flags' is not a majority test"
+                       % (panel["flagged_by"], panel.get("seats", "?")))
+        # ── A FLAGGED BUILD REACHES THIS STATE ONLY BY A RECORDED AMENDMENT ──────────────────
+        #
+        # "No unrouted flags" is evaluated at two points (SKILL.md). At ROUND time a flagged
+        # build is a FAIL, and `panel_verdict` returns exactly that. The second point is here,
+        # where each flagged item carries a disposition — and moving the verdict between those
+        # two points is an AMENDMENT, which the autonomy ruling put in the builder's hands for
+        # `ROUTED` and left with Rafe for `CLOSED` and `PARKED`.
+        #
+        # The enforcement of a disposition has always been VISIBILITY: every one is printed at
+        # the gate and stamped onto the handset, so a routing the builder invented is a claim
+        # Rafe does not recognise, on his own screen, while he is holding the build. A verdict
+        # rewritten from FAIL with no trace of the rewrite defeats that — the file simply says
+        # INSTALL-LATEST and nothing records that a seat said no. So the amendment must be
+        # written down, in the verdict, naming the state it came from and the law it moved
+        # under, and it is printed below with everything else.
+        # ⚠ THE TEST IS DIVERGENCE, NOT FLAGS — sharpened 2026-09-09 with the ruling that let a
+        # flagged build reach this state on its own. Before, "flagged" stood in for "must have
+        # been amended", which was true then and is not now: the panel itself can return
+        # INSTALL-LATEST with a flag on it, and the flag is enforced by the disposition rules
+        # below exactly as it always was. What must never happen silently is the verdict being
+        # REWRITTEN, so the check now compares the file against what the panel actually returned.
+        at_round = panel.get("verdict_at_round")
+        if at_round and at_round != v.get("verdict"):
+            am = v.get("amendment") or {}
+            missing = [k for k in ("from", "to", "law") if not str(am.get(k) or "").strip()]
+            if missing:
+                bad.append("the panel returned %s and this file says %s, so it was AMENDED — and "
+                           "the amendment record is %s (%s). A rewrite nobody can see is the one "
+                           "thing visibility cannot police."
+                           % (at_round, v.get("verdict"),
+                              "absent" if not am else "incomplete",
+                              "missing " + ", ".join(missing)))
+        if bad:
+            return False, L + ["", "INSTALL-LATEST IS NOT LAWFULLY FORMED:"] \
+                   + ["  - %s" % b for b in bad]
+        L += ["", "INSTALL-LATEST — non-regression against the seeded reference."]
+        am = v.get("amendment") or {}
+        if am:
+            L.append("  AMENDED from %s: %s" % (am.get("from"),
+                                                " ".join(str(am.get("flag") or "").split())[:60]))
+            L.append("    under: %s" % " ".join(str(am.get("law") or "").split())[:70])
+        if seats:
+            L.append("  panel: not below it in %d of %d seats (above in %s); flagged by %s."
+                     % (sum(1 for x in seats if x.get("not_below")), len(seats),
+                        panel.get("above_reference"), panel.get("flagged_by")))
+        L.append("  item exit MET: %s" % " ".join(str(ie.get("claim") or "").split())[:74])
+        L.append("    measured: %s" % " ".join(str(ie.get("measured")).split())[:72])
+        if v.get("dispositions"):
+            L.append("  Outstanding items, each disposed:")
+            print_dispositions(L, list(v["dispositions"]))
+
+    elif v.get("verdict") == "PASS-INSTALL":
         pr = v.get("progress") or {}
         pos, app = pr.get("rank_position"), pr.get("approved_position")
         bad = []

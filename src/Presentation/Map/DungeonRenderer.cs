@@ -407,7 +407,8 @@ public sealed class DungeonRenderer
                         int gx = prop.X + dx;
                         int gy = prop.Y + dy;
 
-                        var sprite = CreatePropSprite(themeConfig, renderer, gx, gy, tileId, isOverlay);
+                        var sprite = CreatePropSprite(themeConfig, renderer, gx, gy, tileId, isOverlay,
+                                                      onWallTop: prop.OnWallTop);
                         if (sprite == null) continue;
 
                         parent.AddChild(sprite);
@@ -417,7 +418,8 @@ public sealed class DungeonRenderer
                 else
                 {
                     // 1x1 prop: single sprite at prop anchor. Pass FlipH for flippable props (e.g. chairs).
-                    var sprite = CreatePropSprite(themeConfig, renderer, prop.X, prop.Y, prop.TileId, isOverlay, prop.FlipH);
+                    var sprite = CreatePropSprite(themeConfig, renderer, prop.X, prop.Y, prop.TileId,
+                                              isOverlay, prop.FlipH, prop.OnWallTop);
                     if (sprite != null)
                     {
                         parent.AddChild(sprite);
@@ -573,7 +575,7 @@ public sealed class DungeonRenderer
     /// </summary>
     private static Sprite2D? CreatePropSprite(
         TileThemeConfig themeConfig, IMapRenderer renderer,
-        int gx, int gy, int tileId, bool isOverlay, bool flipH = false)
+        int gx, int gy, int tileId, bool isOverlay, bool flipH = false, bool onWallTop = false)
     {
         var texturePath = themeConfig.GetTexturePath(tileId);
         var texture = GD.Load<Texture2D>(texturePath);
@@ -592,7 +594,22 @@ public sealed class DungeonRenderer
             Centered = false,
             // Props sit above floor (+0) and bones (+1) but below entity layer.
             // +2 keeps them visually above floor decoration without competing with entities.
-            ZIndex = renderer.GetTileSortOrder(gx, gy) + 2,
+            //
+            // ── #167: A WALL-TOP PROP SORTS ABOVE THE WALL IT STANDS ON ──────────────────────
+            //
+            // From directly overhead, a thing standing on a wall top is NEARER THE CAMERA than
+            // the top is, so it must draw over it. A floor prop must keep doing the opposite —
+            // it stands in the room and the wall in front of it occludes it — which is why this
+            // is a per-prop fact and not a global bump. Measured before it existed: a prop on a
+            // wall cell changed 98 device pixels where a floor prop changes about 900. The
+            // renderer seated it and the wall drew straight over it.
+            //
+            // +5 clears the tallest thing at the cell. The wall's own stack is the base sprite at
+            // GetTileSortOrder, its face child at +1 and its binding child at +1; the floor
+            // overlay family reaches +4 (channel 1, occlusion 2, event 3, grit 4). Five is one
+            // above the highest of those, and it stays below the entity layer, which is odd-
+            // numbered by GetEntitySortOrder and therefore always in front.
+            ZIndex = renderer.GetTileSortOrder(gx, gy) + (onWallTop ? 5 : 2),
             TextureFilter = CanvasItem.TextureFilterEnum.Nearest,
             // Non-blocking overlays (puddles, grates) are 0.7 alpha like bones — subtle atmosphere
             Modulate = isOverlay ? new Color(1f, 1f, 1f, 0.7f) : Colors.White,

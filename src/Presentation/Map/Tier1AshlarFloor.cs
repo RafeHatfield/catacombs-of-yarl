@@ -94,6 +94,9 @@ public static class Tier1AshlarFloor
         // The highlight shoulder (RULED Rafe 2026-09-07). Defaults are the identity-safe pair;
         // the manifest is the authority, as it is for every other lever here.
         public double ShoulderKnee = 0.75, ShoulderCeiling = 0.92;
+        // #198: the specular scales with the fragment's own value, normalised by the family's
+        // median albedo. `SpecShade = 0` is the flat additive term it replaces, exactly.
+        public double SpecShade = 1.0, AlbedoMedian = 0.446;
         public double[] DeformFlatten = { 0, 0, 0, 0 };
         public double DeformAniso = 0.8;
         public double HollowDepth = 1.3, HollowRim = 0.45;
@@ -744,6 +747,16 @@ public static class Tier1AshlarFloor
     /// It is NOT a sill and NOT a kerb. Nothing is built here — the register is found-and-annexed
     /// with thin administration, so traffic carved what it needed and nobody installed a piece.
     /// </summary>
+    /// <summary>
+    /// Is this cell FLOOR — regardless of whether anything stands on it?
+    ///
+    /// Walkable-minus-props is a movement predicate and this is a rendering one. A cell with a
+    /// barrel on it is still a floor cell; it is simply a floor cell you cannot walk into.
+    /// </summary>
+    private static bool IsFloorCell(GameMap map, int x, int y)
+        => map.IsWalkable(x, y) || map.IsPropCell(x, y);
+
+
     private static bool IsMouth(GameMap map, int x, int y)
     {
         if (!map.IsWalkable(x, y)) return false;
@@ -969,7 +982,19 @@ public static class Tier1AshlarFloor
 
         foreach (var (pos, node) in tileLayer.TileSprites)
         {
-            if (!map.IsWalkable(pos.X, pos.Y)) continue;
+            // ⚠ A PROP'S CELL IS STILL FLOOR — #128's conflation, in a second painter.
+            //
+            // `IsWalkable` is `_walkable && !_propCells.Contains(...)`: it answers CAN AN ACTOR
+            // STEP HERE, which is a movement question. Using it to decide WHAT TO PAINT means a
+            // blocking prop's cell is skipped by the family and left showing the theme's magenta
+            // placeholder — and the props pass found exactly that, three props each sitting on a
+            // magenta square. #128 is the same fault in FloorComposer: *"Pass 1 conflates
+            // walkability with floor — wall-adjacent props render as light pedestals."*
+            //
+            // The magenta is the guard working (§4.2: a painter that misses comes back screaming
+            // rather than plausible), so the fix is to paint the cell, never to change the
+            // placeholder. Floor-ness is `IsFloor`; walkability is somebody else's question.
+            if (!IsFloorCell(map, pos.X, pos.Y)) continue;
             if (node is not Sprite2D sprite) continue;
 
             int n = EdgeFamily(pos.X, pos.Y, cfg.HorizSalt, cfg.Seed, cfg.Families);
@@ -1013,6 +1038,8 @@ public static class Tier1AshlarFloor
                 pm.SetShaderParameter("polish_gain", (float)cfg.PolishGain);
                 pm.SetShaderParameter("shoulder_knee", (float)cfg.ShoulderKnee);
                 pm.SetShaderParameter("shoulder_ceiling", (float)cfg.ShoulderCeiling);
+                pm.SetShaderParameter("spec_shade", (float)cfg.SpecShade);
+                pm.SetShaderParameter("albedo_median", (float)cfg.AlbedoMedian);
                 sprite.Material = pm;
                 polished++;
             }
@@ -1781,6 +1808,12 @@ public static class Tier1AshlarFloor
             cfg.PolishGain = mat.GetProperty("polish_gain").GetDouble();
             if (mat.TryGetProperty("shoulder_knee", out var sk)) cfg.ShoulderKnee = sk.GetDouble();
             if (mat.TryGetProperty("shoulder_ceiling", out var sc)) cfg.ShoulderCeiling = sc.GetDouble();
+            if (mat.TryGetProperty("spec_shade", out var ss)) cfg.SpecShade = ss.GetDouble();
+            // DERIVED, NEVER COPIED (§13.12). The median albedo the specular is normalised by is
+            // the family's own `lum_median`, which the compositor measured off the donors — so it
+            // moves when the family does, and no second number can drift away from the first.
+            if (mat.TryGetProperty("lum_median", out var lm))
+                cfg.AlbedoMedian = lm.GetDouble() / 255.0;
             var dfl = new List<double>();
             foreach (var v in mat.GetProperty("deform_flatten").EnumerateArray()) dfl.Add(v.GetDouble());
             cfg.DeformFlatten = dfl.ToArray();

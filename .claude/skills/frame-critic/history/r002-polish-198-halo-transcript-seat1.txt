@@ -1,0 +1,56 @@
+All four read; 1 and 2 are pixel-identical outside the box (259,379)–(545,631), so the choice between them is entirely the light-pool repaint.
+
+RANK: 1 > 3 > 2 > 4
+
+BEST: 1
+
+BEST_WHY: The top wall of the room (y≈380–455, x≈185–500) is built as a solid, not a line. It carries a full course of cut stones with near-black joints along its upper edge, a mottled front face below at a warmer value than either the void above or the floor below, and two vertical timber posts (x≈265 and x≈355) that run *up over* the wall's top edge into the black — so the posts read as driven through the wall, and the wall reads as having a top surface and a thickness. At the corridor mouth (x≈440–560, y≈430–470) the wall's cut end is framed by individual stone blocks with visible depth rather than terminating at a drawn edge. On the floor below-right of the figure (x≈430–560, y≈555–640) the joints vary: some runs are 1px dark, some 2px with a lighter chip on the upper side, and several blocks carry short diagonal tool-scores that differ block to block — the stones read as cut and separately laid, not stamped. The long crack system (entering top-left at x≈260,y≈470, branching at x≈320,y≈610) crosses tile joints without snapping to them and changes width along its run.
+
+WORST: 4
+
+WORST_WHY: It is lit flat, everywhere, from nowhere. There is no carried light and no falloff — the cobble at bottom-left (x≈15,y≈215) and the cobble at the far right edge (x≈370,y≈160) sit at the same value, so the frame has no light model at all. On top of that: the water is a literal rectangle (x≈248–343, y≈0–191), its right edge a dead-straight vertical butting grey stone and its bottom edge a dead-straight horizontal butting dirt, with zero bank, lip, shadow or shoreline pixels on any side. The dirt field's left edge (x≈56) is the same dead-straight cut. The same teal splotch decal is stamped three times unmodified — top-left (x≈20,y≈55), bottom-left (x≈15,y≈200), right edge (x≈360,y≈150). The two barrels at (x≈115,y≈195) and (x≈160,y≈195) are drawn in three-quarter view — elliptical top *and* curved front staves — sitting on a strictly top-down floor; the torch at (x≈28,y≈125) is drawn in straight elevation and hangs below its wall onto the floor with no shadow. The crates at (x≈63–97, y≈5–90) are a tan rectangle sitting on a dark plank block of identical width, so they have no top face and no volume. The figure at (x≈222,y≈8) stands on a hard-edged brown ellipse in a different brown from the ground it covers. Nothing anywhere shows a repair — no rope, no pin, no hide, no salvage. Everything is intact, clean and new.
+
+FLAGGED: 2, 4
+
+SHIP: NONE
+
+FLIP 1:
+- The figure at (x≈390–425, y≈462–505) casts no contact shadow while standing on the brightest floor in the frame. Add a short, hard ellipse under the boots, offset opposite the lamp, at roughly 35% of the local floor value.
+- The sprite's outline is pure black against a floor that reaches near-white two pixels away, and it is the only thing in the frame receiving no light. Run the sprite through the same light pass as the floor, or lift its keyline to a dark warm brown in the lit core.
+- The wall face at (x≈200–500, y≈420–455) has no hard pixel edges anywhere — it is soft-focus while the floor tiles 10px below it are pixel-crisp. Redraw the wall face at the floor's resolution: define the stone edges and stop the blur at the block boundaries.
+- The alcove at (x≈285–380, y≈645–700) has a hard left edge and blurred top and right edges bleeding into the floor. Pick one treatment; give all four sides the same 1px dark boundary.
+- The light pool's right edge steps through a hard vertical break at x≈548, y≈480–560. Feather that boundary to match the falloff on the left side.
+- The pale blocks at (x≈490–560, y≈490–530) sit at the same value as the lit floor and read as a value patch rather than stones. Drop them a step and give them joints.
+
+FLIP 2:
+- The lit floor is scored with a 45° hatch texture — parallel fine lines running lower-left to upper-right, clearest at (x≈290–380, y≈540–620) and again at (x≈430–500, y≈470–500). They cross tile joints without regard to them and correspond to no surface. Delete the hatch layer entirely.
+- The hot core has erased the tile grid: between x≈330 and x≈470, y≈460–540 the joints that are visible in the identical region of the darker frames are gone. Cap the light's white point below the joint value so joints survive at full brightness.
+- The brightest point sits at roughly (x≈360, y≈500) — about a tile and a half left of and below the lamp at (x≈415, y≈470). Recentre the pool on the light source.
+- The pool boundary breaks in hard 8px blocks along its right side (x≈500–545, y≈490–560) — chunk edges turning on and off with no gradient. Resample the falloff at pixel resolution or dither the boundary.
+- The light spills onto the base of the top wall at (x≈300–470, y≈445–458) and lifts it to the same value as the floor, so the wall loses its height where it matters most. Clamp the wall's lit value at least two steps below the adjacent lit floor.
+- Everything else in this frame is already good; the fix is to revert this region and relight it, not to patch it.
+
+FLIP 3:
+- The upper half of the room's top wall (x≈185–500, y≈390–425) is a featureless brown smear with no stone joints, while the course directly below it (y≈428–450) has crisp black joints. Draw the upper course to match the lower one.
+- The black void's lower boundary cuts the wall top with a dead-straight horizontal at y≈388 and a right-angle step at x≈500. That edge reads as an unpainted rectangle, not shadow. Break it against the wall's stones and let the darkness fall off across at least half a tile.
+- The corridor mouth at (x≈440–560, y≈430–450) collapses to a 2–3px dark line with two isolated blocks stuck to it; the wall has no thickness where it is cut. Rebuild the cut end with stones that show their depth.
+- A row of small dark dashes runs across the corridor at (x≈505–540, y≈390) with no object under them. Remove or resolve into an actual feature.
+- The pale amorphous blob at (x≈425–465, y≈495–540) has a ragged edge, overlaps three tile joints, and is neither stone, stain nor crack. Replace with a defined feature or remove it.
+- The figure's keyline has been tinted to mid-brown and the shield reduced to a flat tan disc with no rim — the player's silhouette is now within one value step of the floor. Restore a dark keyline on the sprite and put a rim value on the shield.
+- The alcove at (x≈310–380, y≈645–710) is a hard-cornered black rectangle with a smeared interior. Give the interior readable structure or make the opening's edge irregular.
+
+FLIP 4:
+- There is no light source and no falloff. Add the carried light: attenuate everything by distance from the figure, and let the frame go to black at the edges as the other frames do.
+- The water body (x≈248–343, y≈0–191) is an axis-aligned rectangle. Break its right and bottom edges off the grid, and add a bank: a darker wet line 2px inside the water, a lighter damp line 2px outside on the stone and dirt.
+- The dirt field's left edge (x≈56, y≈0–215) and bottom edge (y≈215) are dead-straight cuts against stone. Interleave the two materials at the boundary — dirt drifted into the joints, stone showing through where it's worn.
+- The teal splotch at (x≈20,y≈55) is the identical decal used at (x≈15,y≈200) and (x≈360,y≈150). Redraw each, or vary rotation and mask so no two match.
+- The barrels at (x≈115,y≈195) and (x≈160,y≈195) and the torch at (x≈28,y≈125) are drawn in three-quarter and elevation view on a top-down floor. Redraw all props from directly above.
+- The crates at (x≈63–97, y≈5–90) have a top face and a body of identical width, so they have no volume. Inset the top face and shade the visible side.
+- The figure at (x≈222,y≈8) stands on a hard brown ellipse in a different hue from the ground. Replace with a soft shadow that multiplies the ground beneath it.
+- The white scatter at (x≈208–237, y≈112–127) is loose pixels with no readable form. Draw the object or delete it.
+- The dirt's red speckle is uniformly distributed at constant density across the whole field. Cluster it, and wear a path where traffic would actually go.
+- Nothing in the frame is repaired or in use. Add the rope lashings, driven pins, hide patches and salvaged timber the place runs on — on the crates, across the wall break at (x≈0–56, y≈120–145), and at the water's edge.
+
+The through-line: 1 is the only frame whose *construction* is sound, and it is held back by integration faults (a sprite that receives no light and casts no shadow, a wall painted at a lower resolution than the floor it touches). Those are cheap to fix. 2 is 1 made worse by a relight that only subtracted; revert it. 4 isn't in the same conversation — it has no lighting model, no perspective discipline and no fiction on it.
+
+Model: Claude Opus 5 (1M context)

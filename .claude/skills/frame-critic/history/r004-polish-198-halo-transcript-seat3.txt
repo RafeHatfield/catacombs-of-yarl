@@ -1,0 +1,55 @@
+I read all four. Frames 1, 2 and 4 are the same scene: 1 and 2 are pixel-identical outside a 286×252 patch around the figure, so 2 is literally 1 with a light blob painted over it. 4 is a broader relight of the same base. 3 is a different frame at 384×288.
+
+**RANK:** 1 > 4 > 2 > 3
+
+**BEST:** 1
+
+**BEST_WHY:** The wall run at x≈190–505, y≈390–450 is the only genuinely authored thing in the deck. The timbers are individual pieces at different lengths, and the dark vertical pins driven through them sit at x≈265, 300, 345, 405 and 430 — irregular spacing, irregular length, and the pin at x≈345 overshoots the timber's lower edge into the floor rather than stopping neatly at it. There's a small salvaged plate lapped over the course at x≈420–440, y≈402–410. It reads as accumulated repair, not a stamped border tile.
+
+The value structure holds under it: the wall's top surface averages luma 53 across x 200–330 against the lit floor at 127 — 74 levels of separation, achieved without an outline. The light pass excludes the character: sprite pixels are byte-identical between 1 and 2, so the blade at (391,478) stays (255,251,168) against a floor at (252,201,127) and still reads as metal. Only 678 pixels (0.1%) touch the red-channel ceiling, and the horizontal joint at y≈462 stays ~23 luma below its slabs across x 300–365 — the grid survives the brightest part of the pool. Slab scale varies for a reason too: large slabs at x 180–340 / y 455–530 meet a running-bond brick at roughly half the course height at x 400–750 / y 760–900, and the two abut with no decorative transition, which is what a floor patched by people who don't care looks like.
+
+**WORST:** 3
+
+**WORST_WHY:** The water is a rectangle. It occupies x 248–343, y 0–191 at 95.5% fill of its own bounding box — dead-vertical right edge at x=343, dead-horizontal bottom at y=191, square corner between them. No bank, no wet fringe, no depth. The entire body of water contains **7 distinct colours** across 96×192 pixels, and the surface is one cell-pattern tile repeated at uniform value from edge to centre.
+
+The lit torch on the left wall emits nothing: the wall panel beside it at (20,130) is (50,50,50), and the stone floor is (90,90,90) — R=G=B exactly, so there is not one warm pixel anywhere near a burning flame. The mud→stone boundary is one pixel row: at x=150, row 230 is (107,101,95) and row 231 is (90,90,90). No threshold, no edge tile, the dirt just stops. The two barrels at x≈116–150 and x≈158–192 differ by a mean of 17.6 levels and the two crate sprites by 18.5 — near-duplicate stamps placed side by side. 193 unique 16px tiles across 432 placements, with the mud field's red-vein motif visibly repeating on grid. The figure's head is clipped by the top frame edge at x 221–226, y=0, and its hard-edged brown shadow smear at y≈22–26 is the only cast shadow in the frame — the barrels and crates cast none.
+
+**FLAGGED:** 2, 3, 4
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- The sprite reaches saturation 1.0 (cyan plume, orange face); the environment's ceiling across the whole frame is 0.627. Rebuild the character's ramp inside the environment's gamut — cap sprite saturation at ~0.6 and pull the plume off pure cyan, or it stays a pasted-on asset from another game.
+- The object at x 285–380, y 645–712 has a hard left edge and a hard bottom edge, but its top ramps 131→22 over 18px (column x=340, y 630–648). Give it the same edge treatment on all four sides; if that haze is meant to be a stain, separate it from the object's silhouette so the object still reads as an object.
+- The crack holds a constant 2px width along its entire run and crosses the joint at y≈600 and the vertical joint at x≈420 without deflecting, widening or chipping a corner. Break it at the joints: let it run along mortar where it can, open it where it crosses, and vary the width.
+
+**FLIP 2:**
+- 15,726 pixels (2.3% of the frame) have the red channel railed at 255, against 678 in the same frame without the blob. The floor at (437,490) reads (255,255,168) — two channels clipped. Rebuild the pool so peak floor luma lands ~215 and nothing clips.
+- The horizontal joint above the figure at y≈462 is continuous in the base art but disappears between x≈365 and x≈545 under the light. The joint must survive at every brightness the pool reaches — light multiplicatively over the floor rather than adding a flat wash on top.
+- The added layer is a lumpy lozenge filled with 45° hatch strokes that are visible in the shipped image at x 290–400, y 480–560, running straight through slabs and joints alike at a constant angle. Delete the hand-hatched blob; drive the pool from a radial falloff.
+- The blob's boundary is an irregular hand-drawn outline with a bulge lower-left and a notch on the right, unrelated to the room's geometry. A carried lamp's pool is radial and occluded by walls — derive it, don't paint it.
+
+**FLIP 4:**
+- The colour grade was applied over the character layer, not just the environment. Blade (391,478) = (255,186,130), shield face (419,494) = (241,173,116), floor (437,490) = (252,201,127) — the sword, the shield and the ground the figure stands on are within ~15 levels of each other. Mask the sprite out of the grade so the blade's top ramp step stays cool and pale.
+- The grade hue-rotated the sprite rather than tinting it: face skin goes (255,190,47) in the ungraded version to (255,117,31) here — green dropped 73 levels on a character pixel. Whatever tint the environment gets, the sprite needs its own authored ramp, not the environment's transform.
+- Same as 1: the object at x 285–380, y 645–712 ramps 131→19 over 16px on its top edge (column x=340) while its other edges are hard. Unify the edge treatment.
+- Same as 1: sprite saturation 1.0 against an environment ceiling of 0.627.
+
+**FLIP 3:**
+- Replace the rectangular water body (x 248–343, y 0–191) with an irregular edge: cut the bank on the tile grid with corner and edge pieces, and add a wet-stone fringe one tile deep where mud meets water.
+- The pool holds 7 colours total. Add at least a darker centre and a lighter shallow band so the water has depth, and break up the single repeated surface tile — currently the same cell pattern runs uniformly from bank to bank.
+- The three lily-pad clusters are the same sprite at the same rotation. Author two more variants or mirror and recolour, and stop placing them in identical triangular groupings.
+- The torch at x≈27–36 emits nothing: the wall beside it at (20,130) is (50,50,50). Either add a warm falloff over the adjacent floor and wall, or remove the torch — an unlit light source is the single most obviously unfinished thing in the frame.
+- The stone floor is (90,90,90), perfectly achromatic. Push it a few levels toward a cool or warm cast so it isn't literally neutral grey.
+- Cut a transition at the mud/stone boundary (row 230→231 at x=150 is a one-row switch from (107,101,95) to (90,90,90)). Add scatter tiles: dirt spilling onto the first course of stone, mud packed into the joints.
+- The two barrels (x 116–150, x 158–192) and the two crates are near-duplicate stamps. Vary the lid tone, rotate the staves, dent one.
+- The figure at x 221–226 is clipped by the top frame edge at y=0. Reframe so it sits inside the view.
+- The figure's hard-edged brown shadow at y≈22–26 is the only cast shadow in the frame. Either give the barrels, crates and torch the same treatment or remove it.
+
+---
+
+The deck's real story: one competent base render, presented three ways, two of which damage it — 2 by blowing out the light, 4 by letting the grade run over the character sprite. The persistent fault across all three is that the character was authored to a different palette than the world. Fix that and 1 ships.
+
+*Model: Claude Opus 5 (1M context)*

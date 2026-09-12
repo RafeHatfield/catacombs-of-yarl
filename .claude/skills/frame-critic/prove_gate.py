@@ -227,6 +227,51 @@ def main():
         case("H6 MEASURED-FALSE with no percept recorded -> refuse",
              1, rc, out, "no percept recorded")
 
+        # ── N/A: flags about art that does not exist yet. RULED (Rafe, 2026-09-11). ────────
+        #
+        # This is the narrowest state the gate has, because it is the only one that makes a
+        # criticism disappear without anybody promising to do anything about it. Each of its
+        # four refusals is exercised here, and so is the one thing it must not become.
+        NA_RULING = "the hero light-response engine term stays (Sasha inherits it); all hero-appearance work stops - the current sprite is the Oryx placeholder and is not worked; close the placeholder-look flags as N/A"
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "N/A", "item": "the figure's tabard is a flat teal with no folds",
+             "ruling": NA_RULING,
+             "cites": "#183"}]})
+        rc, out = run(["python3", GATE])
+        case("N1 N/A on a placeholder-APPEARANCE flag, ruling + citation -> allow",
+             0, rc, out, "GATE OPEN")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "N/A", "item": "the figure's tabard is a flat teal",
+             "cites": "#183"}]})
+        rc, out = run(["python3", GATE])
+        case("N2 N/A with no quoted ruling -> refuse", 1, rc, out, "only Rafe creates these")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "N/A", "item": "the figure's tabard is a flat teal",
+             "ruling": NA_RULING}]})
+        rc, out = run(["python3", GATE])
+        case("N3 N/A with no citation -> refuse", 1, rc, out, "must CITE")
+
+        # ⚠ THE ONE THAT MATTERS. The re-scope stops APPEARANCE work and keeps the light-response
+        # term fully live, so a flip about exposure ON the figure is not N/A — it is
+        # hero_light.gdshader's, and disposing it N/A would be using the ruling to duck a live
+        # finding. That is precisely the flip the morgue's `lamp-clip-figure` plant carries.
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "N/A", "item": "the figure is blown out by the lamp and reads washed out",
+             "ruling": NA_RULING,
+             "cites": "#183"}]})
+        rc, out = run(["python3", GATE])
+        case("N4 N/A used on a LIGHTING flag -> refuse", 1, rc, out, "talks about LIGHT")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "N/A", "item": "the figure's silhouette is hard to read against the floor",
+             "ruling": NA_RULING, "cites": "#999999"}]})
+        rc, out = run(["python3", GATE])
+        case("N5 N/A citing an issue that appears nowhere -> refuse",
+             1, rc, out, "appears nowhere")
+
         synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
             {"state": "MEASURED-FALSE", "item": "x", "percept": "kept"}]})
         rc, out = run(["python3", GATE])
@@ -238,6 +283,177 @@ def main():
         rc, out = run(["python3", GATE])
         case("H8 a seat flagged the build and nothing is disposed -> refuse",
              1, rc, out, "not a majority test")
+
+        # ---- J. THE AUTONOMY AMENDMENT — a cited flip disposes WITHOUT a human return ---------
+        #
+        # RULED (Rafe, 2026-09-08): "CC routes flags to issues with verified citations. Routing is
+        # no longer a human-only act; the citation verifier is the laundering guard." The case the
+        # amendment is FOR is J1: a flip that cites a clause which resolves is disposed by the
+        # builder, the gate opens, and no human is involved anywhere in it. J2 and J3 are the
+        # guard that makes J1 safe — an unresolvable citation and a bare assertion both refuse.
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "ROUTED", "item": "joints fade at full light", "lane": "#194",
+             "cites": "§13.4.1"}]})
+        rc, out = run(["python3", GATE])
+        case("J1 a flip ROUTED by the builder on a resolvable clause -> allow, no human",
+             0, rc, out, "GATE OPEN")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "ROUTED", "item": "x", "lane": "#194", "cites": "§99.9"}]})
+        rc, out = run(["python3", GATE])
+        case("J2 builder ROUTED citing a clause that does NOT resolve -> refuse",
+             1, rc, out, "does not resolve")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "ROUTED", "item": "x", "lane": "#194"}]})
+        rc, out = run(["python3", GATE])
+        case("J3 builder ROUTED with neither citation nor ruling -> refuse",
+             1, rc, out, "neither a verified citation nor a quoted ruling")
+
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "ROUTED", "item": "x", "cites": "§13.4.1"}]})
+        rc, out = run(["python3", GATE])
+        case("J4 ROUTED with no destination lane -> refuse", 1, rc, out, "no destination lane")
+
+        # CLOSED and PARKED still need Rafe's words — they are statements about what a human
+        # decided, where routing is a statement about where something belongs.
+        synth("PASS-INSTALL", bid, {"progress": P, "dispositions": [
+            {"state": "CLOSED", "item": "x", "cites": "§13.4.1"}]})
+        rc, out = run(["python3", GATE])
+        case("J5 CLOSED by citation alone -> refuse (only Rafe closes)",
+             1, rc, out, "only Rafe creates these")
+
+        # ---- K. INSTALL-LATEST — non-regression, not victory ---------------------------------
+        #
+        # RULED (Rafe, 2026-09-08). The three things the ruling asks to be proved: an EQUAL-RANK
+        # build with its exit met installs; a build a MAJORITY ranks below does not; and the
+        # guards, plants and citation checks are untouched (every case above still passes).
+        #
+        # "Equal rank" is one place below the reference — the tie the deck forbids, the same slack
+        # §1.2.1 already uses for the asset bar.
+        EXIT = {"claim": "the lane's shine is down and the wall-base seam is restored",
+                "measured": "specular share 22.4% -> 18.8%; seam lane/flank 0.030 -> 0.639",
+                "met": True}
+        def seats(*pairs):
+            return [{"seat": i + 1, "rank": r, "reference_rank": a, "not_below": r <= a + 1}
+                    for i, (r, a) in enumerate(pairs)]
+
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
+                                      "item_exit": EXIT, "flip_list": [], "dispositions": [],
+                                      "panel": {"seats": 3, "flagged_by": 0, "above_reference": 1,
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K1 EQUAL-RANK build (tied 3 of 3) with its exit met -> allow",
+             0, rc, out, "GATE OPEN")
+
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 3, "approved_position": 1},
+                                      "item_exit": EXIT, "flip_list": [], "dispositions": [],
+                                      "panel": {"seats": 5, "flagged_by": 0, "above_reference": 0,
+                                                "per_seat": seats((3, 1), (3, 1), (3, 1),
+                                                                  (3, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K2 a STRONG majority ranks the build below -> refuse",
+             1, rc, out, "a strong")
+
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
+                                      "item_exit": {"claim": "x", "measured": "", "met": True},
+                                      "flip_list": [], "dispositions": [],
+                                      "panel": {"seats": 3, "flagged_by": 0, "above_reference": 1,
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K3 exit claimed met with NO measurement -> refuse", 1, rc, out, "carries no measurement")
+
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
+                                      "item_exit": {"claim": "x", "measured": "n", "met": False},
+                                      "flip_list": [], "dispositions": [],
+                                      "panel": {"seats": 3, "flagged_by": 0, "above_reference": 1,
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K4 the item's exit NOT met -> refuse", 1, rc, out, "DID THE THING")
+
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": None},
+                                      "item_exit": EXIT, "flip_list": [], "dispositions": [],
+                                      "panel": {"seats": 3, "flagged_by": 0, "per_seat": []}})
+        rc, out = run(["python3", GATE])
+        case("K5 no seeded reference in the deck -> refuse", 1, rc, out, "nothing here to be level with")
+
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
+                                      "item_exit": EXIT, "flip_list": [], "dispositions": [],
+                                      "panel": {"seats": 3, "flagged_by": 2, "above_reference": 1,
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K6 a seat flagged the build, nothing disposed -> refuse",
+             1, rc, out, "not a majority test")
+
+        # ---- K7/K8. A FLAGGED BUILD REACHES INSTALL-LATEST ONLY BY A RECORDED AMENDMENT -------
+        #
+        # `panel_verdict` returns FAIL the moment any seat flags the build, and that is right at
+        # round time. The verdict can then be amended once every flagged item carries a lawful
+        # disposition — the builder may do that for ROUTED since 2026-09-08, by verified
+        # citation. What must not happen is the rewrite going unrecorded: the whole enforcement
+        # of a disposition is that Rafe sees it on the handset, and a file that simply says
+        # INSTALL-LATEST hides the fact that a seat said no. K7 is that hole; K8 is the same
+        # verdict with the amendment written down.
+        DISPOSED = [{"state": "ROUTED-ALREADY", "item": "wall tops read as noise",
+                     "lane": "wall", "cites": "#194"}]
+        AM = {"from": "FAIL", "to": "INSTALL-LATEST",
+              "law": "CC routes flags to issues with verified citations. - Rafe, fixture",
+              "flag": "1 of 3 seats flagged the build; its items are disposed"}
+
+        # ⚠ THE AMENDMENT TEST IS DIVERGENCE, NOT FLAGS — sharpened 2026-09-09. The panel can now
+        # return INSTALL-LATEST with a flag on it, so "flagged" no longer implies "was amended".
+        # What must never pass silently is the verdict being REWRITTEN, so the check compares the
+        # file against `panel.verdict_at_round` — what the panel actually returned.
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
+                                      "item_exit": EXIT, "flip_list": [],
+                                      "dispositions": DISPOSED,
+                                      "panel": {"seats": 5, "flagged_by": 1, "above_reference": 1,
+                                                "verdict_at_round": "FAIL",
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1),
+                                                                  (2, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K7 verdict REWRITTEN from FAIL, no amendment record -> refuse",
+             1, rc, out, "amendment record is absent")
+
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
+                                      "item_exit": EXIT, "flip_list": [],
+                                      "dispositions": DISPOSED, "amendment": AM,
+                                      "panel": {"seats": 5, "flagged_by": 1, "above_reference": 1,
+                                                "verdict_at_round": "FAIL",
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1),
+                                                                  (2, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K8 the same verdict with the amendment recorded -> allow",
+             0, rc, out, "AMENDED from FAIL")
+
+        # ── K10. THE OTHER HALF OF THE FLAG TERM, which prove_panel no longer holds ───────────
+        #
+        # The panel itself returned INSTALL-LATEST with one seat flagging — no rewrite, so no
+        # amendment is owed. The install must still turn on whether that flag carries a lawful
+        # disposition, and K6 above is this case with the dispositions removed. If K6 and K10
+        # ever go green together the flag guard has quietly stopped existing.
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
+                                      "item_exit": EXIT, "flip_list": [],
+                                      "dispositions": DISPOSED,
+                                      "panel": {"seats": 5, "flagged_by": 1, "above_reference": 1,
+                                                "verdict_at_round": "INSTALL-LATEST",
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1),
+                                                                  (2, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K10 panel returned it flagged AND disposed -> allow",
+             0, rc, out, "INSTALL-LATEST")
+
+        # An amendment that names no law is not a record of one.
+        synth("INSTALL-LATEST", bid, {"progress": {"rank_position": 2, "approved_position": 1},
+                                      "item_exit": EXIT, "flip_list": [],
+                                      "dispositions": DISPOSED,
+                                      "amendment": {"from": "FAIL", "to": "INSTALL-LATEST"},
+                                      "panel": {"seats": 5, "flagged_by": 1, "above_reference": 1,
+                                                "verdict_at_round": "FAIL",
+                                                "per_seat": seats((1, 2), (2, 1), (2, 1),
+                                                                  (2, 1), (2, 1))}})
+        rc, out = run(["python3", GATE])
+        case("K9 an amendment naming no law -> refuse", 1, rc, out, "missing law")
 
         # Leave a clean passing verdict behind: the cases below assume one, and a fixture that
         # silently changes the state its successors read is how a proof stops proving.

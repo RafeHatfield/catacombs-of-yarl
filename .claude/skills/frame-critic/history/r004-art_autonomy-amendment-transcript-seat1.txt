@@ -1,0 +1,46 @@
+RANK: 1 > 2 > 4 > 3
+
+BEST: 1
+BEST_WHY: The floor masonry is the most convincingly made thing in the deck. The coursing runs in rows but the block lengths vary within a row (the row at y≈540 goes long-short-long-long across x 250–650), and the damaged blocks — the dark ones at (405,400), (330,420), (560,395), (430,600) — sit *in* the coursing at block size rather than being splatted over it, so the floor reads as cut stone with individual failed pieces. The light falloff is smooth with no visible banding from the lit centre at (410,490) out to the dark floor at (100,700). The north wall band at y 200–262 and the side wall columns at x 0–55 / x 690–750 are cooler and smaller-coursed than the floor, so the wall plane separates from the floor plane without needing an outline. The stair/grate sprite at (183–248, 455–515) is still lit consistently with its neighbours (it goes darker with the falloff, unlike a pasted icon).
+
+WORST: 3
+WORST_WHY: It is assembled, not made. There is no light source at all — the orc at (220,10) carries nothing and the frame is the same value edge to edge. The dirt floor from (55,0) to (245,195) is one speckle-noise tile stamped with zero variation; the grey wall at x 0–50 is identical courses with single-value mortar. The water pool at (248–384, 0–195) is a hard-edged rectangle against the dirt with no bank, no edge tile, no depth, and the three lily pads at (320,20), (325,115), (275,160) are one blob at three scales. Floor-to-wall boundaries at x≈50 and y≈195 are hard lines with no contact shadow. The two barrels at (125,205) and (175,205) are the same sprite twice. The torch bracket at (30,135) has a flame that lights nothing. This is what a free tileset looks like when dropped onto a map with no pass afterwards.
+
+FLAGGED: 2, 3, 4
+
+SHIP: NONE
+
+FLIP 1:
+- The crack strokes are an overlay, not damage. The one from (100,300) through (190,400) to (290,560) and the arc from (455,470) to (620,445) are constant single-pixel width, spline-smooth, and cross block joints and mortar identically. Real cracks in cut stone stay within a block or terminate at a joint, and vary in width. Redraw them per block or delete them.
+- The whole floor is one sepia tint at different values — the dark floor at (100,700) is the same hue as the lit floor at (400,450). That reads as a colour filter over a grey base. Push the far falloff toward neutral/cool so the light is a warm source in a cold place.
+- The figure at (410,490) is chunky pixel art; the floor under it is sub-pixel painterly hatching. Two resolutions in one frame. Either quantise the environment to the figure's pixel grid or repaint the figure at the floor's resolution.
+- The stair/grate sprite at (183–248, 455–515) has hard straight edges and no contact shadow while every floor block around it has a soft-edged joint. Give it a ground shadow and match edge treatment.
+- The north wall's south face is a single bright line at y≈258 the full width from x 55 to 690. Break it — a block proud here, one recessed there, one patched — so it isn't a ruled edge.
+
+FLIP 2:
+- The vertical plank at (270–295, 540–625) is a flat pale rectangle in two vertical tones: no grain, no end-grain, no shadow, and it's the brightest surface in the frame apart from the fire. That is a placeholder. Paint it as timber with a contact shadow, or remove it.
+- The crossed-timber props at (245,485) and (440,610) are chunky pixel sprites over sub-pixel painterly floor — same resolution mismatch as the figure. Match one to the other.
+- A floor crack crosses onto a wall: the line that starts on the corridor floor around (545,250) continues through the wall at (565–610, 340–400). Cracks cannot pass from the floor plane to a wall plane. Clip the crack layer to the floor mask.
+- The arc from (595,660) to (700,590) is one constant-width stroke over roughly eight blocks. Same fix as image 1: per-block, variable width, terminate at joints.
+- The row of small vertical posts along the wall base at y≈425–440 (x 190–500 and x 570–750) is one stamp repeated at even pitch; it reads as a fence tile. Vary the spacing, lean and height so it reads as pins someone actually drove.
+- The brazier at (598,548) lights nothing. The floor at (560,580) is the same value as the floor at (650,650). Either add a local warm falloff around it or take the flame out.
+
+FLIP 4:
+- The floor right of the figure at (430–560, 460–560) is blown to near-white; the block joints are gone. Clamp the light so the brightest floor block still shows its joints and hatching.
+- The bloom bleeds across the wall band. At (190–500, 395–440) and (560–750, 400–470) the wall face is smeared to the same value as the floor below it, so the wall plane disappears exactly where the player is looking. Mask the bloom off the wall layer and re-separate the wall face from the lit floor.
+- The bloom also feathers into the void: the bottom edge of the black room at (120–440, 130–390) has a soft grey halo at y≈385–395. Void must stay black. Kill the post-process or mask it to the floor.
+- Same floor crack crossing the wall at (560–620, 300–390), and the same arc from (595,660) to (700,590). Clip and redraw.
+- Same figure/floor resolution mismatch at (410,490).
+- Same evenly stamped post row along the wall base at y≈425–440.
+
+FLIP 3:
+- There is no light source. Add falloff from the figure at (220,10); the far corners at (30,270) and (370,270) must be materially darker than the floor under the figure.
+- The water pool at (248–384, 0–195) needs a shoreline: an edge tile where dirt meets water, a depth gradient from bank to centre, and the lily pads redrawn as distinct pieces rather than one blob scaled three times.
+- The dirt floor (55–245, 0–195) needs variation tiles — worn path, a darker band along the wall base at x≈55 and y≈190 — so it stops reading as one stamped noise tile.
+- The grey wall at (0–50, 0–150) and the big-stone band at y 195–265 need varied block lengths and mortar values; every course is currently identical.
+- Add contact shadows at the floor/wall boundaries at x≈50 and y≈195; both are hard lines now.
+- The two barrels at (125,205) and (175,205) are the same sprite; rotate, damage or replace one.
+- The torch bracket at (30,135) must light the wall and floor around it or lose the flame.
+- The dark wall band at the bottom has a lighter break at (155–185, 270–285) with no framing — either it's a doorway (frame it) or a seam (fix it).
+
+Model used: Claude Opus 5 (1M context).

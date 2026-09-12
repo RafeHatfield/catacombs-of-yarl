@@ -147,9 +147,36 @@ def main():
              "5b editing a SCENE CONFIG moves the id"),
             ("src/Presentation/assets/tier1_ashlar/__scope_probe.png", True,
              "5c editing an ASSET moves the id"),
+            # ---- 6. the run's reports are excluded, AND THE EXCLUSION IS NARROW --------------
+            #
+            # 6a is the exclusion added 2026-09-08 (a report describes the build and is not in
+            # it). 6b is the line it must not cross: the entries are NAMED FILES, not a root
+            # pattern, so an unnamed file at the root still moves the id. Without 6b the
+            # exclusion could quietly widen into "the repo root does not count", which is the
+            # failure direction the blacklist exists to avoid — an id that does not move when
+            # the build does.
+            ("RUN-REPORT.md", False,
+             "6a the run's own report does not move the id"),
+            # ---- 7. capture logs are records, not inputs -- and the PNG beside them still counts
+            ("tools/tier1_floors/evidence/__probe.log", False,
+             "7a a capture LOG does not move the id"),
+            ("tools/tier1_floors/evidence/__probe.png", True,
+             "7b the capture PNG beside it still DOES"),
+            ("__unnamed_root_probe.md", True,
+             "6b an UNNAMED file at the root still does"),
         ):
             full = os.path.join(REPO, rel)
             os.makedirs(os.path.dirname(full), exist_ok=True)
+            # ⚠ THE PROBE RESTORES WHAT IT FOUND. Case 6a's path is `RUN-REPORT.md` BY NAME —
+            # that is the whole point of the case, since the exclusion is by name — and the
+            # first version wrote "scope probe" over it and deleted it in the `finally`. It
+            # destroyed the long run's own deliverable twice, silently, and the second time the
+            # file had to be recovered from the last commit with the session's newest entries
+            # gone. A proof that damages the tree it is proving about is not a proof.
+            prior = None
+            if os.path.exists(full):
+                with open(full, "rb") as f:
+                    prior = f.read()
             try:
                 with open(full, "w") as f:
                     f.write("scope probe\n")
@@ -158,7 +185,10 @@ def main():
                 check(label, moved_now == should_move,
                       "%s the id (%s)" % ("moved" if moved_now else "did not move", rel))
             finally:
-                if os.path.exists(full):
+                if prior is not None:
+                    with open(full, "wb") as f:
+                        f.write(prior)
+                elif os.path.exists(full):
                     os.remove(full)
 
         # ---- 5d/5e the marker: the TEMPLATE ships, the GENERATED one does not -----------------

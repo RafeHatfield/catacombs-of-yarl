@@ -1,14 +1,14 @@
-[DIAG 00000 F0 T0.715] === Session started ===
-[DIAG 00001 F0 T1.707] [Tier1] rig:start: radius=5 falloff=1 ambient=0.7 (121218) energy=1.6
-[DIAG 00002 F0 T1.710] [Tier1] BUILD IDENTITY: commit=bea4c6b425360daf49f15159243e2d355d310754+dirty built=2026-09-02T16:00:28Z app=Catacombs of YARL
-[DIAG 00003 F0 T1.711] [Tier0] corridor scene: tier1_wall_review (res://src/Presentation/assets/tier0_harness/scenes/tier1_wall_review.json)
-[DIAG 00004 F0 T1.711] [Tier0] map=17x21 player=(8,15) carve_rects=7
-[DIAG 00005 F0 T1.711] [Tier0] junction=NO
-[DIAG 00006 F0 T1.711] [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml
-[DIAG 00007 F0 T1.711] [Tier0] light rig: ambient=1a1a22@0.7 (effective 121218) light=ffb066 energy=1.6 radius_tiles=5 falloff=1 tile=32x32 tex=320px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
-[DIAG 00008 F0 T1.711] [Tier0] grid map: centre00=(-120,-409.5) pitch=(64,64) view=(0,90)...(720,947)
-[DIAG 00009 F0 T1.712] [Tier1] variant census: cells=141 distinct=1 max_multiplicity=141  step_top2: row=1.000(122/122) col=1.000(117/117) diag=1.000(103/103) anti=1.000(103/103)  worst_top2=1.000  chance_mode~1.000  pool_implied>=1
-[DIAG 00010 F0 T1.719] [Tier1] floor overlays: cells=141 channel=28 neglected=55 drawn(grit=0 event=0 channel=0 occlusion=165/stacked=63@anchor2) cell_shadow_suppressed=78 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_floors/MANIFEST.json
+[DIAG 00000 F0 T0.309] === Session started ===
+[DIAG 00001 F0 T1.010] [Tier1] rig:start: radius=6 falloff=1 ambient=1.5 (272733) energy=1.6
+[DIAG 00002 F0 T1.012] [Tier1] BUILD IDENTITY: commit=f252a8cf5d3b12fcfc5714f794c886e7f8af315b built=2026-09-12T03:45:22Z review=GATED app=Catacombs of YARL
+[DIAG 00003 F0 T1.012] [Tier0] corridor scene: tier1_props_review (res://src/Presentation/assets/tier0_harness/scenes/tier1_props_review.json)
+[DIAG 00004 F0 T1.012] [Tier0] map=17x21 player=(6,12) carve_rects=7
+[DIAG 00005 F0 T1.012] [Tier0] junction=NO
+[DIAG 00006 F0 T1.012] [Tier0] tile_theme_config=res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml
+[DIAG 00007 F0 T1.012] [Tier0] light rig: ambient=1a1a22@1.5 (effective 272733) light=ffb066 energy=1.6 radius_tiles=6 falloff=1 tile=32x32 tex=384px (light: RULED for the Boundary — §6.2.1 Ruling 56; other regions PLACEHOLDER. tile: RULED value, §4.3 derivation outstanding)
+[DIAG 00008 F0 T1.012] [Tier0] grid map: centre00=(8,-217.5) pitch=(64,64) view=(0,90)...(720,947)
+[DIAG 00009 F0 T1.013] [Tier1] variant census: cells=134 distinct=1 max_multiplicity=134  step_top2: row=1.000(111/111) col=1.000(107/107) diag=1.000(93/93) anti=1.000(93/93)  worst_top2=1.000  chance_mode~1.000  pool_implied>=1
+[DIAG 00010 F0 T1.021] [Tier1] floor overlays: cells=134 channel=26 neglected=51 drawn(grit=0 event=0 channel=0 occlusion=0/stacked=56@anchor2 BAKED-BY-FLOOR) cell_shadow_suppressed=74 missing_texture=0 seed=1337 manifest=res://src/Presentation/assets/tier1_floors/MANIFEST.json
 [Tier1] channel map (L/M/R channel, F trodden chokepoint, x neglected, . floor, # solid)
 [Tier1]   #################
 [Tier1]   #################
@@ -22,42 +22,87 @@
 [Tier1]   ########F########
 [Tier1]   ########F########
 [Tier1]   ########F########
-[Tier1]   ###xx..LMMR..x###
-[Tier1]   ###xx...LMR..x###
-[Tier1]   ###xx...LMR..x###
+[Tier1]   #####..LMR...x###
+[Tier1]   ###x#..LM#...x###
+[Tier1]   ###x#.##MMR..x###
 [Tier1]   ###xx#..LMR..x###
 [Tier1]   #xxxxx..LMR..x###
 [Tier1]   #xxxxx.......x###
 [Tier1]   ###xxx.......x###
 [Tier1]   ###xxxxxxxxxxx###
 [Tier1]   #################
-[DIAG 00011 F0 T1.719] [Tier1] wang floor: none declared (no --wang-floor, no marker wangFloor)
-[DIAG 00012 F0 T1.965] [Tier1] ashlar floor: laid=141 channel_cells=27 missing=0 families=5 seed=1337 atlases=146 edge_check=128/OK stone_check=144/OK paint_check=96/OK traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_ashlar/MANIFEST.json
+[DIAG 00011 F0 T1.021] [Tier1] wang floor: none declared (no --wang-floor, no marker wangFloor)
+[DIAG 00012 F0 T3.232] [Tier1] ashlar floor: laid=141 channel_cells=25 missing=0 families=5 seed=1337 atlases=146 edge_check=128/OK stone_check=144/OK paint_check=96/OK occlusion=baked:68/check:48/OK lines=1 mouths=17 polished=141 traffic=spine:18/routes:23 manifest=res://src/Presentation/assets/tier1_ashlar/MANIFEST.json
 [Tier1] traffic field (space=unwalked .. @=busiest)
 [Tier1]   #################
 [Tier1]   #################
-[Tier1]   ###=++=-----::###
-[Tier1]   ###=****++==-:###
-[Tier1]   ###=+*###*+=-:###
-[Tier1]   ###:=+####*=-:###
+[Tier1]   ###=+++=-----:###
+[Tier1]   ###+*#***++=-:###
+[Tier1]   ###=*#####*+-:###
+[Tier1]   ###-=*#%%%*=-:###
 [Tier1]   ########%########
 [Tier1]   #################
 [Tier1]   ########*########
-[Tier1]   ########+########
+[Tier1]   ########*########
 [Tier1]   ########*########
 [Tier1]   #################
-[Tier1]   ###-=*###*+-:.###
-[Tier1]   ###=*###*+=-::###
-[Tier1]   ###*#%#*++=--:###
-[Tier1]   ####%##+==--::###
-[Tier1]   #+*%@%*==---:.###
-[Tier1]   #+*#%#*==---:.###
-[Tier1]   ###*#*+==--::.###
-[Tier1]   ###+***+==--:.###
+[Tier1]   #####+#%#*+-:.###
+[Tier1]   ###-#*####+=-:###
+[Tier1]   ###+####*+==-:###
+[Tier1]   ####%##++==--:###
+[Tier1]   #+*%@%*+===--:###
+[Tier1]   #+*#%%*+===-::###
+[Tier1]   ###*##*+==--:.###
+[Tier1]   ###*##*++==-:.###
 [Tier1]   #################
-[DIAG 00013 F0 T2.030] [Tier1] wall age map (. not a reveal, 0=sharp/sealed .. 3=on the spine)
+[Tier1] travel axis (- E-W  / NE-SW  | N-S  \ NW-SE  . none)
+[Tier1]   #################
+[Tier1]   #################
+[Tier1]   ###////.......###
+[Tier1]   ###/////......###
+[Tier1]   ###.////......###
+[Tier1]   ###...//|.....###
+[Tier1]   ########|########
+[Tier1]   ########|########
+[Tier1]   ########|########
+[Tier1]   ########|########
+[Tier1]   ########|########
+[Tier1]   ########\########
+[Tier1]   #####\\\\.....###
+[Tier1]   ###\#\\\.#....###
+[Tier1]   ###\#\##......###
+[Tier1]   ###\\#........###
+[Tier1]   #||\\.........###
+[Tier1]   #|||..........###
+[Tier1]   ###|..........###
+[Tier1]   ###...........###
+[Tier1]   #################
+[Tier1] route strength (space=off-route .. @=on the line)
+[Tier1]   #################
+[Tier1]   #################
+[Tier1]   ###*@=        ###
+[Tier1]   ###.*@-       ###
+[Tier1]   ###  *@-      ###
+[Tier1]   ###   +@-     ###
+[Tier1]   #################
+[Tier1]   #################
+[Tier1]   ########*########
+[Tier1]   ########%########
+[Tier1]   ########*########
+[Tier1]   ########=########
+[Tier1]   #####*%=      ###
+[Tier1]   ### #@=. #    ###
+[Tier1]   ###+#*##      ###
+[Tier1]   ###@*#        ###
+[Tier1]   # %*          ###
+[Tier1]   # *#          ###
+[Tier1]   ###-          ###
+[Tier1]   ###           ###
+[Tier1]   #################
+[Tier1] axis coherence: 48 of 52 adjacent on-route pairs agree (92%) - round 21 measured 34% on the per-tile field
+[DIAG 00013 F0 T3.298] [Tier1] wall age map (. not a reveal, 0=sharp/sealed .. 3=on the spine)
 [Tier1]   .................
-[Tier1]   ...12221111110...
+[Tier1]   ...22221111110...
 [Tier1]   .................
 [Tier1]   .................
 [Tier1]   .................
@@ -67,16 +112,176 @@
 [Tier1]   .................
 [Tier1]   .................
 [Tier1]   .................
-[Tier1]   ...11233.22110...
+[Tier1]   ...01233.22110...
 [Tier1]   .................
 [Tier1]   .................
 [Tier1]   .................
-[Tier1]   .23..3...........
+[Tier1]   .22..3...........
 [Tier1]   .................
 [Tier1]   .................
 [Tier1]   .................
 [Tier1]   .................
 [Tier1]   .................
-[DIAG 00014 F0 T2.030] [Tier1] boundary wall: family=boundary_wall_material_v1 face=24 top=192 void=0(choice=0,ring>0) missing=0 face_suppressed=192 planes(top=114.7 face=61.79) edge_check=46/OK bindings=11(cramp:2,lash:3,patch:1,pin:3,strap:2) cap=216+0void age0..3=2/11/7/4 traffic=spine:18/routes:25 manifest=res://src/Presentation/assets/tier1_walls/MANIFEST.json
-[DIAG 00015 F0 T2.031] [Tier0] review_build_marker=res://src/Presentation/assets/tier0_harness/REVIEW_BUILD.json
-[DIAG 00016 F0 T2.031] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
+[DIAG 00014 F0 T3.298] [Tier1] boundary wall: family=boundary_wall_material_v1 face=24 top=63 void=129(choice=0,ring>1) missing=0 face_suppressed=63 planes(top=114.7 face=61.79) edge_check=46/OK bindings=14(cramp:3,lash:4,patch:1,pin:3,strap:3) cap=87+129void age0..3=3/9/9/3 traffic=spine:18/routes:23 manifest=res://src/Presentation/assets/tier1_walls/MANIFEST.json
+[DIAG 00015 F0 T3.298] [Tier0] review_build_marker=res://src/Presentation/assets/tier0_harness/REVIEW_BUILD.json
+[DIAG 00016 F0 T3.298] [Tier0] losable-state check: turn_limit=2147483647 monsters=0 ending=None alive=True game_over=False
+[DIAG 00017 F716 T15.295] _UnhandledInput tap at (521, 246), phase=WaitingForInput
+[DIAG 00018 F716 T15.296] HandleTap MOVE_TO (8,7)
+[DIAG 00019 F716 T15.297] ExecuteTurn START action=Move
+[DIAG 00020 F716 T15.297] ExecuteTurn: { action = Move, turnCount = 0 }
+[DIAG 00021 F716 T15.298]   pre-ProcessTurn | heap=21MB
+[DIAG 00022 F716 T15.306]   ProcessTurn done: 1 events, gameOver=False
+[DIAG 00023 F716 T15.306]     evt: MoveEvent
+[DIAG 00024 F716 T15.306]   post-ProcessTurn | heap=16MB
+[DIAG 00025 F716 T15.307]   -> TurnCompleted
+[DIAG 00026 F716 T15.307] voice_skip: { turn = 1, dungeon = True, schedulerNull = True, ribbonNull = False }
+[DIAG 00027 F716 T15.338]   <- TurnCompleted
+[DIAG 00028 F716 T15.338]   -> PlayTurn (gameOver=False)
+[DIAG 00029 F716 T15.338] TurnAnimator.PlayTurn: creating tween for 1 events
+[DIAG 00030 F716 T15.339] ExecuteTurn END
+[DIAG 00031 F719 T15.374] TurnAnimator: tween finished, firing AnimationComplete
+[DIAG 00032 F719 T15.374] OnAnimationComplete START
+[DIAG 00033 F719 T15.374] AnimationComplete: { phase = Animating }
+[DIAG 00034 F719 T15.375]   OAC: UpdatePositions
+[DIAG 00035 F719 T15.375]   OAC: PathContinue (5 steps left)
+[DIAG 00036 F719 T15.375]   OAC: PathStep (8,11)
+[DIAG 00037 F719 T15.375] ExecuteTurn START action=Move
+[DIAG 00038 F719 T15.375] ExecuteTurn: { action = Move, turnCount = 1 }
+[DIAG 00039 F719 T15.375]   pre-ProcessTurn | heap=19MB
+[DIAG 00040 F719 T15.375]   ProcessTurn done: 1 events, gameOver=False
+[DIAG 00041 F719 T15.375]     evt: MoveEvent
+[DIAG 00042 F719 T15.375]   post-ProcessTurn | heap=19MB
+[DIAG 00043 F719 T15.375]   -> TurnCompleted
+[DIAG 00044 F719 T15.375] voice_skip: { turn = 2, dungeon = True, schedulerNull = True, ribbonNull = False }
+[DIAG 00045 F719 T15.375]   <- TurnCompleted
+[DIAG 00046 F719 T15.375]   -> PlayTurn (gameOver=False)
+[DIAG 00047 F719 T15.375] TurnAnimator.PlayTurn: creating tween for 1 events
+[DIAG 00048 F719 T15.376] ExecuteTurn END
+[DIAG 00049 F724 T15.459] TurnAnimator: tween finished, firing AnimationComplete
+[DIAG 00050 F724 T15.459] OnAnimationComplete START
+[DIAG 00051 F724 T15.460] AnimationComplete: { phase = Animating }
+[DIAG 00052 F724 T15.460]   OAC: UpdatePositions
+[DIAG 00053 F724 T15.460]   OAC: PathContinue (4 steps left)
+[DIAG 00054 F724 T15.460]   OAC: PathStep (8,10)
+[DIAG 00055 F724 T15.460] ExecuteTurn START action=Move
+[DIAG 00056 F724 T15.460] ExecuteTurn: { action = Move, turnCount = 2 }
+[DIAG 00057 F724 T15.460]   pre-ProcessTurn | heap=19MB
+[DIAG 00058 F724 T15.460]   ProcessTurn done: 1 events, gameOver=False
+[DIAG 00059 F724 T15.460]     evt: MoveEvent
+[DIAG 00060 F724 T15.460]   post-ProcessTurn | heap=19MB
+[DIAG 00061 F724 T15.460]   -> TurnCompleted
+[DIAG 00062 F724 T15.460] voice_skip: { turn = 3, dungeon = True, schedulerNull = True, ribbonNull = False }
+[DIAG 00063 F724 T15.461]   <- TurnCompleted
+[DIAG 00064 F724 T15.462]   -> PlayTurn (gameOver=False)
+[DIAG 00065 F724 T15.462] TurnAnimator.PlayTurn: creating tween for 1 events
+[DIAG 00066 F724 T15.462] ExecuteTurn END
+[DIAG 00067 F729 T15.544] TurnAnimator: tween finished, firing AnimationComplete
+[DIAG 00068 F729 T15.545] OnAnimationComplete START
+[DIAG 00069 F729 T15.545] AnimationComplete: { phase = Animating }
+[DIAG 00070 F729 T15.545]   OAC: UpdatePositions
+[DIAG 00071 F729 T15.545]   OAC: PathContinue (3 steps left)
+[DIAG 00072 F729 T15.545]   OAC: PathStep (8,9)
+[DIAG 00073 F729 T15.545] ExecuteTurn START action=Move
+[DIAG 00074 F729 T15.545] ExecuteTurn: { action = Move, turnCount = 3 }
+[DIAG 00075 F729 T15.546]   pre-ProcessTurn | heap=19MB
+[DIAG 00076 F729 T15.546]   ProcessTurn done: 1 events, gameOver=False
+[DIAG 00077 F729 T15.546]     evt: MoveEvent
+[DIAG 00078 F729 T15.546]   post-ProcessTurn | heap=19MB
+[DIAG 00079 F729 T15.546]   -> TurnCompleted
+[DIAG 00080 F729 T15.546] voice_skip: { turn = 4, dungeon = True, schedulerNull = True, ribbonNull = False }
+[DIAG 00081 F729 T15.548]   <- TurnCompleted
+[DIAG 00082 F729 T15.548]   -> PlayTurn (gameOver=False)
+[DIAG 00083 F729 T15.548] TurnAnimator.PlayTurn: creating tween for 1 events
+[DIAG 00084 F729 T15.548] ExecuteTurn END
+[DIAG 00085 F734 T15.627] TurnAnimator: tween finished, firing AnimationComplete
+[DIAG 00086 F734 T15.628] OnAnimationComplete START
+[DIAG 00087 F734 T15.628] AnimationComplete: { phase = Animating }
+[DIAG 00088 F734 T15.628]   OAC: UpdatePositions
+[DIAG 00089 F734 T15.628]   OAC: PathContinue (2 steps left)
+[DIAG 00090 F734 T15.628]   OAC: PathStep (8,8)
+[DIAG 00091 F734 T15.628] ExecuteTurn START action=Move
+[DIAG 00092 F734 T15.628] ExecuteTurn: { action = Move, turnCount = 4 }
+[DIAG 00093 F734 T15.628]   pre-ProcessTurn | heap=19MB
+[DIAG 00094 F734 T15.629]   ProcessTurn done: 1 events, gameOver=False
+[DIAG 00095 F734 T15.629]     evt: MoveEvent
+[DIAG 00096 F734 T15.629]   post-ProcessTurn | heap=19MB
+[DIAG 00097 F734 T15.629]   -> TurnCompleted
+[DIAG 00098 F734 T15.629] voice_skip: { turn = 5, dungeon = True, schedulerNull = True, ribbonNull = False }
+[DIAG 00099 F734 T15.631]   <- TurnCompleted
+[DIAG 00100 F734 T15.631]   -> PlayTurn (gameOver=False)
+[DIAG 00101 F734 T15.631] TurnAnimator.PlayTurn: creating tween for 1 events
+[DIAG 00102 F734 T15.631] ExecuteTurn END
+[DIAG 00103 F739 T15.711] TurnAnimator: tween finished, firing AnimationComplete
+[DIAG 00104 F739 T15.711] OnAnimationComplete START
+[DIAG 00105 F739 T15.711] AnimationComplete: { phase = Animating }
+[DIAG 00106 F739 T15.712]   OAC: UpdatePositions
+[DIAG 00107 F739 T15.712]   OAC: PathContinue (1 steps left)
+[DIAG 00108 F739 T15.712]   OAC: PathStep (8,7)
+[DIAG 00109 F739 T15.712] ExecuteTurn START action=Move
+[DIAG 00110 F739 T15.712] ExecuteTurn: { action = Move, turnCount = 5 }
+[DIAG 00111 F739 T15.712]   pre-ProcessTurn | heap=19MB
+[DIAG 00112 F739 T15.713]   ProcessTurn done: 1 events, gameOver=False
+[DIAG 00113 F739 T15.713]     evt: MoveEvent
+[DIAG 00114 F739 T15.713]   post-ProcessTurn | heap=19MB
+[DIAG 00115 F739 T15.713]   -> TurnCompleted
+[DIAG 00116 F739 T15.713] voice_skip: { turn = 6, dungeon = True, schedulerNull = True, ribbonNull = False }
+[DIAG 00117 F739 T15.715]   <- TurnCompleted
+[DIAG 00118 F739 T15.715]   -> PlayTurn (gameOver=False)
+[DIAG 00119 F739 T15.716] TurnAnimator.PlayTurn: creating tween for 1 events
+[DIAG 00120 F739 T15.716] ExecuteTurn END
+[DIAG 00121 F744 T15.793] TurnAnimator: tween finished, firing AnimationComplete
+[DIAG 00122 F744 T15.794] OnAnimationComplete START
+[DIAG 00123 F744 T15.794] AnimationComplete: { phase = Animating }
+[DIAG 00124 F744 T15.794]   OAC: UpdatePositions
+[DIAG 00125 F744 T15.794]   OAC: PathComplete
+[DIAG 00126 F744 T15.794]   OAC: WaitingForInput
+[DIAG 00127 F780 T16.395] _UnhandledInput tap at (346, 235), phase=WaitingForInput
+[DIAG 00128 F780 T16.395] HandleTap MOVE_TO (7,4)
+[DIAG 00129 F780 T16.396] ExecuteTurn START action=Move
+[DIAG 00130 F780 T16.396] ExecuteTurn: { action = Move, turnCount = 6 }
+[DIAG 00131 F780 T16.396]   pre-ProcessTurn | heap=19MB
+[DIAG 00132 F780 T16.396]   ProcessTurn done: 1 events, gameOver=False
+[DIAG 00133 F780 T16.396]     evt: MoveEvent
+[DIAG 00134 F780 T16.396]   post-ProcessTurn | heap=19MB
+[DIAG 00135 F780 T16.396]   -> TurnCompleted
+[DIAG 00136 F780 T16.397] voice_skip: { turn = 7, dungeon = True, schedulerNull = True, ribbonNull = False }
+[DIAG 00137 F780 T16.399]   <- TurnCompleted
+[DIAG 00138 F780 T16.399]   -> PlayTurn (gameOver=False)
+[DIAG 00139 F780 T16.399] TurnAnimator.PlayTurn: creating tween for 1 events
+[DIAG 00140 F780 T16.400] ExecuteTurn END
+[DIAG 00141 F785 T16.477] TurnAnimator: tween finished, firing AnimationComplete
+[DIAG 00142 F785 T16.477] OnAnimationComplete START
+[DIAG 00143 F785 T16.477] AnimationComplete: { phase = Animating }
+[DIAG 00144 F785 T16.477]   OAC: UpdatePositions
+[DIAG 00145 F785 T16.477]   OAC: PathContinue (2 steps left)
+[DIAG 00146 F785 T16.478]   OAC: PathStep (7,5)
+[DIAG 00147 F785 T16.478] ExecuteTurn START action=Move
+[DIAG 00148 F785 T16.478] ExecuteTurn: { action = Move, turnCount = 7 }
+[DIAG 00149 F785 T16.478]   pre-ProcessTurn | heap=19MB
+[DIAG 00150 F785 T16.478]   ProcessTurn done: 1 events, gameOver=False
+[DIAG 00151 F785 T16.478]     evt: MoveEvent
+[DIAG 00152 F785 T16.479]   post-ProcessTurn | heap=19MB
+[DIAG 00153 F785 T16.479]   -> TurnCompleted
+[DIAG 00154 F785 T16.479] voice_skip: { turn = 8, dungeon = True, schedulerNull = True, ribbonNull = False }
+[DIAG 00155 F785 T16.481]   <- TurnCompleted
+[DIAG 00156 F785 T16.481]   -> PlayTurn (gameOver=False)
+[DIAG 00157 F785 T16.481] TurnAnimator.PlayTurn: creating tween for 1 events
+[DIAG 00158 F785 T16.481] ExecuteTurn END
+[DIAG 00159 F790 T16.560] TurnAnimator: tween finished, firing AnimationComplete
+[DIAG 00160 F790 T16.560] OnAnimationComplete START
+[DIAG 00161 F790 T16.560] AnimationComplete: { phase = Animating }
+[DIAG 00162 F790 T16.561]   OAC: UpdatePositions
+[DIAG 00163 F790 T16.561]   OAC: PathContinue (1 steps left)
+[DIAG 00164 F790 T16.561]   OAC: PathStep (7,4)
+[DIAG 00165 F790 T16.561] ExecuteTurn START action=Move
+[DIAG 00166 F790 T16.561] ExecuteTurn: { action = Move, turnCount = 8 }
+[DIAG 00167 F790 T16.561]   pre-ProcessTurn | heap=19MB
+[DIAG 00168 F790 T16.562]   ProcessTurn done: 1 events, gameOver=False
+[DIAG 00169 F790 T16.562]     evt: MoveEvent
+[DIAG 00170 F790 T16.562]   post-ProcessTurn | heap=19MB
+[DIAG 00171 F790 T16.562]   -> TurnCompleted
+[DIAG 00172 F790 T16.562] voice_skip: { turn = 9, dungeon = True, schedulerNull = True, ribbonNull = False }
+[DIAG 00173 F790 T16.564]   <- TurnCompleted
+[DIAG 00174 F790 T16.564]   -> PlayTurn (gameOver=False)
+[DIAG 00175 F790 T16.564] TurnAnimator.PlayTurn: creating tween for 1 events
+[DIAG 00176 F790 T16.564] ExecuteTurn END

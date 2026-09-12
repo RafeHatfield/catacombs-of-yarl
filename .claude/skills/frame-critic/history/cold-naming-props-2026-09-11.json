@@ -1,0 +1,27 @@
+{
+  "frame": "tools/tier1_floors/evidence/combined.png",
+  "seats": 3,
+  "results": [
+    {
+      "key": "marker",
+      "card": "B-PROP-001 the boundary marker stone",
+      "verdict": "NAMED",
+      "phrase": "a tall stone pillar or column",
+      "why": "'stone pillar'"
+    },
+    {
+      "key": "barricade",
+      "card": "B-PROP-002 the barricade",
+      "verdict": "NAMED",
+      "phrase": "pile of crossed wooden planks or logs (broken wood)",
+      "why": "'logs'"
+    },
+    {
+      "key": "fire",
+      "card": "B-PROP-003 the orc fire",
+      "verdict": "NAMED",
+      "phrase": "round brazier or fire pit with burning flame",
+      "why": "'fire'"
+    }
+  ]
+}

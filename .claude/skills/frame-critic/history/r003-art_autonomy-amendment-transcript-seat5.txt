@@ -1,0 +1,42 @@
+RANK: 2 > 4 > 1 > 3
+
+BEST: 2
+BEST_WHY: The floor at (185–700, 450–911) is the strongest surface in the deck: the bricks vary in width and in edge-wear along a single course (e.g. the run at y≈520–560, x 250–560 has short, long and half-chipped blocks in sequence), and value shifts brick-to-brick within the lit zone so it reads as laid stone, not a stamped tile. The light falloff from the figure at (405, 490) is a smooth continuous gradient with no visible step, and the corridor at (500–560, 70–440) legitimately darkens with distance rather than being cut off. Wall tops (185–500, 395–420) carry a different surface from the wall face strip beneath (420–445), so the wall reads as a solid with thickness. Nothing in the frame is broken; its faults are all second-look faults.
+
+WORST: 3
+WORST_WHY: The top edge of the wall band at (185–500, 395–445) and the matching band at (560–750, 395–445) has regular black rectangular notches cut into it at roughly x = 200, 270, 320, 360, 430, 470 — in a straight-down view a wall top cannot have "teeth", so this reads as a tile-edge rendering error, not damage. The light mask is also degraded relative to 2: the lit region around the figure has a hard, blotchy boundary (visible at 240–300, 560–640 and along 480–560, 450–520) where the brightness steps rather than falls off, like a low-resolution mask scaled up. Same base frame as 2 with two things broken on top of it.
+
+FLAGGED: 3, 4
+
+SHIP: NONE
+
+FLIP 1:
+- The frame is uniformly lit edge to edge; there is no falloff from the orc at (215–235, 0–25). Add a radial light gradient centred on the figure so the corners at (0–60, 200–288) and (340–384, 200–288) sit two to three stops darker than the floor beside the figure.
+- The dirt floor (55–250, 0–200) repeats its speck pattern (the blue/red flecks) on a visible 32 px period. Break the repeat with at least three floor variants and remove the flecks from two of them.
+- The water at (250–340, 0–195) meets the dirt on a hard, perfectly straight vertical edge with no bank, shadow or wet margin. Add a one-tile shoreline (darker damp dirt, or a stone lip) and a shadow line under the eastern wall at x≈340.
+- Walls cast nothing onto the floor. Add a one-tile-deep shadow along the base of every wall that faces down or right (e.g. under (0–55, 0–200) onto x 55–70, and under the wall at y≈200 onto the floor row above it).
+- The grey block at (0–25, 10–45) is a lighter value than the wall bricks around it and reads as a mis-set tile; match its value to its neighbours.
+- The two chests at (65–95, 5–20) and (65–95, 45–70) and the two round barrels at (120–140, 195–215) and (165–185, 195–215) sit flat on the floor with no contact shadow; add a two-pixel offset shadow under each.
+- The wall-mounted torch at (25–40, 125–160) glows with nothing lit around it; either give it a small local light on the adjacent floor or remove the flame.
+
+FLIP 3:
+- Remove the black notches from the top edge of the wall bands at (185–500, 395–445) and (560–750, 395–445); the wall top must be a continuous surface as it is in the same position in image 2.
+- Replace the stepped light mask with a continuous gradient; the boundary at (240–300, 560–640) should have no visible edge at any zoom.
+- Then apply every item from FLIP 2.
+
+FLIP 4:
+- The brazier at (575–625, 525–580) is on fire and casts no light: the floor at (540–660, 490–620) is exactly as dark as it is in image 2. Either give it a warm local light on the surrounding two tiles or extinguish it.
+- The standing timber at (270–295, 535–625) is a flat pale rectangle with no grain, no end-grain, no shadow and a hard outline; it reads as a placeholder. Redraw it with the same value range and edge treatment as the dark crossed timbers at (200–285, 455–510), and give it a contact shadow on the floor.
+- The two crossed-timber props are drawn in two different palettes — dark brown with pale ends at (200–285, 455–510), light tan throughout at (395–480, 590–630). Pick one wood treatment.
+- No prop casts a shadow onto the floor; add a short offset shadow under each, consistent with the figure's light direction.
+- Then apply every item from FLIP 2.
+
+FLIP 2:
+- The figure at (390–430, 465–515) is drawn at roughly twice the pixel size of the floor beneath it; re-render the sprite at the tile's pixel density or downsample the environment to match.
+- The crack lines (e.g. the run from (250, 500) to (340, 620), and the arc from (560, 720) to (750, 600)) are single-width dark strokes that cross mortar joints without deflecting; cracks in laid stone follow or break at joints. Redraw them to step along joints, and vary their width.
+- Wall top (185–500, 395–420) and corridor floor (505–560, 200–440) sit at the same value and carry the same mottle; in the dim you cannot tell surface from wall. Drop the wall-top value or give the corridor floor a legible brick course.
+- The brick patch at (490–660, 480–560) is laid at a visibly larger block scale than the courses to its left and below; either make that a deliberate paved threshold with an edge stone, or match the course height.
+- The same grey speckled mottle sits at the same frequency on floor, wall top and wall face, which reads as a noise overlay rather than material; remove it from the wall face and vary its density across the floor so it clusters at wall bases and in corners.
+- The dark square at (310–380, 650–700) has no readable identity — pit, hatch, drain or missing tile. Give it a rim, a lid, or a depth shadow so it reads as something.
+
+Model: Claude Opus 5 (1M context)

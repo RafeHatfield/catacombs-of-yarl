@@ -1,0 +1,53 @@
+2, 3 and 4 are the same environment art under three different lighting passes — I verified this by differencing: 2 and 3 differ only inside a blob bounded by (259,379)–(545,631), and 2 is *strictly brighter* than 3 everywhere in it (signed diff min 0.0, max +39). So 2 is 3 with an additional light layer painted on. 4 is a separate, wider pass that also relights the wall runs and the corridor.
+
+RANK: 4 > 3 > 2 > 1
+
+BEST: 4
+
+BEST_WHY: The lighting pass holds the masonry together instead of erasing it. In the floor at (300–380, 505–545) the mean level is 184 with a joint signal of 7.6 — against 2's mean 217 / signal 6.4 and 3's mean 192 / signal 5.1. That means 4 puts the light pool *under* the stone rather than over it: you can still count individual flagstones through the brightest part of the pool, and each stone holds its own face value. Second, the horizontal wall run at y 385–450 is legible as construction — it has separate block courses with a distinct top course, and short dark verticals along y≈388–400 that read as driven pins in the timber; in 2 and 3 that same run is an undifferentiated brown gradient. Third, the floor recess at (310–378, 642–712) is a clean grid-aligned rectangle with a hard dark top lip at y=642 and a left jamb, so it reads as a hole cut into the floor. Fourth, the sprite has been graded into the ambient — tunic gone rust, shield gone tan — so it sits in the light instead of on top of it.
+
+WORST: 1
+
+WORST_WHY: The two barrels at (113–150, 186–220) and (161–198, 186–220) are the same block pasted twice at exactly 48px offset — 57.5% of pixels are bit-identical, including the notch on the rim highlight. The dirt underneath them repeats on the same 48px period across the whole field (24–248, 0–240): correlation at period 48 is 3.3, against an overall texture deviation of 9.7. Every terrain boundary is an untreated 1px cut: the water at (248–360, 0–192) ends in a perfectly straight horizontal line at y=192 against dirt with no bank, no wet margin, no transition tile, and the dirt/stone edges at y=240, x=24 and x=248 are the same. The grey floor band at y 240–288 is one tile repeated with identical speckle and a uniform-width, uniform-value joint. And there is no lighting at all — the frame is at full even brightness corner to corner, so nothing in it has a top surface as distinct from a side.
+
+FLAGGED: 1, 2, 3
+
+SHIP: NONE
+
+FLIP 4:
+- The figure at (378–440, 455–515) carries a sword and a round shield and nothing that emits, yet it is the origin of the frame's only light. Put a lamp in the off-hand, or move the pool's centroid onto a bracket lamp placed in frame.
+- The far end of the vertical corridor at (500–570, 200–350) sits at a cold blue-grey with no source anywhere in frame. Either place a source there or bring that band onto the same neutral-warm ramp as the rest of the unlit floor.
+- The wall runs at y 380–450 and the floor at y 460–600 use the same running-bond block pattern at the same scale and are separated only by value; when the lamp is off them they merge. Give the wall top course a different width or a distinct cap.
+- The stone joints are soft 2–3px anti-aliased gradients while the sprite outline is a hard 1px line — two rendering resolutions in one frame. Harden the joints inside the lit radius to a 1px cut.
+- The floor is running-bond brick — a wall bond used as paving. Re-lay (180–750, 460–900) as irregular flagstone or ashlar so it stops reading as a brick wall rotated flat.
+- Nothing in frame shows repair. The pin ticks at y≈388–400 are the only candidate and they are ambiguous. Add explicit rope wraps, pin heads with cast shadow, and salvaged timber spanning a failed section — the corridor mouth at (500–570, 440–460) is the obvious place.
+
+FLIP 3:
+- The joints in the pool at (300–580, 520–580) read salmon-pink against the stone faces; the faces are neutral and the mortar is not. Neutralise the joint hue to the same ramp as the stone.
+- Structure loss in the pool: at (300–380, 505–545) the joint signal is 5.1 at mean 192 — 2.6% relative contrast, against 4.1% in 4. Restore joint contrast inside the lit radius rather than lifting the whole area.
+- Axis-aligned bright rectangles at (500–560, 440–520) cut across the masonry joints and correspond to no stone in the base art. Remove them, or snap them to actual block edges.
+- The wall run at y 380–450 is a brown blur with no legible courses and no pin verticals. Re-cut it as in 4.
+- The floor object at (283–378, 640–712) is a broken L-shaped dark smear with a stray lighter square notch at (288–298, 650–662). It is off-grid and reads as a stain. Replace with the clean grid-aligned recess and top lip.
+- Plus every item in FLIP 4 — the missing light source, the unsourced blue corridor, wall/floor separation, joint hardness, the brick-as-paving, and the absent repair vocabulary all carry over unchanged.
+
+FLIP 2:
+- Everything in FLIP 3, all of it present here.
+- The added light layer pushes the floor at (300–380, 505–545) to mean 217, 33 levels above the same stones in 4, and the stone faces flatten toward a single cream value. Pull the pool's peak down.
+- The falloff at (260–380, 515–605) is dithered with 45° diagonal hatch lines that run across stone faces and joints alike, ignoring the pixel grid and the masonry both. Replace with an ordered dither on the grid, or a clean ramp.
+- Alternating lit/unlit squares at the pool edge around (440–500, 490–560) — a visible checkerboard where the falloff is being resolved per-tile on one axis and smoothly on the other. Pick one granularity.
+- The added brightness is applied to the floor and not to the character: the sprite at (378–440, 455–515) is untouched by the layer, so it sits as a hard-edged cutout on a brightened field. Grade the sprite with the same light.
+
+FLIP 1:
+- Redraw one of the two barrels at (113–150 / 161–198, 186–220). At minimum vary the rim ellipse, the stave spacing and the ground contact so they are not the same 48px block twice.
+- Break the 48px dirt repeat across (24–248, 0–240) with hand-placed variation, or overlay a larger non-tiling pass.
+- Add an edge treatment where water meets dirt at y=192, x 248–360: a bank, a darker wet margin, a broken shoreline. As it stands the water is a rectangle stamped over the dirt.
+- Add transition tiles at the dirt/stone boundaries at y=240, x=24 and x=248 — currently the same untreated straight cuts.
+- Vary the grey floor at y 240–288: joint depth and speckle are identical tile to tile, so the run reads as one stamp repeated. Differentiate at least joint depth along a single course.
+- Implement the light system. The frame is evenly lit corner to corner; add the falloff from the figure so surfaces acquire form and top planes separate from sides.
+- Fix grounding consistency: the figure at (215–250, 0–30) has an elliptical drop shadow, the barrels have none and meet the dirt on a hard bottom edge, and the objects at (72–108, 0–75) have a dark body but no contact shadow. Pick one contact rule and apply it to all three.
+- The algae shapes at (30–70, 145–175) and in the water are soft airbrushed blobs with no hard edge, in a frame where every other edge is hard. Re-render them with the same edge treatment as the tiles.
+- The ladder at (28–40, 118–148) runs down the dark band and terminates on bare dirt with no landing or footing. Give it a bottom, or remove it.
+
+The thing worth watching: 2, 3 and 4 prove the base environment art is good enough to carry the fiction — 4's wall run and floor recess are genuinely well made. What's failing is the lighting/grading pass on top, and in 2's case that pass is actively destroying the art underneath it. Fix the pass, not the tileset.
+
+*Model: Claude Opus 5 (1M context)*

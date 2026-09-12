@@ -101,6 +101,27 @@ def main():
             print("  %s  %-10s %-10s %s" % (label, expect or "(none)", got or "(none)",
                                             "ok" if good else "FAIL"))
 
+        # ── C7/C8. AN ITEM-CLOSING VERDICT CUTS THE SERIES, AND ONLY ONE DOES ────────────────
+        #
+        # "Progress-guard scope = the item under work" (Rafe, 2026-09-08). The cut test read
+        # `startswith("PASS")`, which silently excluded INSTALL-LATEST — the gate-opening state
+        # polish rounds actually reach. C7 is that fix; C8 is the line it must not cross, because
+        # a cut that fired on any verdict would delete the guard rather than scope it.
+        same = [verdict(1, 0.5, 8, sig="a"), verdict(2, 0.5, 8, sig="a")]
+        got = run(tmp, same)
+        good = got == "no-change"
+        ok &= good
+        print("  C8  two FAILs on the same picture          %-10s %-10s %s"
+              % ("no-change", got or "(none)", "ok" if good else "FAIL"))
+
+        closed = [dict(same[0]), dict(same[1])]
+        closed[1]["verdict"] = "INSTALL-LATEST"
+        got = run(tmp, closed)
+        good = got is None
+        ok &= good
+        print("  C7  the second one INSTALL-LATEST          %-10s %-10s %s"
+              % ("(none)", got or "(none)", "ok" if good else "FAIL"))
+
         # C6 is C5 with the unbeatable round CLEARED for stall — it must stop holding the record.
         gp = os.path.join(tmp, "gate.json")
         json.dump({"rulings": []}, open(gp, "w"))

@@ -1,0 +1,89 @@
+Read all four. Here's the verdict.
+
+**RANK:** 1 > 4 > 2 > 3
+
+**BEST:** 1
+
+**BEST_WHY:** It is the only frame in the deck that is internally consistent as a made object — one resolution, one palette, one outline convention, all the way through. Specifics:
+
+- The grey flagstone joints (the floor block at x 40–56, y 5–45, and the whole lower field below y 215) are a clean 1px line at a single value, and the hairline cracks that break across them — the branching crack around x 30–48, y 35–42 — are hand-placed, not stamped: they cross tile boundaries at irregular angles and don't repeat.
+- The two chests at x 63–97 (y 0–20 and y 48–68) have a resolved two-plane read: a lid with a 1px inner bevel and a rivet, and a separate darker front face carrying vertical slat divisions. The bevel value and the slat spacing are the same on both — one drawing convention, applied twice.
+- The orc at x 200–216, y 0–16 has a proper contact shadow: a dark irregular oval under the boots, not a drop shadow, sitting on the dirt it's standing on. It is the only figure in the entire deck that touches the ground.
+- The dark brick course at the bottom (y 265–288) is drawn at a different value and a different bond from the flagstone, so the wall reads as wall and not as floor with a filter on it.
+
+That's craft. It's also the weakest-content frame here, which tells you something about the rest.
+
+**WORST:** 3
+
+**WORST_WHY:** The props break the frame's own light model and its own palette, and one of them can't be identified at all.
+
+- The barricade at x 390–427, y 598–632 samples rgb(213,69,28), saturation **0.87**. Every environment sample in that frame — lit floor near the figure, lit floor to the right, the wall band — sits at saturation **0.51**. It is a hue and a chroma that exists nowhere else in the image.
+- Worse, its value is **0.84** while the floor slab directly under it is **0.69** and the floor two tiles up-light is **0.31**. An object further from the lamp than the floor is brighter than the floor. The prop isn't lit by the scene; it's just drawn bright and pasted down. This is the one thing 2/3/4 had going for them — a coherent falloff — and 3 breaks it with its own furniture.
+- The same object has no readable silhouette. At x 390–427 it's a red-orange smear with two small yellow lozenges in it. It is not timber, rope, hide or pin. The brief says orcs repair with rope, driven pins and salvaged timber; there is no lashing, no pin, no end-grain, no overlap where the two members cross.
+- The brazier at x 328–360, y 535–565 is a pale cream rounded rectangle with an orange smudge in its lower half and three yellow bars. It has no outline, no top/side separation, and — in a frame whose entire premise is one light source — it casts no light at all. The slab it sits on and the slab two tiles away are the same value.
+- The left barricade at x 261–297 is two flat bars in three values; the right one is a rendered blob. Two of the same object class in one room, drawn at incompatible fidelity.
+- Nothing in the frame casts a contact shadow — not the barricades, not the brazier, not the loose planks at x 515–545, not the figure.
+- The grey stub at x 362–375, y 585–632 is unidentifiable, and the soft dark smear trailing below it is not shadow-shaped.
+
+**FLAGGED:** 1, 2, 3, 4
+
+- **1** — the two barrels at x 115–144 and x 163–192 are *severed* by the dirt/stone seam at y 215. Their staves terminate on the tile boundary with no base, no rim, no shadow. And they are the same sprite twice, pixel-identical including the lid highlight.
+- **2** — a 45° streak field runs across the entire lit floor, continuous over slabs and mortar alike, ignoring every tile boundary and joint in the frame. High-passing the region x 210–520, y 455–600 shows it as a uniform-direction linear hatch laid over everything including the figure's tile. That is a filter pass over a finished image.
+- **3** — see above.
+- **4** — the darkness has square corners. At y=300 the luminance goes 10, 10, 10, 10 → **72** in a single pixel step at x=439. Everywhere else in the frame the light falls off smoothly. There is a hard-edged, axis-aligned black rectangle from roughly (0,245) to (439,700), and another hard step at x=60, y=647. Two incompatible darkness systems in one image, and the rectangular one is visible at a glance. This defect is in 2 and 3 as well.
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- Draw shoreline tiles for the water. Its boundary is currently a bare axis-aligned rectangle: left edge x=248, right edge x=343, bottom edge y=190, all dead straight. Add a darkened margin band and an irregular per-tile edge so the pool stops at a shore rather than at a fill boundary.
+- The water butts the grey flagstone at x=343 with no lip and no depth. Sink the water plane: darken the first tile of water in from every edge, and add a 2px shadowed step on the stone side.
+- Move the barrels off the dirt/stone seam or draw their bases. Right now both are clipped mid-body at y=215.
+- Give the barrels and chests contact shadows. The orc has one; nothing else does.
+- Vary the barrel pair — the two at x 115–144 and x 163–192 are identical copies. Rotate the lid highlight and change one stave's value on the second.
+- Author 3–4 variants of the dirt tile. The current single tile repeats visibly on a regular pitch across the whole brown field; the same dark-red squiggle recurs at fixed intervals in both axes.
+- Cut transition tiles for the dirt/stone boundary. The seam at x=56 and the seams around the flagstone patch at x 40–56, y 5–45 are razor-straight material butts with no crumble, no scatter, no interlock.
+- Resolve or remove the white scatter at x 208–237, y 112–132. It currently reads as unoutlined confetti with no silhouette and no shadow.
+- Remove or explain the teal specks in the dirt (x 137, y 8; x 125, y 15; x 160, y 66; x 183, y 78). They are the water's exact hue dropped on soil.
+- Pick one projection. The barrels and chests are drawn in 3/4 with visible side faces; the floor grid is strict orthographic top-down. Flatten the props to top-down, or tilt the floor.
+- Add the light model. The frame is uniformly lit corner to corner; the stated premise is a single carried lamp. Grade the far corners down and pool the value around the figure.
+
+**FLIP 4:**
+- Replace the hard-edged black masks with a falloff. The step at x=439, y=300 goes from luminance 10 to 72 in one pixel; the rectangle it bounds runs (0,245)–(439,700). Feather the occlusion boundary, or at minimum break the rectangle's straight edges against the architecture so the shadow follows walls instead of a bounding box.
+- Same for the seam at x=60, y=647, where the black steps from 2 to 16 on a horizontal line.
+- Draw structure into the wall surface. The band at x 130–470, y 60–135 is mottled brown noise with no courses, no joints, no blocks — a large area of the frame carrying zero information. Give it the same coursed masonry the frame already proves it can draw.
+- Reconcile the two wall treatments. The strip at y 0–125 is crisp cold blue-grey brick with regular joints; everything below y=140 is warm structureless blur. They meet on a hard horizontal line. Pick one and redraw the other to match.
+- Remove the unattached line artifacts. There's a 3px dark bar with a right-angle hook at x 297–328, y 480–534 that has no source object, no volume, no highlight and no shadow, terminating mid-slab. Others like it recur across the frame.
+- Resolve the slab interiors. High-passing x 210–520, y 455–600 shows most slabs contain only a soft undirected smudge while a handful (top-left, x 30–150) carry crisp chisel scoring. Bring the blurred slabs up to the scored ones' fidelity, or drop the scoring.
+- Fix the joint values. The mortar lines are pale salmon in the lit area and dark in the same run a few tiles over — pick a single relationship between joint and slab and hold it.
+- Match the figure to its environment. The sprite at x 385–430, y 460–505 is 1:1 hard-edged pixel art with a dark outline over a soft continuous-tone floor. Either resample the floor to the sprite's texel grid or lose the sprite's hard outline.
+- Grade the sprite into the light. It is at full brightness and full chroma (pure orange, mint, cream) sitting on a floor that is heavily value-graded. Tint it by the local light value.
+- Give the figure a contact shadow. It currently floats.
+- Give the figure the lamp. The brief's premise is that this figure carries the only light; the sprite holds a sword and a shield and nothing else, so the light emanates from nowhere.
+- Fill the pit at x 300–380, y 640–710. It's a soft brown blob with no edge, no wall thickness and no depth cue — it doesn't read as a hole, a hatch or a stain.
+
+**FLIP 2:**
+- Everything in FLIP 4 — 2 shares the same architecture, the same black rectangles, the same structureless wall band, the same pasted sprite.
+- Remove the 45° streak overlay across the lit floor. It runs continuously over slabs, mortar and the figure's tile alike at a single fixed angle, which no light or surface in a top-down orthographic frame can produce. If the intent is wear polish, redraw it per-slab, following each slab's own orientation and stopping at its joints.
+- Once the streaks come off, the room is empty. There is nothing in it between the corridor mouth at y=390 and the bottom of the lit pool at y=700 except floor. Populate it, or the frame reads as a texture test.
+
+**FLIP 3:**
+- Everything in FLIP 4.
+- Repalette the barricades. Bring rgb(213,69,28) at x 390–427 down to the frame's environment saturation of ~0.51, in the frame's ochre hue family.
+- Re-light the props. That barricade sits at value 0.84 on a slab at 0.69, further from the lamp than floor that reads 0.31. Multiply every prop by the local light value so distance darkens it.
+- Redraw the barricade at x 390–427 with a readable silhouette: two timbers crossing, one clearly over the other, with lashing or a driven pin at the intersection and visible end-grain. It is currently a smear.
+- Bring the left barricade at x 261–297 to the same fidelity, or bring the right one down to the left one's. They are the same object drawn two different ways in one room.
+- Redraw or delete the brazier at x 328–360, y 535–565. It has no outline, no top/side separation, and reads as neither container nor fire.
+- Decide whether that brazier is lit. If it is, it must contribute light to the surrounding slabs — currently the slab under it and the slab two tiles away are identical. If it isn't, remove the orange and the yellow bars from it.
+- Add contact shadows to every prop: both barricades, the brazier, the loose planks at x 515–545, the stub at x 362–375.
+- Identify or remove the grey stub at x 362–375, y 585–632, and remove the unshaped dark smear trailing below it.
+- Fix the plank highlights at x 515–545. The bright centre stripe on those planks is lit from the lower-right; the lamp is up and to the left of them.
+
+---
+
+The through-line: **1** is a real drawing with assembly faults — missing edge tiles, clipped props, reused sprites. Those are fixed by drawing more assets. **2/3/4** are a lit surface with no structure underneath it — the wall bands carry no masonry, the darkness has square corners, and a hard-edged sprite sits on top of a blurred plate. Those aren't fixed by adding props; **3** proves it, because adding props made it the worst frame in the deck.
+
+What to watch: 3 vs 4 differ by only 4.5% of pixels, and every one of those differing pixels is a prop. The prop pass is currently subtracting value from the environment pass. Fix the light-model discipline on props before adding any more of them.
+
+*Model: Claude Opus 5 (1M context)*

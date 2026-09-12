@@ -58,11 +58,34 @@ long, autonomous, critic-held runs — not checkpointed relay.**
    ruling-trigger fires (below). "Tried once or twice, then asked" is a malformed session.
 3. **Sessions are bounded by budget and width, never by rounds and never by check-ins**
    (§6 already says this about rounds; it now explicitly covers check-ins).
-4. **Ruling triggers — the ONLY reasons to return to a human mid-run:** (a) a landing decision
-   (Rafe's gate, §1); (b) an amendment to anything frozen (kill criteria, declared canvas,
-   surface, bar); (c) an instrument shown unable to fail (§4); (d) a precondition fail;
-   (e) budget exhausted below bar. Each return names its trigger. **A return that names no
-   trigger is checkpoint creep and is a process defect.**
+4. **Ruling triggers — the ONLY THREE reasons to return to a human mid-run. AMENDED (Rafe,
+   2026-09-08), and the amendment NARROWS them:**
+
+   **(a) A one-way door.** Canvas, projection (§3), palette lock (§5.1), rig ratification (the
+   Ruling 56 family), or **a LANDING at the surface gate**. These cannot be walked back, so they
+   are not the builder's to open.
+
+   **(b) The bible is silent or self-contradictory** on a question the round actually needs
+   answered — a genuine ruling gap, **quoted**. Not "this touches a ruled system"; that is an
+   answer, not a gap.
+
+   **(c) Broken judge** (the plant missed twice running) **or budget exhausted.**
+
+   Each return names its trigger. **A return that names no trigger is checkpoint creep and is a
+   process defect.**
+
+   ⚠ **WHAT THIS AMENDMENT REPLACED, AND WHY.** The previous list read: a landing decision; an
+   amendment to anything frozen; an instrument shown unable to fail; **a precondition fail**;
+   budget exhausted. Two of those were open doors in practice. *Precondition fail* was read as
+   covering every gate mechanic — a stale build id, a pin that no longer matched, a plant on the
+   wrong axis — and *amendment to anything frozen* was read as covering every flip that so much
+   as touched a ruled clause. Between them they turned an autonomous loop into a relay: the run
+   of 2026-09-07/08 stopped for a hash exclusion, for a value pin, and for a routing decision,
+   none of which needed a human and each of which cost a night.
+
+   **The asymmetry is the whole problem: escalation is free for the machine and expensive for
+   the human.** A loop that is uncertain will therefore drift toward asking, every time, unless
+   the cost is put back — which is what this amendment does by enumerating what asking is FOR.
 5. **Evidence-required is not approval-required.** Every round logs its evidence (diffs, counts,
    ledger, verbatim critic verdicts) exactly as before — in the report, read after the run, not
    as a toll-gate during it. Vetting by the design thread applies to landings and rulings, not
@@ -74,6 +97,45 @@ long, autonomous, critic-held runs — not checkpointed relay.**
    another blind batch** (bible §13.3: lessons cross, pixels don't). Builders get recipes with
    numbers; seats get the comparative frame. **Absolute verdicts in a vacuum are how ten
    independent judges ask for the same wrong thing.**
+
+### 1.1.5 What the builder decides, under the bible — RULED (Rafe, 2026-09-08)
+
+Everything not in §1.1.4's three triggers is the builder's, and the bible is what it decides
+with. These are the four that were being escalated and are now not.
+
+**1. A flip touching a ruled system is ruled BY that clause, by the builder.** Read the clause,
+apply what it says — refuse or do — and record the citation. *"This touches §X"* **is an
+answer.** §13.4.1 is unchanged and load-bearing here: a seat's request against a gate ruling is
+answered by **making the ruled thing read**, not by carrying the request upward. The seat is a
+proxy for the gate; forwarding its request to the gate it is a proxy for is a null operation that
+costs a night.
+
+**2. Gate mechanics are engineering, never escalations.** Build-id drift, pin staleness, plant
+axis mismatch, citation checks, guard scope, hash exclusions. Fix them under the law that already
+governs them — §13.12 derive-don't-copy, clear-by-added-artifact, measure-don't-assume, *a
+historical report never gates* — record what was done, and continue. **Rafe never hears about a
+hash.**
+
+⚠ The one thing that does not change: fixing a mechanic may never *weaken* it. A guard, a plant,
+a citation check and the panel are what make an unattended run safe, and §4's rule stands — no
+check's pass counts until it has demonstrated it can fail. Repairing a mechanic and loosening one
+are told apart the same way they always were: by whether the repaired check can still refuse.
+
+**3. The builder ROUTES flags.** Routing is no longer a human-only act. A flag goes to an issue
+with a **verified citation**, and `critic_gate` checks that citation resolves — a clause must
+exist in the bible or this document, an issue must resolve in the record. **The citation verifier
+is the laundering guard**, in place of the human signature it replaces: a routing nobody can look
+up is refused by the gate, not by anyone's memory. Rafe audits the routing table at the walk.
+
+**4. A PASS-INSTALL installs to the phone slot as `latest`**, stamped with its verdict and the
+rulings in the build. **Builds queue; Rafe walks whichever is current when he has time.** His walk
+verdict — *wowed* / *serviceable* / *no, plus flips* — is the only human input the loop needs, and
+a *no + flips* re-enters the loop as a flip list carrying the human gate's authority (§13.2), not
+as a seat's opinion.
+
+**And a STOP does not stop the run.** A single item's STOP writes its plain-language report and
+the cycle continues to the next item. Only a broken judge or an exhausted budget ends the cycle,
+because only those two mean the next item cannot be judged either.
 
 **Named failure this clause exists to prevent: CHECKPOINT CREEP** — the entropic drift of an
 autonomous loop toward human relay, observed independently on both projects. Standing test:
@@ -127,6 +189,31 @@ it was only ever the wrong colour. **A colour cull cannot control a craft questi
 axis a morgue entry's cull was about, and do not expect it to catch a seat asked about a different
 one. A lane whose only plant is off-axis will void honestly and repeatedly, and the answer is a
 plant, not another round.
+
+**AN AXIS IS THE CULL'S PERCEPT, NEVER ITS MECHANISM.** RULED (Rafe, 2026-09-08): *"Re-tag
+`replaced-tiles-lane.png` as `value` — my error; the cull's percept is material identity. Law: a
+plant's axis is the cull's percept, never its mechanism."* That frame was tagged `tonal` because
+it was **made** by restoring `POLISH_LANE_GAIN` to 1.9 — a tonal lever. What Rafe saw was that the
+stones had stopped being the same stones: a **material identity** read, which is `value`. Tagging
+by the knob that produced a frame files the plant under the builder's story about it, and a seat
+is never asked about the knob. Ask what the eye rejected, and tag that.
+
+**A SEAT VOIDED BY A MIS-TAGGED PLANT IS RE-DRAWN, NOT THE ROUND.** RULED (Rafe, 2026-09-08):
+*"its miss is a deck-config fault, not a seat or build fault… Law: a seat voided by a mis-tagged
+plant is re-drawn, not the round; a correct plant missed still voids. Record by added artifact."*
+The distinction is whose fault the miss is. A seat that misses a plant **correctly tagged for the
+axis it was asked about** is soft, and softness voids — unchanged, and this must never be softened,
+because it is the only control the mechanism has. A seat handed a plant that could not test the
+question it was set is not being judged at all, and re-running two innocent seats over it throws
+away evidence and costs a build the panel already carries.
+
+**The re-draw is bounded, and each bound is load-bearing.** The frame's bytes are frozen and the
+run refuses if its sha has moved; the other seats are carried unchanged and are never re-parsed;
+nothing is re-captured; the re-drawn ballot is written to its own `-seat{N}-redraw.txt` so the
+original is never overwritten (it was, once, and was unrecoverable); and an existing re-drawn
+ballot is REUSED rather than re-rolled, checked **before** the seat is spent. Recorded by an added
+artifact — `SEAT-REDRAWN.json`, beside `PARK-CLEARED.json` — on the same principle as the guards:
+evidence is added, never deleted.
 
 **The plant is a picture, not a build.** A frame Rafe personally culled at the device gate, kept
 as bytes in `morgue/` with his words and the commit that produced it, hash-checked before every
@@ -325,6 +412,54 @@ Not discounted — void. A soft critic's findings are worse than no findings, be
 be acted on.
 
 **An instrument that cannot be made to fail is decorative and must be labelled so or deleted.**
+
+### 4.0a Two laws about what may serve as a PLANT — LAW (Rafe, 2026-09-11)
+
+Both were paid for by one round, in which a newly seeded plant voided a five-seat panel and then
+turned out not to be a plant at all.
+
+**A CULL MADE BY THE DEVICE GATE IS NOT AUTOMATICALLY USABLE AS A SEAT CONTROL.**
+
+`crushed-midband.png` was the 2026-08-27 device FAIL — Rafe's *"looks like crap"*, the mid-band
+hollowed out, the frame whose verdict produced two of this bible's laws. Seeded as a tonal plant
+it was dealt to two seats and **missed by both**. Put in the BUILD slot by the plant self-test and
+shown to three fresh seats, it was ranked **first, first and second of four**, above the approved
+reference, flagged by nobody, returning INSTALL-LATEST at *rank 1 of 4, score 1.00, NEW BEST*.
+
+It is not a weak plant. **It is a frame blind seats prefer** — and the reason is the law that
+frame itself created. §3's status trail, written the day it was culled: *"two seats ranked this
+above the bar; the device says otherwise; §13.2 vindicated again."* Five more seats have now
+agreed with those two.
+
+**What the phone catches is, by construction, the class of thing a still and a seat do not.**
+That is why the phone is the gate. Planting such a frame asks the judging layer to catch the one
+defect it has been *proven blind to*, and a control nobody can catch does not measure the judge —
+it voids rounds and stops the line over a judge that was working.
+
+> A frame is eligible as a plant only if a blind seat can be expected to see what is wrong with
+> it. A device-gate cull qualifies only when its defect is also visible in the still.
+
+**PLANTS ARE CAPTURED IN THE DECK'S OWN SCENE, AT THE RATIFIED RIG.**
+
+The same round measured the second reason. The two plants that worked — caught by every seat that
+drew them — are both `tier1_combined_review` at the ratified rig (radius 6.0 / ambient 1.50), the
+deck's own room and light. The one that failed is `tier1_wall_review` at the superseded rig
+(5.0 / 0.70), so it differed from the deck on **scene AND rig AND tone at once**, and a seat
+cannot tell which of the three it is being asked about.
+
+This generalises §4.2's rule about the right image for the wrong reason: **a control must differ
+from the deck on the axis under test and as little else as possible.** Every extra axis it varies
+on is another way for a seat to be right about the wrong thing.
+
+⚠ **The risk was written into that plant's own eligibility note when it was seeded** — *"that is
+the defect, not a confound"* — and the measurement contradicted it. The wrong prediction is kept
+in the morgue entry beside the correction, because a forecast that failed is worth more on the
+record than a tidy file.
+
+**Consequence, and it is an open gap rather than a blocker (Rafe, 2026-09-11):** the DARK side of
+the tonal axis has no plant. It is filled only by a future Rafe-culled, **seat-visible** frame
+captured in the combined scene at the ratified rig. **No manufactured plants** — a plant is a
+frame somebody rejected, never one built to be rejected.
 
 ### 4.1 A lever is proven on its axis, not on the diff — LAW
 
@@ -649,6 +784,20 @@ conditions, which supplies parts, which camera parameters are spent, and why the
 images rather than parameters. One home, cited from both documents.
 
 ---
+
+*v0.10 — 2026-09-08. **§1.1.4 narrowed to three triggers; new §1.1.5.** The old list read
+*landing; amendment to anything frozen; an instrument shown unable to fail; a precondition fail;
+budget*, and two of those were open doors: *precondition fail* was read as every gate mechanic and
+*amendment to anything frozen* as every flip touching a ruled clause. Between them one run stopped
+for a hash exclusion, a value pin and a routing decision. The loop now returns for **a one-way
+door**, **a genuine ruling gap quoted from the bible's silence or self-contradiction**, or **a
+broken judge / exhausted budget** — nothing else. §1.1.5 states the other side: a flip touching a
+ruled system is ruled BY the clause, gate mechanics are engineering, and a STOP does not stop the
+run. Routing moved to the builder **by verified citation** — `critic_gate` refuses a `ROUTED`
+whose issue or clause does not resolve in the record, which is a stronger guard than the signature
+it replaces, and `CLOSED`/`PARKED` still need Rafe's words. **§1.2.1 gains the two plant laws**
+above: an axis is the cull's percept and never its mechanism, and a seat voided by a mis-tagged
+plant is re-drawn while a correct plant missed still voids.*
 
 *v0.9 — 2026-09-03. **New §4.3: the gate verdict outranks the instrument bar.** Ruled at the
 floor's close. A positive control that can only be cleared by restoring a lever the eye culled is
