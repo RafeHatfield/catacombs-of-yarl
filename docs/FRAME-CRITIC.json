@@ -24,7 +24,9 @@
     "cmd": [
       "tools/tier1_floors/capture_combined.sh",
       "combined",
-      "1"
+      "1",
+      "--scene-spec",
+      "src/Presentation/assets/tier0_harness/scenes/tier1_props_review.json"
     ],
     "frame": "tools/tier1_floors/evidence/combined.png",
     "log": "tools/tier1_floors/evidence/combined.log"
@@ -167,15 +169,12 @@
     "approach station put the route's lit run off to one side. A capture composed around the",
     "PLAYER is not composed around the ROUTE'S VISIBLE PORTION once the lamp is carried."
   ],
-  "axis": "tonal",
+  "axis": "construction",
   "_axis": [
     "WHICH QUESTION THIS ROUND ASKS, and therefore which plant the deck draws.",
     "",
-    "RULED BY THE ITEM (2026-09-07, polish list item C): back to 'tonal'. The change under test is",
-    "#183's hero light response — how much of the lamp's top end the sprite receives — which is a",
-    "value question, and blown-highlight is the morgue's tonal cull.",
-    "",
-    "Item B ran on 'construction' for the face-placement fix. Move it when the question moves."
+    "RULED BY THE ITEM (2026-09-12, §3.2): 'construction'. The change under test is the props re-authored at the ruled object projection — does each object read as a thing standing in space, built and held — which is a construction question; cement-cap is the morgue's construction cull for the combined surface.",
+    "The scene is tier1_props_review, passed through capture_combined.sh's trailing args, because the item is the props and the combined review scene places none."
   ],
   "item_exit": {
     "_what": [
@@ -189,10 +188,10 @@
       "Declared here per item, recorded into the verdict, re-checked at the gate. The gate",
       "refuses a `met` with no measurement behind it."
     ],
-    "item": "§12.2 — the three props re-authored at READABILITY SCALE, after the walk failed them on identifiability",
-    "claim": "a prop nobody can name has failed §12 regardless of its craft, and the lever that reaches it is SIZE: a prop fills most of its cell and a large object spans 1x2 or 2x2. Real proportions preserved, colouring frozen in kind.",
-    "measured": "THE COLD-NAMING TEST PASSES, and it is calibrated against the frame the human gate rejected. Three blind seats, shown the delivered frame, told nothing, asked to name every placed object. ALL THREE PROPS NAMED: marker 'tall narrow stone slab or pillar' / 'a tall stone pillar or column' / 'a tall upright stone slab or pillar'; barricade 'crossed wooden planks or logs' / 'a bundle of wooden planks tied together with rope'; fire 'brazier or fire pit', all three. On the previous build the same test returns MISS for the marker (offered: a bottle or vial, a lantern or candle, an orange chest or crate), MISS for the barricade ('sticks', the card's own role_reject) and NAMED for the fire — which is Rafe's 'small, unrecognizable except the fire' reproduced by instrument (§13.5). SIZE: the marker's content was 10x15 px in a 32px cell and is now a 1x2 footprint taller than the character; the barricades are 2x1. LIT AT THE WORST FOOTPRINT CELL, not the anchor: 74.16 / 74.45 / 76.33 / 47.95 against §13.8's 36.7. All five legibility points pass, including the one moved off a barricade it had been standing on in every previous gated build.",
-    "instrument": ".claude/skills/frame-critic/cold_naming.py (calibrated against evidence/props_pre_1212.png, §13.5); tools/tier2_props/verify_props.py reporting the worst cell of each footprint; 41 tests in CorridorReviewSceneBuilderTests including a gate over every shipped scene",
+    "item": "§3.2 — the marker, the barricade family and the fire re-authored at the RULED object projection (cabinet oblique, right, ½; the fire under the round exception)",
+    "claim": "every object stands in space the same way, at the projection Rafe ruled on device, and still names itself at 1× (§12). Structure authored as a projected model; generation supplies surface; nothing in the scene shows the old three-plane-left marker.",
+    "measured": "PROJECTION HOLD (silhouette IoU of the landed generation against its projected template): marker 1.000, barricade_a 0.993, barricade_b 0.999, fire 0.997 — every object carries the ruled geometry, and the templates are the same function that drew the walked candidate. COLD NAMING (three blind seats, told nothing): fire NAMED by all three ('fire pit / brazier'); barricade NAMED by all three ('planks', 'broken bench/bed frame' — the card's own arrangement grammar); marker NAMED by ONE of three ('a tall wooden pillar / pedestal (stone-coloured column)') and read as 'a tall wooden plank / upright board' by the other two. PASS under the instrument's rule, and reported at its margin: the lamp warms pale grey toward wood, which is #204's ladder problem arriving at naming. Two earlier re-authors of the marker (a banded box; a narrower banded box) were read as 'a wooden crate or barrel' by three of three and were not landed — the taper and a single low lashing are what moved it. LIT AT THE WORST FOOTPRINT CELL: 68.32 / 72.33 / 72.93 / 50.64 against §13.8's 36.7.",
+    "instrument": ".claude/skills/frame-critic/cold_naming.py (calibrated, §13.5); tools/tier2_props/projection_props.py land (IoU hold); tools/tier2_props/verify_props.py (worst cell)",
     "met": true
   }
 }

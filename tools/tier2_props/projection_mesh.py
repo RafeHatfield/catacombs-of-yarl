@@ -41,8 +41,12 @@ from PIL import Image, ImageDraw
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 KW = 0.31            # W's top:face proportion, from the props manifest (top_rows 10 of 32)
-DEPTH = {"OL": 1.0 / 3, "OR": 1.0 / 3, "Odeep": 0.5}
-SIDE = {"OL": -1.0, "OR": +1.0, "Odeep": +1.0}     # O-deep recedes RIGHT — stated in the doc
+DEPTH = {"OL": 1.0 / 3, "OR": 1.0 / 3, "Odeep": 0.5, "RULED": 0.5}
+SIDE = {"OL": -1.0, "OR": +1.0, "Odeep": +1.0, "RULED": +1.0}
+# RULED (Rafe, on device, 2026-09-12; bible §3.2): cabinet oblique, receding RIGHT, k = 1/2 per
+# screen axis — the geometry of the build walked as projOdeep. Every object in the game is
+# generated from a template rendered through this function. Round objects are the exception
+# (true-circle top, vertical body): see round_exception() below.
 A_C, A_CZ = 0.72, 0.85
 
 
@@ -94,6 +98,42 @@ def cylinder(cx, cd, r_of_z, z0, z1, n=32, rings=8, part="body"):
     return faces
 
 
+def null_vector(fn):
+    """The world direction fn collapses to a point — the view direction, pointing AWAY from the
+    viewer (larger d is further). Solved numerically so it holds for any projection function."""
+    o = np.array(fn((0.0, 0.0, 0.0)))
+    ex = np.array(fn((1.0, 0.0, 0.0))) - o
+    ed = np.array(fn((0.0, 1.0, 0.0))) - o
+    ez = np.array(fn((0.0, 0.0, 1.0))) - o
+    # find (a, b) with a*ex + b*ez = -ed  ->  v = (a, 1, b)
+    M = np.array([ex, ez]).T
+    a, b = np.linalg.lstsq(M, -ed, rcond=None)[0]
+    return np.array([a, 1.0, b])
+
+
+def rotbox(cx, cd, z0, length, width, height, angle_deg, part="body"):
+    """A box turned angle_deg in plan about (cx, cd), lying from z0 up. For beams."""
+    a = math.radians(angle_deg)
+    ca, sa = math.cos(a), math.sin(a)
+    out = []
+    for pts, kind, prt in box(-length / 2, length / 2, -width / 2, width / 2, z0, z0 + height, part):
+        rp = [(cx + x * ca - d * sa, cd + x * sa + d * ca, z) for x, d, z in pts]
+        out.append((rp, kind, prt))
+    return out
+
+
+def round_exception(cand):
+    """§3.2's round exception (Rafe, 2026-09-12): a cylinder has no front face to keep true and
+    oblique makes its ends oblong, so round objects keep a TRUE-CIRCLE top and a VERTICAL body.
+    The top is the plan view — a circle, not an ellipse — and the body is the front elevation
+    below it: (x, d, z) -> (x, -(z + d)). Nothing shears. `cand` is accepted for symmetry with
+    project() and ignored: the exception is the same under every candidate."""
+    def f(p):
+        x, d, z = p
+        return (x, -(z + d))
+    return f
+
+
 # ── the archetypes as models. Dimensions in art px at 2x; origin at the footprint's centre ───
 def model(name):
     if name == "stone":
@@ -107,7 +147,6 @@ def model(name):
         for bx in (-w / 2 + 10, w / 2 - 14):
             f += box(bx, bx + 4, -d / 2 - 1, -d / 2, 0, h, "iron")            # front strip
             f += box(bx, bx + 4, -d / 2, d / 2, h, h + 1, "iron")             # over the lid
-            f += box(bx, bx + 4, d / 2, d / 2 + 1, 0, h, "iron")              # back strip
         # lock plate on the front, proud
         f += box(-4, 4, -d / 2 - 1.5, -d / 2, h / 2 - 6, h / 2 + 4, "iron")
         # lid seam: a thin darker strip round the body at 60% height
@@ -128,6 +167,57 @@ def model(name):
         f = box(-w / 2, w / 2, -d / 2, d / 2, 6, h, "stone")          # the slab
         f += box(-w / 2 + 8, w / 2 - 8, -d / 2 + 6, d / 2 - 6, 0, 6, "stone_dark")   # the plinth
         return f
+    # ── the Boundary's props, re-authored under §3.2 (B-PROP-001/002/003) ──────────────────
+    if name == "marker":
+        # old dressed stone post; orc rope lashing and driven pins over it.
+        # THREE COLD SEATS TWICE CALLED A BANDED BOX 'a wooden crate or barrel'. The read that
+        # passed §12 last round was a bare pale post. So: a FRUSTUM (the post tapers 30 -> 22,
+        # which no crate does), ONE rope lashing low on the post rather than bands across its
+        # middle, pins kept, stone pale as the frozen colouring had it.
+        wb, wt, d, h = 30, 22, 20, 96
+        def frustum(part):
+            P = lambda x, dd, z: (x, dd, z)
+            b0, b1, t0, t1 = -wb / 2, wb / 2, -wt / 2, wt / 2
+            db, dt = d / 2, d / 2 * (wt / wb)
+            return [
+                ([P(t0, -dt, h), P(t1, -dt, h), P(t1, dt, h), P(t0, dt, h)], "top", part),
+                ([P(b0, -db, 0), P(b1, -db, 0), P(t1, -dt, h), P(t0, -dt, h)], "front", part),
+                ([P(b1, -db, 0), P(b1, db, 0), P(t1, dt, h), P(t1, -dt, h)], "right", part),
+                ([P(b0, db, 0), P(b0, -db, 0), P(t0, -dt, h), P(t0, db * (wt / wb), h)], "left", part),
+                ([P(b1, db, 0), P(b0, db, 0), P(t0, dt, h), P(t1, dt, h)], "back", part),
+            ]
+        f = frustum("stone_pale")
+        z0, z1 = 14, 17
+        wz = wb + (wt - wb) * (z0 / h)          # the post's width at the lashing's height
+        f += box(-wz / 2 - 1, wz / 2 + 1, -d / 2 - 1, -d / 2, z0, z1, "rope")       # front
+        f += box(wz / 2, wz / 2 + 1, -d / 2, d / 2 + 1, z0, z1, "rope")             # right
+        for px_, pz in ((-8, 15), (6, 15)):
+            f += box(px_, px_ + 3, -d / 2 - 2.5, -d / 2, pz - 1, pz + 3, "iron")
+        return f
+    if name == "barricade_a":
+        # crossed baulks: one lies ON the other (no interpenetration — #207's crossing), rope at
+        # the join. 'A heap of thick timber beams lying crossed over one another.'
+        L, W_, T = 104, 14, 12
+        f = rotbox(0, 0, 0, L, W_, T, 22, "wood")
+        f += rotbox(0, 0, T, L * 0.92, W_, T, -26, "wood_dark")
+        f += rotbox(0, 0, 2 * T, 18, W_ + 4, 3, -26, "rope")     # lashing over the top baulk
+        return f
+    if name == "barricade_b":
+        # a bound stack: two baulks side by side, a third across their top, rope at both ends
+        L, W_, T = 100, 14, 12
+        f = rotbox(0, -9, 0, L, W_, T, 4, "wood")
+        f += rotbox(0, 9, 0, L * 0.95, W_, T, -3, "wood_dark")
+        f += rotbox(0, 0, T, L * 0.9, W_, T, 1, "wood")
+        for x in (-32, 30):                                        # rope over the top baulk
+            f += rotbox(x, 0, 2 * T, 8, W_ + 4, 3, 1, "rope")
+        return f
+    if name == "fire_ring":
+        # the round exception: a ring of stones, true circle in plan, short vertical bodies.
+        # The interior (fuel and flame) is the LANDED sprite's, composited back — that read
+        # passed the gate and has no face to project.
+        r_out, r_in, hgt = 26, 19, 8
+        f = cylinder(0, 0, lambda z: r_out, 0, hgt, n=24, rings=1, part="stone_dark")
+        return f
     if name == "rack":
         w, d, h = 48, 22, 50
         t = 3
@@ -143,13 +233,14 @@ def model(name):
 
 # ── shading: a diagram convention ───────────────────────────────────────────────────────────
 BASE = {
-    "stone": (132, 128, 118), "stone_dark": (96, 92, 84),
+    "stone": (132, 128, 118), "stone_dark": (96, 92, 84), "stone_pale": (150, 144, 134),
     "wood": (128, 86, 44), "wood_dark": (84, 56, 30),
     "iron": (46, 44, 46), "seam": (40, 28, 16), "interior": (58, 38, 20),
+    "rope": (104, 82, 44),
 }
 KIND_K = {"top": 1.28, "front": 1.0, "left": 0.66, "right": 0.66, "back": 0.5, "bottom": 0.5}
-GREY = {"stone": 128, "stone_dark": 96, "wood": 128, "wood_dark": 84, "iron": 46, "seam": 40,
-        "interior": 58}
+GREY = {"stone": 128, "stone_dark": 96, "stone_pale": 150, "wood": 128, "wood_dark": 84, "iron": 46, "seam": 40,
+        "interior": 58, "rope": 118}
 
 
 def shade(part, kind, grey):
@@ -165,14 +256,17 @@ def shade(part, kind, grey):
     return (min(255, int(r * k)), min(255, int(g * k)), min(255, int(b * k)), 255)
 
 
-def render(cand, name, canvas, grey=False, outline=True, zoom=1.0):
+def render(cand, name, canvas, grey=False, outline=True, zoom=1.0, fn=None):
     """Project the model, cull back faces, paint back-to-front, return an RGBA template.
-    zoom 0.5 renders at the family's NATIVE 32px (model units are 2x art px)."""
+    zoom 0.5 renders at the family's NATIVE 32px (model units are 2x art px). fn overrides the
+    candidate's function (the round exception)."""
     W, H = int(canvas[0] * zoom), int(canvas[1] * zoom)
     faces = model(name)
     proj = []
+    fn = fn or (lambda p: project(cand, p))
+    view_dir = null_vector(fn)
     for pts, kind, part in faces:
-        sp = [tuple(v * zoom for v in project(cand, p)) for p in pts]
+        sp = [tuple(v * zoom for v in fn(p)) for p in pts]
         # winding on screen (y down): keep faces that wind the outward way
         area = 0.0
         for i in range(len(sp)):
@@ -181,11 +275,16 @@ def render(cand, name, canvas, grey=False, outline=True, zoom=1.0):
             area += x0 * y1 - x1 * y0
         if area >= 0:            # back-facing in this convention
             continue
-        # painter's key: further (larger d), lower (smaller z) first
+        # painter's key: distance along the VIEW DIRECTION — the projector's null vector (the
+        # world direction that maps to a single screen point). Larger = further. The old key
+        # (-d, then z) could not resolve two crossed beams; this one can, because the top beam's
+        # faces are nearer along the view no matter where the crossing falls.
         cen = np.mean(np.array(pts), axis=0)
-        key = -cen[1] * 1.0 + cen[2] * 0.001 - (0.5 if part in ("iron", "seam") else 0.0)
+        # decals (bands, pins, rope) sit ON a body by construction, so they always draw last: a
+        # centroid depth cannot say so, because a tall face's centroid sits above a low band.
+        key = float(np.dot(cen, view_dir)) - (1e3 if part in ("iron", "seam", "rope") else 0.0)
         proj.append((key, sp, kind, part))
-    proj.sort(key=lambda t: t[0])          # far (large d -> small key) first
+    proj.sort(key=lambda t: -t[0])         # far first
     # fit: anchor the footprint's front-bottom-centre near the canvas bottom, centred
     im = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     dr = ImageDraw.Draw(im)

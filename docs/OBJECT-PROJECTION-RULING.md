@@ -412,3 +412,36 @@ re-authored at the ruled projection with `projection_mesh.py` as the geometric a
 round one's 9850–9872 overwritten (superseded; their generations remain in `gen/projection/`
 and in git history) and extended to 9884 because five candidates need 35 cells. No props
 manifest lists them, no placer places them, no game scene names them.
+
+---
+
+# THE RULING (Rafe, on device, round two, 2026-09-12)
+
+**OBLIQUE, receding RIGHT, CABINET depth (½).** True isometric rejected; flat front+top
+rejected — *"if we're doing dynamic lighting it should count for something."* Round and
+cylindrical objects are the exception: true-circle top, vertical body (a cylinder has no front
+face to keep true; oblique makes it oblong). Characters unaffected. Written into the bible as
+**§3.2 — object law, no longer provisional** — with the rationale (cabinet = technical-drawing
+correct; right = the drafting / pixel-art norm). ⚠ The walked build is `projOdeep` (k = ½ per
+screen axis); the round's brief had the depth labels backwards and §3.2 records the walked
+geometry and the textbook discrepancy. Walls: continuous runs stay two-plane; wall ends,
+corners and pillars gain an east face at ½ depth — **#211**. Props not against walls (base
+placement, depth order under the top band) — **#212**, placement not projection.
+
+## After the ruling, same session
+
+- **Re-authored at the ruled projection:** marker (9800/9801), barricade_a (9810/9811),
+  barricade_b (9812/9813), fire (9820, round exception: ring re-rendered, landed interior kept).
+  `tools/tier2_props/projection_props.py`; templates from `projection_mesh.RULED`; hold
+  1.000 / 0.993 / 0.999 / 0.997.
+- **§12 cold naming:** two marker re-authors read as *"a wooden crate or barrel"* to three of
+  three seats (a banded box, then a narrower banded box) and were not landed; the frustum with
+  one low lashing passed — one of three named it *"a tall wooden pillar / pedestal
+  (stone-coloured column)"*, two read *"a tall wooden plank / upright board"*. A pass at the
+  margin: the lamp warms pale grey toward wood (#204).
+- **Frame critic, round 1 on lane `art/object-projection`: VOID, then STOP (broken-judge).**
+  The seat put the cement-cap plant at rank 2 above the build and the re-draw missed too. Its
+  findings are not read. `STALL-REPORT.md`, `CRITIC-VERDICT.json`,
+  `.claude/skills/frame-critic/history/r001-art_object-projection*`. **Nothing installed.**
+  Install-latest waits on the ruling the stall report asks for.
+- `projC` deleted from the handset.

@@ -1,9 +1,9 @@
 # Catacombs of Yarl / The Under-Warden — ART-BIBLE v0
 
-**Status: v0.13 — DRAFT. Two clauses have been derived from rendered assets on the device (§6.3)
+**Status: v0.14 — DRAFT. Two clauses have been derived from rendered assets on the device (§6.3)
 or ruled at the gate on them (§8.3); §6.5 and §3.1 are measured against the asset bar and ruled,
-awaiting the device gate; §3 remains under test and ratifies at that gate. Everything else in
-this document still has not been derived.**
+awaiting the device gate; §3 is ratified for walls and §3.2 RULED for objects. Everything else
+in this document still has not been derived.**
 
 This bible is written *before* pixel work, deliberately. It records decisions taken in
 conversation during Phase 1–3 of the art-direction rework (2026-08). It graduates to **v1**
@@ -152,8 +152,16 @@ been declared finalised does not reopen because a later tier raised the standard
 ## 3. Projection and grid — **RATIFIED 2026-09-09**
 
 - **Orthogonal square grid. Portrait orientation. Not isometric.**
-- **Volume lives in what stands up, not in the ground plane.** Objects and walls present
-  exactly two visible planes: a **front face** and a **top surface**. The floor stays flat.
+- **Volume lives in what stands up, not in the ground plane.** The floor stays flat. **Walls**
+  (continuous runs) present exactly two visible planes: a **front face** and a **top surface**.
+  **Objects** present three: front, top, and a **right side receding at 45°** — cabinet
+  oblique, **RULED for objects 2026-09-12, §3.2**. Round objects keep a true-circle top and a
+  vertical body (§3.2). Wall ends, corners and pillars follow the objects (§3.2, follow-up).
+
+⚠ **The two-plane clause below was drafted for objects and walls together and ratified for
+WALLS only** — the 2026-09-09 walk was of a scene with no objects in it (Rafe, 2026-09-11). The
+object half was provisional until §3.2 ruled it. Where the prose beneath says *"objects and
+walls"*, read *walls*; §3.2 is the object law.
 
 **Rationale.** Isometry is a way of showing volume, and its cost is paid entirely by the ground
 plane — diagonal grids waste screen corners, visible tile count drops, and portrait is the
@@ -362,6 +370,72 @@ value, joints at half-tile pitch. `tools/sighted_round/WALL-RECIPE.md` §2.3.
 ⚠ **Worth stating why this matters beyond walls: it is §8.3 in different clothes.** Coursing on
 a top plane is *material describing the wrong thing*, repeated in every cell. The tile was not
 badly drawn — it was a picture of the wrong surface, thirty times over.
+
+### 3.2 Object projection — RULED (Rafe, on device, 2026-09-12). Cabinet oblique, receding RIGHT, ½ depth.
+
+**Every object in the game stands in space the same way: a square-on front face, the top
+visible, and the RIGHT side receding up-right at 45° with the receding run at ½ of true
+depth.** Three planes. This is a §1.1.4 one-way door, walked and ruled on the handset across
+two rounds (`docs/OBJECT-PROJECTION-RULING.md`), and it is object law, not provisional.
+
+**The geometry, exactly, because a law that says "cabinet" without numbers is a label.** World
+axes: x right, d into the scene (north), z up. Screen (y down):
+
+    (x, d, z)  →  ( x + ½·d ,  −(z + ½·d) )
+
+The receding run is **½ of the depth on each screen axis** — the way a pixel artist steps a 45°
+edge — so the receding *edge* is 0.71·d long. This is the build Rafe walked (`projOdeep`: k=½,
+right). ⚠ Strict technical-drawing cabinet draws the receding *edge* at ½·d (a per-axis run of
+0.35·d), a visibly shallower side; the round's brief mislabelled the depths, and Rafe's ruling
+used the textbook name for the ½ build he walked. **The law records the walked geometry.** If
+the strict figure is ever wanted, that is a rebuild and a re-walk under §13.1, never a relabel.
+The authority for the projection is `tools/tier2_props/projection_mesh.py` — each object as a
+model, the projection as one function — and every re-authored object is generated from its
+projected template, because generation cannot be told a projection (§13.7 platform fact,
+2026-09-12: 16/16 Pro candidates returned the model's own view against a reference *and* an
+instruction).
+
+**Rejected, and why, in Rafe's words.** *True isometric* — reads wrong on this floor; the
+diamond fights the orthogonal grid (§3's own rationale, confirmed at the walk). *Flat front +
+top* (the walls' grammar on objects, candidate W) — *"if we're doing dynamic lighting it should
+count for something"*: a two-plane object has no surface for the carried lamp to turn, so the
+rig's one expressive act — form revealed by a moving light — is wasted on every prop. The
+walls can afford two planes because they are mass and run; an object has to be a thing.
+
+**The round exception.** A cylinder has no front face to keep true, and oblique makes its ends
+oblong — round one's honest archetype (the barrel, whose lid *"slides sideways and the body
+leans"* under oblique) showed the cheat rather than hiding it. So **round and cylindrical objects
+keep a true-circle top and a vertical body**: the ellipse of the lid states the camera, and
+nothing shears. Barrels, cauldrons, wells, round pillars, tree trunks if there are ever any.
+
+**Characters are unaffected.** Sprites are front-facing (§7.4: heraldic, planted) and stay so;
+this clause is for what stands *in* the room, not who walks through it.
+
+**Rationale, recorded so the ruling can be re-derived.** Cabinet is the technical-drawing
+convention for exactly this problem — a true front elevation with depth indicated, never a
+rotated view — and its ½ is the depth at which a side reads as a side without the front ceasing
+to be an elevation. Right is the drafting convention and the pixel-art norm (the receding axis
+runs up-right; the light side of a cabinet drawing is the front); no fixed light motivates it
+here (§6.3 — the lamp moves), so it is a whole-game constant chosen by convention and it stays
+chosen. Consistency is the actual law: one projection per scene was what made round two
+judgeable at all, and it is what makes a room read.
+
+**Walls, and what follows.** Continuous wall runs stay two-plane — §3 walls, ratified 2026-09-09,
+untouched by this ruling. But where a wall *ends* — a run's terminus, a corner, a free-standing
+pillar — it becomes an object in the room's terms and must agree with the objects beside it: a
+**right/east face at ½ depth**. Filed as a bounded wall follow-up rather than done here, because
+the wall family's composer is a different instrument (§13.7) and a wall end is one cell's worth
+of new plane, not a re-projection of the family.
+
+**Filed separately, not projection:** props that do not sit against walls — the depth order
+under the top band (which of prop and wall draws over which, and where a prop's base sits in
+the cell) is placement law, and the round-two walk raised it as such.
+
+**What re-authors under this clause.** The boundary marker stone, the three-variant barricade
+family and the orc fire — B-PROP-001/002/003 — are re-authored from projected templates at the
+ruled geometry (the fire is the round exception: ring true-circle, nothing sheared), and the
+§12 cold-naming walk resumes on projection-correct objects. Round two's review block
+(ids 9850–9884) stays a review block: nothing from the ruling instrument enters the prop set.
 
 ---
 
@@ -2607,6 +2681,15 @@ Not law, and not banked speculation either: each line below was paid for by a ru
 to the audit that paid. They are here rather than in the tooling notes because each one closes a
 question a future session would otherwise re-open with generations.
 
+- **Generation cannot be told a projection.** Pro, given a projection template as a labelled
+  reference AND the projection in the prompt, returned its own ¾ view receding right on
+  **16/16** chests against a left template, and **16/16** straight-on barrels. img2img holds an
+  authored projection at `init_image_strength` ≥ 150 and loses it by 90, and at 150 adds no
+  object to a bare box. So a projected object is **authored as geometry** (every band, hoop,
+  plate and shelf in the template — `tools/tier2_props/projection_mesh.py`) and generation
+  supplies surface. A forced palette from a LIT frame turns every material the same tan
+  (limestone → pine): the floor-mottle law, at props. `docs/OBJECT-PROJECTION-RULING.md`,
+  round two.
 - **Architecture and conditioning do not exist on the same surface.** BitForge conditions
   (12/12 propagation, §5.5) and produced architecture **0/100**; tiles-pro produces clean parts
   (0 mechanical culls in 114) and refuses style conditioning on connectable features. **Any
@@ -3051,6 +3134,17 @@ Recorded so they are not re-derived; deliberately not law.
 ---
 
 *Revision history:*
+
+- *v0.14 — 2026-09-12. **§3.2 — OBJECT PROJECTION RULED.** Cabinet oblique, receding RIGHT,
+  ½ depth (per-axis; the walked `projOdeep` build), on device across two rounds
+  (`docs/OBJECT-PROJECTION-RULING.md`). §3's head clause now separates walls (two planes,
+  ratified 2026-09-09) from objects (three), and records that the old joint wording was ratified
+  for walls only. True isometric and flat front+top rejected — *"if we're doing dynamic lighting
+  it should count for something."* Round objects excepted: true-circle top, vertical body.
+  Characters unaffected. Wall ends/corners/pillars gain an east face at ½ depth — bounded
+  follow-up. Props-not-against-walls filed as placement, not projection. New §13.7 platform
+  fact: generation cannot be told a projection; geometry is authored (`projection_mesh.py`),
+  generation supplies surface.*
 
 - *v0.13 — 2026-09-03. **The deflection theorem — the corner theorem's twin, recorded in §13.7.**
   Ruled a PLATFORM THEOREM at the gate: a treatment keyed to WORLD position cannot register

@@ -1,0 +1,74 @@
+{
+ "marker": {
+  "seed": 1337,
+  "hold": 1.0,
+  "ordered": [
+   {
+    "seed": 1337,
+    "hold": 1.0
+   },
+   {
+    "seed": 1338,
+    "hold": 1.0
+   },
+   {
+    "seed": 1339,
+    "hold": 1.0
+   }
+  ]
+ },
+ "barricade_a": {
+  "seed": 1338,
+  "hold": 0.9933,
+  "ordered": [
+   {
+    "seed": 1338,
+    "hold": 0.9933
+   },
+   {
+    "seed": 1337,
+    "hold": 0.9922
+   },
+   {
+    "seed": 1339,
+    "hold": 0.9922
+   }
+  ]
+ },
+ "barricade_b": {
+  "seed": 1337,
+  "hold": 0.999,
+  "ordered": [
+   {
+    "seed": 1337,
+    "hold": 0.999
+   },
+   {
+    "seed": 1339,
+    "hold": 0.9961
+   },
+   {
+    "seed": 1338,
+    "hold": 0.9932
+   }
+  ]
+ },
+ "fire": {
+  "seed": 1339,
+  "hold": 0.997,
+  "ordered": [
+   {
+    "seed": 1339,
+    "hold": 0.997
+   },
+   {
+    "seed": 1337,
+    "hold": 0.9956
+   },
+   {
+    "seed": 1338,
+    "hold": 0.9941
+   }
+  ]
+ }
+}
