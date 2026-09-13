@@ -1,0 +1,44 @@
+RANK: 3 > 2 > 4 > 1
+
+BEST: 3
+BEST_WHY: The floor in the lit zone around the figure (roughly x 200–560, y 450–700) is cut stone, not stamped stone: the block widths vary along each course (a half-block at x≈300,y≈515 next to a double at x≈430–520), the joints change depth and darkness from block to block, the scratch/tool-mark hatching inside each block runs at slightly different angles, and the light falloff is layered onto that — the blocks nearest the figure show the joints picked out as bright edges, the blocks two courses down at y≈620 show them as dark lines only. The lintel band at y≈425–450 has value separation from both the floor below and the rock mass above, so the room edge reads at a glance. It is the only frame where surface, joint, and light are all doing work at once.
+
+WORST: 1
+WORST_WHY: Everything in it is a stamp. The grey wall-top tiles (left column x 0–55, bottom band y 190–260) carry a single uniform 1px grid line with no variation in joint width, depth or value anywhere; the identical teal moss blotch appears at least four times (x≈35,y≈60; x≈20,y≈205; x≈355,y≈160; x≈130,y≈215 in the bottom band). The floor is one brown tile repeated with the same red-brown blotch pattern visible on every repeat. The two chest-over-crate stacks at top-left (x 62–97, y 0–85) are pixel-identical, as are the two barrels at y≈200. There is no light source in the frame at all — the wall face, the water and the far corners sit at the same value as the area at the figure's feet — and the vertical walls have no face while the horizontal wall at the bottom has a full brick face, so the projection is inconsistent with itself. It looks like an unmodified asset-pack tileset.
+
+FLAGGED: 1, 4
+
+SHIP: NONE
+
+FLIP 3:
+- The rock mass in the upper right (x 565–750, y 75–400) is filled with straight diagonal seams forming flat triangular facets — a low-poly/Voronoi look. Replace with hand-drawn irregular rock breaks; no straight seam longer than a block, no three seams meeting at a point.
+- The crack lines on the floor (the long one from x≈190,y≈480 to x≈530,y≈500, and the arc at x 570–750, y 560–720) are 1px anti-aliased curves at a finer resolution than the ~3px block art around them. Redraw them at the art's pixel size and give them the block-joint palette, not a vector-black.
+- The arc crack at the right is a smooth circular sweep; cracks don't do that. Break it into short straight segments with direction changes at joints.
+- The single olive/brown tile at x 315–380, y 640–690 is a different palette, lower contrast, and outlined darker than anything around it — reads as an unresolved placeholder. Either make it a legible object (grate, hatch, drain) with the same joint treatment as the floor, or remove it.
+- The lintel band at y≈425–450 hangs a row of dark rectangles at regular intervals under it; it reads as a picket fence. Vary spacing and length, or tie them to the block joints above so they read as driven pins.
+- The corridor at x 505–565 going north brightens to near-white at y≈350–430 although it is further from the light than the darker floor beside it; correct the falloff so the corridor is never brighter than a same-distance floor block.
+
+FLIP 2:
+- All of FLIP 3.
+- The brazier at x 570–620, y 525–575 is on fire and casts nothing: the blocks around it are the same value as those two tiles further out. Add a warm local falloff on the floor around it, and warm the near face of the plank pile and pillar.
+- The plank pile (x 380–500, y 590–640) and crate stack (x 190–300, y 475–520) are full-saturation orange with hard black outlines and no darkening with distance; the floor under them is already two stops down. Run the props through the same falloff as the floor and pull saturation to the scene's range.
+- The pillar (x 260–300, y 540–640) is drawn as a side elevation on a floor drawn from straight above; either give it a top-down footprint with a shadow, or commit the whole prop set to the elevation convention and match the crate stack to it.
+- The crate stack has no contact shadow; it floats. Add a one-block-wide shadow to its south and east edges.
+
+FLIP 4:
+- All of FLIP 3.
+- The orange upright at x 265–300, y 545–620 and the orange slab at x 395–490, y 595–630 are flat two-tone untextured boxes — blockout geometry. Replace them with finished sprites (grain, end-grain, wear, an outline that matches the floor's line weight) or remove them from the frame.
+- The chest (x 640–690, y 465–505), shelf (x 705–750, y 470–500) and barrel (x 585–615, y 590–630) are finished sprites at a different detail level from the boxes; once the boxes are replaced, match their outline weight and value range to those three.
+- The chest and barrel are fully lit while the floor at their feet is already in falloff; apply the floor's falloff to the props.
+
+FLIP 1:
+- Add a light source at the figure and darken with distance; the frame currently has one value everywhere.
+- Break the wall-top grid: vary joint width and depth per block, and per-block value by at least two steps, so the grey tiles at left (x 0–55) and bottom (y 190–260) stop reading as a single repeated square.
+- Draw at least four distinct moss/stain decals and stop placing the same one in four spots.
+- Give the brown floor three or four tile variants with different blotch placement so the repeat at every tile boundary disappears.
+- Either give every wall a face or none; currently the bottom wall (y 260–288) and the doorway (x 8–55, y 118–150) show a brick face while the vertical walls show none.
+- Replace the identical chest+crate stacks (x 62–97, y 0–85) and identical barrels (y≈200) with varied sprites, and give every prop the same drop shadow the figure has.
+- The water at x 250–330 is one flat scale texture with no edge or depth against the floor; darken its rim and give the floor a wet edge one pixel wide.
+- The white speckle at x≈220,y≈120 reads as noise, not bones; draw it as an object or remove it.
+
+Model: Claude Opus 5 (1M context).

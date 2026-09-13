@@ -1,0 +1,54 @@
+RANK: 3 > 2 > 4 > 1
+
+BEST: 3
+BEST_WHY: The flagstone floor around the figure (roughly x 185–750, y 450–911) is laid in a running bond with stone lengths that actually vary — a long stone at ~(420–520, 540) sits beside a half-stone at ~(520–560, 540) — and each stone carries its own sparse scratch hatching in a different direction, so no two adjacent stones read as the same stamp. The joints are a consistent 1-pixel-scale dark line that stays dark under full light near the figure, so the grid holds without being ruled. The wall face at the top of the room (y ~420–450) is a separate brick course, darker and smaller-moduled than the floor, so wall face and floor never share a value. The light falloff is smooth with no visible banding from the hot ellipse around the figure out to the black at the frame edges, and the corridor opening at x ~500–560 carries light upward with a believable gradient. With nothing else in the room, the surfaces carry it on their own.
+
+WORST: 1
+WORST_WHY: The green pool (x ~250–345, y 0–190) is a hard-edged rectangle butting directly onto the grey wall tiles on its right and the brown floor on its left with no bank, lip or transition of any kind — it reads as a green rectangle placed on top of the map, not water sitting in a floor. Its hex-cell fill is a uniform procedural pattern. The brown floor is a single tile repeated with the same red speck cluster visible at every tile boundary (compare the stones at ~(110, 40) and ~(110, 90)). The teal moss blotch on the wall tops is the identical sprite copied four times (~(20, 55), ~(20, 215), ~(360, 160), ~(370, 175)). The two crates at top-left (~(65–95, 5–40) and ~(65–95, 50–85)) are pixel-identical copies drawn in 3/4 elevation with front faces, as are the two barrels at ~(115–145, 195–215) and ~(160–190, 195–215). The wall tops are one flat light grey with hairline seams and nothing else on them. It is clean and internally consistent in pixel scale, but every surface says asset pack.
+
+FLAGGED: 1, 2, 4
+
+SHIP: NONE
+
+FLIP 1:
+- Give the pool an edge: a 2–4 px darker rim course or worn-stone lip where the green meets the grey wall tiles (x ~345) and the brown floor (x ~250), and a wet-dark band on the floor along its west edge.
+- Replace the single hex-cell water fill with a hand-placed surface: irregular dark patches, two or three highlight ripples, and cut the lily pads to one, placed off-centre.
+- Break the floor tile repeat: author at least four floor variants with different speck placement and rotate them, so the red cluster no longer lands at the same offset in every tile.
+- Draw two or three moss variants and stop mirroring the same one on the left wall and the right wall; vary scale and edge.
+- Make the two crates and the two barrels differ — one crate with a lid ajar or a broken slat, one barrel with a hoop missing — and offset one of each pair off the exact grid centre.
+- Put something on the wall tops: a value step between the top surface (light grey) and the wall face (dark brick) at the bottom of the frame is there, but the top surface itself needs joint depth variation and a worn edge along its inner face, not a flat fill with 1-px seams.
+- The lighter brick block at the very bottom (~(165–190, 268–278)) sits in the dark brick face with no purpose; either make it a legible feature (drain, step) or remove it.
+- Introduce a light model or at least a value gradient away from the orc; the frame currently has no depth cue at all.
+
+FLIP 2:
+- The brazier at ~(580–620, 530–565) is burning and casts nothing: the flagstones under and around it are at the same value as unlit floor two stones over. Give it a warm radial falloff of its own, or extinguish it.
+- The crate at ~(200–300, 480–515) is at full saturation and full brightness while sitting in half-lit floor. Run the props through the same light pass as the floor so their value drops with distance from the figure.
+- The pale standing slab at ~(265–295, 540–635) is near-white in a zone where the floor is mid-grey; bring its value down to the floor's and give it a cast shadow that agrees with the figure's light direction (currently the soft shadow falls to its right, away from a light that is up and to its right).
+- The 1-px anti-aliased crack line running from ~(300, 470) through ~(340, 580) down to ~(400, 780), plus its twin at the right edge (~(560, 690) to ~(740, 640)), is drawn at native resolution over stones pixelated at ~4 px. Redraw it at the stone's pixel scale with a stepped edge and a lighter chip line beside it, or remove it.
+- The wall mass either side of the north corridor (x ~440–500 and ~560–630, y ~135–420) is a soft cloud-noise fill; replace it with the same brick or rubble language as the wall face, darkened, or a flat wall-top value with a worn inner edge.
+- The lighter triangular facet in the wall mass at top-right (~(580–640, 340–430)) has a straight diagonal edge that reads as a lighting-mesh seam; remove it or make it a real cast shadow with a source.
+- The hard-edged pure-black rectangles at ~(125–440, 135–390) and ~(630–750, 135–390) sit inside soft-edged wall texture; either soften their boundary to match the falloff or give them a visible wall-top edge so they read as rooms beyond, not holes in the render.
+- The hero sprite at ~(390–430, 465–510) is a saturated cyan-and-orange cartoon at a coarser pixel scale and a different render style than everything under it; it reads as a placeholder from another kit. Repaint it in the environment's palette and pixel scale.
+- Keep the lashed timber at ~(380–500, 590–640) as is — it is the one prop on-tone and correctly lit.
+
+FLIP 3:
+- The 1-px anti-aliased crack line from ~(300, 470) through ~(340, 580) to ~(400, 780), and the second one at the right edge (~(560, 690) to ~(740, 640)), and the diagonal hairline across the wall mass at top-right (~(560, 330) to ~(750, 120)), are all drawn at native resolution over ~4 px pixel art; redraw them stepped at the stone's pixel scale or remove them.
+- Replace the cloud-noise fill in the wall mass beside the north corridor (x ~440–500 and ~560–630, y ~135–420) and along the top-left (x ~125–185, y 0–640) with a wall-top surface drawn in the same brick language as the wall face.
+- Remove the lighter triangular facet in the wall mass at ~(580–640, 340–430); its straight diagonal edge reads as a render seam.
+- Resolve the hard-edged black rectangles at ~(125–440, 135–390) and ~(630–750, 135–390): give them a wall-top edge or soften them into the falloff so they do not read as unrendered boxes.
+- The dark sunken rectangle at ~(310–380, 645–700) with a brick face below it is not legible as anything specific — pit, stair, trapdoor. Commit to one and draw it so it reads at a glance (treads, a rim, or a grate).
+- Repaint the hero sprite at ~(390–430, 465–510) in the environment's palette and pixel scale; it currently reads as a placeholder from a different asset set.
+- The top strip (y 0–70, x ~185–750) shows a brick wall face that is then cut by a hard black horizontal band at y ~70–135; clarify what that band is (floor of a room beyond, or wall top) so the stack of surfaces at the top of the frame reads.
+
+FLIP 4:
+- The bench at ~(395–490, 595–625) and the tall block at ~(265–300, 550–620) are the most saturated objects in the frame and sit at full brightness in half-lit floor; run all props through the same light pass as the floor.
+- The tall block at ~(265–300, 550–620) is drawn as a 3/4 elevation of a standing prism (top face plus a long front face) in a straight top-down scene; redraw it as a top-down object, or lay it down as a fallen slab.
+- The shelf unit at ~(700–750, 470–510) is a front elevation showing its shelves, which is a side view; either redraw as top-down or cut it.
+- The chest at ~(640–690, 465–505) is brighter than the barrel at ~(585–615, 590–630) despite being further from the light; fix the value ordering.
+- Same hairline crack lines as 2 and 3 (~(300, 470)→(400, 780); ~(560, 690)→(740, 640); ~(560, 330)→(750, 120)): redraw at the stone's pixel scale or remove.
+- Same cloud-noise wall mass beside the north corridor (x ~440–500 and ~560–630, y ~135–420): replace with a drawn wall-top surface.
+- Same triangular facet in the wall mass at ~(580–640, 340–430): remove.
+- Same hard-edged black rectangles at ~(125–440, 135–390) and ~(630–750, 135–390): resolve their edge.
+- Same hero sprite at ~(390–430, 465–510): repaint in the environment's palette and pixel scale.
+
+Model: Opus 5 (1M context)

@@ -27,5 +27,18 @@ public sealed record PlacedProp(
     // from directly overhead a thing standing on a wall top is nearer the camera than the top is.
     // A floor prop keeps sorting BELOW the wall in front of it, which is why this is a per-prop
     // fact and not a global z bump.
-    bool OnWallTop = false
+    bool OnWallTop = false,
+    // ── CAST SHADOWS (bible §6.3 receive-light; §12.1a occlusion) ──────────────────────────
+    // The occluder is shaped from the FOOTPRINT, never the sprite: "box" is the oblique base
+    // parallelogram of §3.2, "round" the plan circle of the round exception. Presentation reads
+    // it; nothing in the logic layer acts on it.
+    string Footprint = "box",
+    // A prop that EMITS. The orc fire is the game's one tended light (§5.4, B-PROP-003): the
+    // sprite receives and the engine emits — a painted glow is §6.3's outlawed rim by another
+    // name (#205). Null for every other prop.
+    PropLight? Light = null
 );
+
+/// <summary>A prop's own light: colour as hex, energy, reach in tiles. Values from the scene
+/// spec or the props manifest; PLACEHOLDER until Rafe rules them at the walk.</summary>
+public sealed record PropLight(string Color, float Energy, float RadiusTiles);

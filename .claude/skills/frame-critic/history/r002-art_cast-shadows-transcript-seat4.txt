@@ -1,0 +1,40 @@
+RANK: 2 > 3 > 1 > 4
+
+BEST: 2
+BEST_WHY: The lit room is the same pixels in 1, 2 and 3 (I diffed them: 2 and 3 differ by ≤2 levels of value in one patch; 1 differs only outside the light). What is well made in that shared room: the floor courses at (300–560, 500–600) mix long and short stones inside one course and the big crack from (275,540) to (530,600) actually splits individual stones rather than following mortar, so the floor reads as cut and then damaged, not stamped. The north wall band at y≈425–455 has short vertical timber marks at x≈300, 400, 700 that read as shoring driven into the wall top — the orcs' repairs, drawn without decoration. The brazier at (595,545) carries its own small falloff that overlaps the figure's light, so the floor between them at (470–580, 500–560) has a genuine two-source gradient. The timber bundle at (440,615) has rope lashing with a single highlight edge and no ornament. What puts 2 above 1: the unlit mass stays warm-neutral and near-black, which is what a single warm carried light should leave behind; 1 swaps in a blue cast with no source. 2 over 3 is arbitrary — they are the same frame to within noise.
+
+WORST: 4
+WORST_WHY: Everything is lit at one flat value from corner to corner — there is no falloff from the orc at (220,10), so the "only light" premise is simply absent. The brown floor is a single tile repeated: its rust-red cracks line up into a visible rectangular seam grid (verticals at roughly x≈195, 260, 320; horizontals at y≈65, 130, 195), which is the first thing the eye reads. The green pool at (250–345, 0–190) is a flat hex fill that stops on a hard rectangular edge with no bank, rim, shadow or wet edge — a placeholder rectangle. Loose cyan specks on the brown floor (≈(185,15), (60,150), (315,470) at 3× — i.e. (60,5), (20,50), (105,157) in-frame) are unidentifiable; they read as palette errors. The grey stone floor is one flat value with a 1-px uniform grout grid and a uniform speckle noise layer — a noise filter, not drawn wear.
+
+FLAGGED: 1, 4
+
+SHIP: NONE
+
+FLIP 2:
+- The figure sprite at (400,490) is drawn at ~2× the pixel size of the floor it stands on (its outlines are 2-px, the floor hatching is 1-px) and in a saturated cartoon palette; redraw it at the environment's pixel density and pull its saturation down to the crate/timber range.
+- The floor right of the brazier at (620–750, 470–560) is blown to near-white and its surface detail is pencil-scribble hatching; cap the light so stone value never exceeds the brazier's own highlight, and replace the scribbles with the same joint-and-chip language used at (300–560, 500–600).
+- The crate at (250,495), the stele at (280,590) and the timber bundle at (440,615) have no contact shadow and no cast shadow away from the figure's light; add a short hard contact shadow under each and a cast shadow on the far side from the figure.
+- The corridor walls at x=440 and x=500 (y 70–390) meet the floor with a hard 1-px cut and no wall face, while the room's north wall at y≈425–455 has a full face band; give the corridor walls the same face band.
+- The unlit rock mass at (180–440, 70–390) and (560–750, 70–390) is a Voronoi-style faceting with long straight seams (e.g. the triangle at (560–650, 300–390)); break the straight seams into the crack language of the lit floor or replace with plain near-black so it does not read as a generated texture.
+- The lighting is a smooth screen-space gradient over pixel art; either quantise it to a stepped falloff on the grid, or bake per-tile so the gradient does not smear across mortar lines.
+
+FLIP 3:
+- Identical to FLIP 2 — the frame is the same to within noise.
+
+FLIP 1:
+- Remove the blue cast in the unlit region: the only light source is warm, so the shadow must go to warm-neutral black, not navy.
+- The unlit mass at (150–400, 100–300) is soft cloud-noise blobs that ignore the grid and the geometry — a cloud filter; replace with either flat near-black or drawn rock with hard, pixel-aligned edges.
+- The light-region items from FLIP 2 all apply, unchanged: figure pixel density, blown floor right of the brazier, missing contact shadows, corridor wall faces, smooth gradient.
+
+FLIP 4:
+- Add a light falloff from the figure at (220,10) so the frame darkens with distance; at present nothing is darker than anything else.
+- Break the brown floor's tile seams: the rust cracks meet at the tile boundaries in straight lines; author at least four variants and cut the cracks so none terminates on a tile edge.
+- Give the pool at (250–345, 0–190) an edge: a darker rim course, a wet band on the surrounding floor, and a stepped falloff into the water; replace the uniform hex fill with a surface that varies across the pool.
+- Remove or identify the cyan specks on the brown floor; if they are debris, draw them as debris with an outline and shadow, otherwise delete them.
+- The grey floor's uniform 1-px grout and uniform speckle at (0–55, 0–260) and (0–384, 215–265) read as a noise filter; vary joint width and value per stone and hand-place wear instead of scattered dots.
+- The moss at (30,60), (30,210), (370,160) is a pasted teal blob with a darker outline sitting on top of the grout lines; let the grout run through it or clip it to stone faces.
+- The chests at (65,10) and (65,50) are bright gold plates with a diamond emblem on a dark slatted base — cartoon loot; drop the emblem, pull the gold down to the barrel palette at (125,205), and add a contact shadow.
+- The bottom wall band (y 265–288) is a side-on brick face while the left wall (x 0–15) is a thin dark strip; use one wall treatment with a consistent thickness.
+- The orc at (220,10) is clipped at the frame's top edge; nothing to do with the sprite, but don't capture a frame that crops the only figure.
+
+Model: Claude Opus 5 (1M context)

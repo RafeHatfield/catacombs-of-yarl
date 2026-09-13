@@ -1,0 +1,324 @@
+{
+ "schema": "frame-critic/1",
+ "verdict": "INSTALL-LATEST",
+ "lane": "art/object-projection",
+ "round": 3,
+ "surface": "combined",
+ "axis": "construction",
+ "commit": "80258d6308502383fb62bcdf52d08b77b8efab3e",
+ "dirty": false,
+ "build_id": "42ba626386e2331cdae38780c312d68642d11abfea2f830dd88c787583e5414e",
+ "timestamp": "2026-09-12T14:02:58",
+ "build_frame": {
+  "path": "tools/tier1_floors/evidence/combined.png",
+  "sha256": "a3df8aa948404195a76b76f0f184175d45c6fd7c5d64e6cca2e18121b2b9028f",
+  "log": "tools/tier1_floors/evidence/combined.log",
+  "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/object-projection --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_floors/evidence/combined.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_props_review.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 6.0 --light-falloff 1.0 --light-ambient-level 1.5 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-ring 1 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
+ },
+ "deck": {
+  "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-93f525b9c5ad7cd9",
+  "slots": {
+   "1": {
+    "what": "approved",
+    "source": ".claude/skills/frame-critic/approved/combined-2026-09-09.png",
+    "sha256": "42f6941bc10d00235a58a727dd79d5635f4ca2adcaa667e98e5c1ef9f25def54",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "2": {
+    "what": "build",
+    "source": "tools/tier1_floors/evidence/combined.png",
+    "sha256": "a3df8aa948404195a76b76f0f184175d45c6fd7c5d64e6cca2e18121b2b9028f",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   },
+   "3": {
+    "what": "bar",
+    "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+    "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+    "crop": [
+     304,
+     192,
+     688,
+     480
+    ],
+    "delivered": [
+     384,
+     288
+    ]
+   },
+   "4": {
+    "what": "plant",
+    "source": ".claude/skills/frame-critic/morgue/props-unrecognizable.png",
+    "sha256": "ced98da2ea92ec0496edb1a2989c3f9d28fa6555ab979843d232187bd61d615b",
+    "crop": [
+     0,
+     90,
+     750,
+     1001
+    ],
+    "delivered": [
+     750,
+     911
+    ]
+   }
+  },
+  "build": "tools/tier1_floors/evidence/combined.png"
+ },
+ "plant": {
+  "slot": 4,
+  "file": "props-unrecognizable.png",
+  "sha256": "ced98da2ea92ec0496edb1a2989c3f9d28fa6555ab979843d232187bd61d615b",
+  "culled_by": "Rafe, device walk, 2026-09-10 (the \u00a712.2 ruling)",
+  "verbatim": "small, unrecognizable except the fire; colouring quite good",
+  "caught": true,
+  "how": {
+   "ranked_last": false,
+   "named_worst": false,
+   "flagged": true,
+   "shipped": false,
+   "outranked_build": false,
+   "every_frame_flagged": false
+  }
+ },
+ "seat": {
+  "BEST_WHY": "The floor in the lit zone around the figure (roughly x 200\u2013650, y 460\u2013720) is cut stone, not a stamp: courses are staggered, block widths vary from ~25px to ~90px along a single row, and joints change depth \u2014 the row directly below the figure has a deep dark joint on its left half and a shallow one on its right. The south-facing wall face (band at y\u2248425\u2013450) is modelled as a separate surface: darker bricks with vertical driven pins breaking the course, and it takes the figure's light at a different intensity from the wall top above it, so wall top / wall face / floor read as three planes. The lighting falloff is handled in value AND hue \u2014 warm cream at the figure, desaturating to blue-grey at the bottom-right corner (x 600\u2013740, y 800\u2013900) \u2014 rather than a plain black multiply.",
+  "WORST_WHY": "The pool (x 248\u2013335, y 0\u2013190) is a flat teal rectangle with a razor-straight edge butting directly against the dirt floor \u2014 no bank, no edge tile, no shoreline transition; a filled rect. The fill itself is a faint hexagonal honeycomb pattern (visible at 8\u00d7), which is a procedural noise, not painted water. The lilypads sit on it with no shadow or ripple. The two chests at (60\u201395, 0\u201320) and (60\u201395, 45\u201365) are pixel-identical duplicates, and they are drawn in side elevation (gold lid above, dark plank front below) inside a top-down world where the barrels at (115\u2013195, 190\u2013220) are drawn from directly above. The grey slabs are a flat fill with a 1px grid line and a handful of speckles; the moss is the same translucent teal blob stamped at (20\u201360, 50\u201375), (15\u201350, 200\u2013230) and (350\u2013380, 150\u2013170). The dirt is rust-speckle noise with no structure. Every surface is uniformly lit; nothing in the frame is modelled in value.",
+  "FLAGGED": "2, 3, 4",
+  "RANK": "1 > 2 > 4 > 3",
+  "BEST": "1",
+  "WORST": "3",
+  "SHIP": "NONE"
+ },
+ "flip_list": [
+  "The pillar at (255\u2013300, 535\u2013635) is drawn in side elevation \u2014 visible shaft, base moulding, and a black outline \u2014 in a top-down frame. Redraw it from above (capital/top face with a cast shadow) or remove it.",
+  "The plank stacks at (190\u2013305, 475\u2013520) and (385\u2013500, 590\u2013640) are flat saturated orange with heavy black outlines and no light response; the bottom-right stack is at the edge of the lit zone and reads as bright as the one beside the figure. Drop the outlines, desaturate to the room's palette, and run them through the same light falloff as the floor.",
+  "The brazier at (575\u2013620, 525\u2013570) contains a lit flame and emits no light onto the surrounding floor. Either add a local warm falloff around it or extinguish it.",
+  "The brazier's rim is drawn in 3/4 view (visible front lip) in a top-down frame. Redraw as a ring seen from above.",
+  "All FLIP 1 items (crack overlay, floor/sprite resolution mismatch, blown-out hotspot, off-centre light, cloud-noise wall top, ambiguous dark square, corridor seam) apply unchanged; the base is the same."
+ ],
+ "flip_list_withheld": null,
+ "withheld_because": null,
+ "panel": {
+  "seats": 5,
+  "ruling": "five seats; block only on strong-majority regression (>=4 of 5 rank below the reference); else install if exit met and plant caught. Rank-in-deck cannot resolve polish-sized deltas at a 40% flip rate. \u2014 Rafe, 2026-09-09",
+  "law": "a gate's binding term must have a measured noise floor and must never be a single sample. \u2014 Rafe, 2026-09-08",
+  "verdict_at_round": "INSTALL-LATEST",
+  "above_reference": 1,
+  "not_below_reference": 4,
+  "below_reference": 1,
+  "strong_regression": false,
+  "ref_slack": 1,
+  "flagged_by": 4,
+  "shipped_by": 0,
+  "majority_above": false,
+  "majority_not_below": true,
+  "all_caught": true,
+  "seat_redraws": [
+   {
+    "seat": 3,
+    "slot": 3,
+    "discarded_plant": {
+     "file": "props-unrecognizable.png",
+     "surface": [
+      "combined"
+     ],
+     "axis": [
+      "construction"
+     ],
+     "subject": [
+      "objects"
+     ],
+     "sha256": "ced98da2ea92ec0496edb1a2989c3f9d28fa6555ab979843d232187bd61d615b",
+     "source": "tools/tier1_floors/evidence/props_pre_1212.png \u2014 the props build walked 2026-09-10, saved at cb344578 as cold_naming.py's calibration frame",
+     "culled_by": "Rafe, device walk, 2026-09-10 (the \u00a712.2 ruling)",
+     "verbatim": "small, unrecognizable except the fire; colouring quite good",
+     "defect": "THE OBJECTS CANNOT BE NAMED. Marker content 10x15 px in a 32 px cell \u2014 a fifth of the cell, twenty device pixels across; three cold seats offered 'a bottle or vial', 'a lantern or candle', 'an orange chest or crate' for the marker and 'sticks' for the barricade. Craft is not the defect (the colouring was approved in kind); SIZE is, and a seat that would ship it is soft on the one clause \u00a712 has \u2014 names itself at 1x. This is the OBJECT construction plant: it is deliberately fine on value and chroma so a round judged on object craft cannot pass by fixing colour.",
+     "provenance": "bible \u00a712.2 (RULED 2026-09-10); cold_naming.py --prove calibrates against this frame and must MISS the marker and barricade on it.",
+     "seeded": "Rafe, ruling 2026-09-12: 'Seed two object plants from Rafe's culls'"
+    },
+    "redraw_plant": {
+     "file": "objects-isometric.png",
+     "surface": [
+      "combined"
+     ],
+     "axis": [
+      "construction"
+     ],
+     "subject": [
+      "objects"
+     ],
+     "sha256": "a5fbe2d625a8002596c1bb30478183786f8ecb8e22f0b0935be53f7bd746a7be",
+     "source": "tools/tier1_floors/evidence/projection_A.png @ f60ddb30 \u2014 object-projection round one, candidate A (three-plane, dimetric-ish), the projA build walked on device",
+     "culled_by": "Rafe, device walk, 2026-09-11 (object-projection round one)",
+     "verbatim": "iso is clearly not a fit",
+     "defect": "THE OBJECTS ARE AT THE WRONG PROJECTION FOR THE FLOOR. Five archetypes drawn three-plane/dimetric on an orthogonal ground: they read as objects but do not sit on the floor; the diamond top fights the square grid the room is built on (\u00a73). Materials and lighting are competent \u2014 the frame is wrong about how things stand in space, which is the object-construction question exactly, and a seat that would ship it over a \u00a73.2-conformant build is soft on that question.",
+     "provenance": "docs/OBJECT-PROJECTION-RULING.md round one and Rafe's round-one verdict; the ruled projection is \u00a73.2 (cabinet oblique, right, \u00bd).",
+     "seeded": "Rafe, ruling 2026-09-12: 'Seed two object plants from Rafe's culls'"
+    },
+    "redraw_caught": true
+   }
+  ],
+  "seat_plant_stop": null,
+  "dissent": 1,
+  "plants_distinct": 2,
+  "per_seat": [
+   {
+    "seat": 1,
+    "rank": 2,
+    "reference_rank": 1,
+    "above_reference": false,
+    "not_below": true,
+    "build_flagged": true,
+    "shipped": false,
+    "plant": "props-unrecognizable.png",
+    "caught": true,
+    "transcript": ".claude/skills/frame-critic/history/r003-art_object-projection-transcript-seat1.txt",
+    "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-93f525b9c5ad7cd9"
+   },
+   {
+    "seat": 2,
+    "rank": 2,
+    "reference_rank": 1,
+    "above_reference": false,
+    "not_below": true,
+    "build_flagged": false,
+    "shipped": false,
+    "plant": "objects-isometric.png",
+    "caught": true,
+    "transcript": ".claude/skills/frame-critic/history/r003-art_object-projection-transcript-seat2.txt",
+    "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-36b91987d254e788"
+   },
+   {
+    "seat": 3,
+    "rank": 2,
+    "reference_rank": 1,
+    "above_reference": false,
+    "not_below": true,
+    "build_flagged": true,
+    "shipped": false,
+    "plant": "objects-isometric.png",
+    "caught": true,
+    "transcript": ".claude/skills/frame-critic/history/r003-art_object-projection-transcript-seat3.txt",
+    "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-d5643b3ad946e7f7"
+   },
+   {
+    "seat": 4,
+    "rank": 1,
+    "reference_rank": 2,
+    "above_reference": true,
+    "not_below": true,
+    "build_flagged": true,
+    "shipped": false,
+    "plant": "objects-isometric.png",
+    "caught": true,
+    "transcript": ".claude/skills/frame-critic/history/r003-art_object-projection-transcript-seat4.txt",
+    "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-941e798516be0676"
+   },
+   {
+    "seat": 5,
+    "rank": 3,
+    "reference_rank": 1,
+    "above_reference": false,
+    "not_below": false,
+    "build_flagged": true,
+    "shipped": false,
+    "plant": "props-unrecognizable.png",
+    "caught": true,
+    "transcript": ".claude/skills/frame-critic/history/r003-art_object-projection-transcript-seat5.txt",
+    "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-837b199627ea8066"
+   }
+  ]
+ },
+ "seat_redraw": null,
+ "item_exit": {
+  "_what": [
+   "THE ITEM'S OWN MEASURED EXIT \u2014 required by INSTALL-LATEST (Rafe, 2026-09-08).",
+   "",
+   "A build installs because it DID THE THING IT SET OUT TO DO. The rank test only says",
+   "the doing cost nothing against the seeded reference; this says what was done. Without",
+   "it, 'not worse than the reference' would mean 'not different from it', and a round",
+   "that changed nothing would install as readily as one that fixed something.",
+   "",
+   "Declared here per item, recorded into the verdict, re-checked at the gate. The gate",
+   "refuses a `met` with no measurement behind it."
+  ],
+  "item": "\u00a73.2 \u2014 the marker, the barricade family and the fire re-authored at the RULED object projection (cabinet oblique, right, \u00bd; the fire under the round exception)",
+  "claim": "every object stands in space the same way, at the projection Rafe ruled on device, and still names itself at 1\u00d7 (\u00a712). Structure authored as a projected model; generation supplies surface; nothing in the scene shows the old three-plane-left marker.",
+  "measured": "PROJECTION HOLD (silhouette IoU of the landed generation against its projected template): marker 1.000, barricade_a 0.993, barricade_b 0.999, fire 0.997 \u2014 every object carries the ruled geometry, and the templates are the same function that drew the walked candidate. COLD NAMING (three blind seats, told nothing): fire NAMED by all three ('fire pit / brazier'); barricade NAMED by all three ('planks', 'broken bench/bed frame' \u2014 the card's own arrangement grammar); marker NAMED by ONE of three ('a tall wooden pillar / pedestal (stone-coloured column)') and read as 'a tall wooden plank / upright board' by the other two. PASS under the instrument's rule, and reported at its margin: the lamp warms pale grey toward wood, which is #204's ladder problem arriving at naming. Two earlier re-authors of the marker (a banded box; a narrower banded box) were read as 'a wooden crate or barrel' by three of three and were not landed \u2014 the taper and a single low lashing are what moved it. LIT AT THE WORST FOOTPRINT CELL: 68.32 / 72.33 / 72.93 / 50.64 against \u00a713.8's 36.7.",
+  "instrument": ".claude/skills/frame-critic/cold_naming.py (calibrated, \u00a713.5); tools/tier2_props/projection_props.py land (IoU hold); tools/tier2_props/verify_props.py (worst cell)",
+  "met": true
+ },
+ "progress": {
+  "rank_position": 2,
+  "deck_size": 4,
+  "rank_score": 0.6666666666666666,
+  "bar_position": 4,
+  "approved_position": 1,
+  "approved_frame_in_deck": true,
+  "beats_approved": false,
+  "near_bar": true,
+  "near_bar_slack": 1,
+  "new_best": false,
+  "best_before": 0.6666666666666666,
+  "capture_signature": "02020202020d101012120e131315100e0f121010121012121212110e0d112c2302020202020b111010100e1313120f0c0e11100f101212111112100e0d10412f02020202020d11110d0b0f0e0c0d0e0b0c0a0b0b0a0d12110d0e0d0c0d0b090902020202020f111111111212111314100a0a0b0c0b0c100f0e1012100f0c0c0c02020202020c0d0e0d0d0e0d0d0e0e0a09090c111b0e110f0e0f100d090807060202020202020202020202020202020303030816160f14100e100f020202020202020202020202020202020303030303040409191f1218130f100e02020202020202020202020203030303030405050405050c252518231c16150d020202020202020202020203030303040505050506060612332f2429221d190b0202020202020202020203030304040505060707080808113b3c30332d2515100302020202020202020303040405060708080a09090a0a184849394539221a130303020202020202020304040506060708090a0b0b0b0b1c444543624a1e191404030202020202020303040405060709090a0c0c0c0d0f215450496f61302117040303020202020203030d0f110e121215181a19202627346859577965423128100e0b0807020203030420252a212a2a3935394e5c5974696470647a4d41393629221d1410020202030421252a282c2d33403640513c4a373c48567347242b211d1c11100b0202030404202c324c465657566c979c9a7b9698898379665247382a221913120202020304233133383d474d45adc8c6af8bd5ba8f736b63574d3f3c291c131a0405060607222d2a394648587696b5becccaae8881736b615942393832201a1a0b1010112b2e1d1f2d30627377a6aca8b3bc8a7a756c675c463832342d1f1918050707080817172038436c716987979b958a7a6c64524e4d4a3d382f29211915020202020311131d3549606352707a5e5a4c4f414a43414d4c41392d231a1310060505050611161b303f49454f5043394952524e564b4a46413930241d1510100e0f0e0d0c0f12151f2f3a403f232a2c45595d574942423e362e29211b1210150c0d09080a0a0a0d18222d30321c2220475352533c423d382c28211d18141215100f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e14120f100e12141214131620252728292e2f2d2b242424211d1a1714120f121213140e100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d12120d0f0e101211110f0f111614151515151517151513101211100f100e0f0d13120f0d0d0e0c0c11100f0f121112111110111313101213100f0e0d0d0e0f0f241f15111312120f1010121314131111110f1214121212121011100d0f0f0e0f151e0f0d0d11110e0f11111213121010120f10120f13121111100f0d100f1110",
+  "moved": {
+   "mad": 0.0,
+   "max_cell": 0
+  },
+  "two_strikes_advisory": null,
+  "series": [
+   {
+    "round": 1,
+    "verdict": "VOID",
+    "rank_position": 2,
+    "deck_size": 4,
+    "rank_score": 0.6666666666666666,
+    "capture_signature": "02020202020d101012120e131315100e0f121010121012121212110e0d112c2302020202020b111010100e1313120f0c0e11100f101212111112100e0d10412f02020202020d11110d0b0f0e0c0d0e0b0c0a0b0b0a0d12110d0e0d0c0d0b090902020202020f111111111212111314100a0a0b0c0b0c100f0e1012100f0c0c0c02020202020c0d0e0d0d0e0d0d0e0e0a09090c111b0e110f0e0f100d090807060202020202020202020202020202020303030816160f14100e100f020202020202020202020202020202020303030303040409191f1218130f100e02020202020202020202020203030303030405050405050c252518231c16150d020202020202020202020203030303040505050506060612332f2429221d190b0202020202020202020203030304040505060707080808113b3c30332d2515100302020202020202020303040405060708080a09090a0a184849394539221a130303020202020202020304040506060708090a0b0b0b0b1c444543624a1e191404030202020202020303040405060709090a0c0c0c0d0f215450496f61302117040303020202020203030d0f110e121215181a19202627346859577965423128100e0b0807020203030420252a212a2a3935394e5c5974696470647a4d41393629221d1410020202030421252a282c2d33403640513c4a373c48567347242b211d1c11100b0202030404202c324c465657566c979c9a7b9698898379665247382a221913120202020304233133383d474d45adc8c6af8bd5ba8f736b63574d3f3c291c131a0405060607222d2a394648587696b5becccaae8881736b615942393832201a1a0b1010112b2e1d1f2d30627377a6aca8b3bc8a7a756c675c463832342d1f1918050707080817172038436c716987979b958a7a6c64524e4d4a3d382f29211915020202020311131d3549606352707a5e5a4c4f414a43414d4c41392d231a1310060505050611161b303f49454f5043394952524e564b4a46413930241d1510100e0f0e0d0c0f12151f2f3a403f232a2c45595d574942423e362e29211b1210150c0d09080a0a0a0d18222d30321c2220475352533c423d382c28211d18141215100f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e14120f100e12141214131620252728292e2f2d2b242424211d1a1714120f121213140e100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d12120d0f0e101211110f0f111614151515151517151513101211100f100e0f0d13120f0d0d0e0c0c11100f0f121112111110111313101213100f0e0d0d0e0f0f241f15111312120f1010121314131111110f1214121212121011100d0f0f0e0f151e0f0d0d11110e0f11111213121010120f10120f13121111100f0d100f1110"
+   },
+   {
+    "round": 2,
+    "verdict": "INSTALL-LATEST",
+    "rank_position": 2,
+    "deck_size": 4,
+    "rank_score": 0.6666666666666666,
+    "capture_signature": "02020202020d101012120e131315100e0f121010121012121212110e0d112c2302020202020b111010100e1313120f0c0e11100f101212111112100e0d10412f02020202020d11110d0b0f0e0c0d0e0b0c0a0b0b0a0d12110d0e0d0c0d0b090902020202020f111111111212111314100a0a0b0c0b0c100f0e1012100f0c0c0c02020202020c0d0e0d0d0e0d0d0e0e0a09090c111b0e110f0e0f100d090807060202020202020202020202020202020303030816160f14100e100f020202020202020202020202020202020303030303040409191f1218130f100e02020202020202020202020203030303030405050405050c252518231c16150d020202020202020202020203030303040505050506060612332f2429221d190b0202020202020202020203030304040505060707080808113b3c30332d2515100302020202020202020303040405060708080a09090a0a184849394539221a130303020202020202020304040506060708090a0b0b0b0b1c444543624a1e191404030202020202020303040405060709090a0c0c0c0d0f215450496f61302117040303020202020203030d0f110e121215181a19202627346859577965423128100e0b0807020203030420252a212a2a3935394e5c5974696470647a4d41393629221d1410020202030421252a282c2d33403640513c4a373c48567347242b211d1c11100b0202030404202c324c465657566c979c9a7b9698898379665247382a221913120202020304233133383d474d45adc8c6af8bd5ba8f736b63574d3f3c291c131a0405060607222d2a394648587696b5becccaae8881736b615942393832201a1a0b1010112b2e1d1f2d30627377a6aca8b3bc8a7a756c675c463832342d1f1918050707080817172038436c716987979b958a7a6c64524e4d4a3d382f29211915020202020311131d3549606352707a5e5a4c4f414a43414d4c41392d231a1310060505050611161b303f49454f5043394952524e564b4a46413930241d1510100e0f0e0d0c0f12151f2f3a403f232a2c45595d574942423e362e29211b1210150c0d09080a0a0a0d18222d30321c2220475352533c423d382c28211d18141215100f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e14120f100e12141214131620252728292e2f2d2b242424211d1a1714120f121213140e100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d12120d0f0e101211110f0f111614151515151517151513101211100f100e0f0d13120f0d0d0e0c0c11100f0f121112111110111313101213100f0e0d0d0e0f0f241f15111312120f1010121314131111110f1214121212121011100d0f0f0e0f151e0f0d0d11110e0f11111213121010120f10120f13121111100f0d100f1110"
+   },
+   {
+    "round": 3,
+    "verdict": "INSTALL-LATEST",
+    "rank_position": 2,
+    "deck_size": 4,
+    "rank_score": 0.6666666666666666,
+    "capture_signature": "02020202020d101012120e131315100e0f121010121012121212110e0d112c2302020202020b111010100e1313120f0c0e11100f101212111112100e0d10412f02020202020d11110d0b0f0e0c0d0e0b0c0a0b0b0a0d12110d0e0d0c0d0b090902020202020f111111111212111314100a0a0b0c0b0c100f0e1012100f0c0c0c02020202020c0d0e0d0d0e0d0d0e0e0a09090c111b0e110f0e0f100d090807060202020202020202020202020202020303030816160f14100e100f020202020202020202020202020202020303030303040409191f1218130f100e02020202020202020202020203030303030405050405050c252518231c16150d020202020202020202020203030303040505050506060612332f2429221d190b0202020202020202020203030304040505060707080808113b3c30332d2515100302020202020202020303040405060708080a09090a0a184849394539221a130303020202020202020304040506060708090a0b0b0b0b1c444543624a1e191404030202020202020303040405060709090a0c0c0c0d0f215450496f61302117040303020202020203030d0f110e121215181a19202627346859577965423128100e0b0807020203030420252a212a2a3935394e5c5974696470647a4d41393629221d1410020202030421252a282c2d33403640513c4a373c48567347242b211d1c11100b0202030404202c324c465657566c979c9a7b9698898379665247382a221913120202020304233133383d474d45adc8c6af8bd5ba8f736b63574d3f3c291c131a0405060607222d2a394648587696b5becccaae8881736b615942393832201a1a0b1010112b2e1d1f2d30627377a6aca8b3bc8a7a756c675c463832342d1f1918050707080817172038436c716987979b958a7a6c64524e4d4a3d382f29211915020202020311131d3549606352707a5e5a4c4f414a43414d4c41392d231a1310060505050611161b303f49454f5043394952524e564b4a46413930241d1510100e0f0e0d0c0f12151f2f3a403f232a2c45595d574942423e362e29211b1210150c0d09080a0a0a0d18222d30321c2220475352533c423d382c28211d18141215100f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e14120f100e12141214131620252728292e2f2d2b242424211d1a1714120f121213140e100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d12120d0f0e101211110f0f111614151515151517151513101211100f100e0f0d13120f0d0d0e0c0c11100f0f121112111110111313101213100f0e0d0d0e0f0f241f15111312120f1010121314131111110f1214121212121011100d0f0f0e0f151e0f0d0d11110e0f11111213121010120f10120f13121111100f0d100f1110"
+   }
+  ],
+  "guards": {
+   "stall_rounds": 3,
+   "round_ceiling": 15,
+   "no_change_mad": 0.25,
+   "no_change_max": 4,
+   "sig_grid": 32,
+   "judge_misses": 2,
+   "flip_same": 0.6
+  }
+ },
+ "transcript": ".claude/skills/frame-critic/history/r003-art_object-projection-transcript-seat1.txt",
+ "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read. The guards measure progress \u2014 rank in the deck \u2014 never rounds elapsed."
+}

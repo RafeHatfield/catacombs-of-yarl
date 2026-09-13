@@ -1,0 +1,48 @@
+RANK: 3 > 1 > 2 > 4
+
+BEST: 3
+BEST_WHY: The props in the lit zone are actually drawn, not placed. The timber stack at top-left (x≈190–305, y≈475–520) has a top face, a lit front edge and a darker stacked course below it with a black keyline of consistent 1-sprite-pixel weight; the stone pillar at x≈255–300, y≈540–640 has a lit left face, a shadowed right face and a separate plinth block at the base, so it reads as cut stone rather than a box; the broken bench at x≈380–500, y≈590–640 is snapped at a join with the two halves at different angles and a splintered end. All three share one palette and one pixel density with the hero sprite, which is the one place in this deck where the props and the figure look like they came from the same hand.
+
+WORST: 4
+WORST_WHY: Nothing in it is lit and nothing in it is drawn with depth. The dirt floor (x≈55–245, full height) is a uniform random speckle fill — dark-red and brown dots with a few blue specks — with no tile structure, wear or direction, which reads as a noise filter. The moss blob is the same stamp reused at (x≈20–45, y≈55–80), (x≈15–40, y≈205–230), (x≈310–345, y≈5–30) and (x≈355–380, y≈150–170). The water pool (x≈248–343, y≈0–192) is a visible honeycomb repeat that meets the dirt on a hard straight edge with no bank. The grey wall-top squares have 1px joints and no bevel, shadow or face-side drop, so they sit at the same value as an open floor would. It looks like a free tileset assembled in an editor.
+
+FLAGGED: 1, 2, 3
+
+SHIP: NONE
+
+FLIP 1:
+- The wall mass between the black voids and the room (x≈120–500 and x≈560–750, y≈390–450) is a soft blurred brown mottle — a smudged noise fill next to hard-pixel floor bricks. Replace with drawn masonry/rock at the same pixel density as the floor, or a flat dark fill; remove the blur.
+- The right wall block (x≈560–640, y≈90–390) has a straight, hard-edged diagonal shading seam running through the dark fill — a lighter triangular wedge. Remove the facet; the dark mass must be continuous.
+- Crack lines (the curve from the figure's feet down-left to x≈300, y≈650; the arc at x≈560–750, y≈640–720; the one in the corridor at x≈520–560, y≈230–350) are 1px hairlines drawn over the top of the bricks while the sprite is ~3px per pixel. Redraw the cracks at sprite pixel density and route them through mortar joints or break blocks; a crack doesn't glide across cut stone.
+- The corridor's floor pattern continues down into the room as a lighter vertical column (x≈500–560, y≈450–620) with different tiling from the room either side. Merge it into the room's coursing.
+- The dark square at x≈310–380, y≈640–700 is a darkened rectangle with three lighter inner blocks and no readable identity. Draw it as a grate/trapdoor with a rim and cast shadow, or remove it.
+- Brick scale jumps from ~25px wide near the figure to ~60px wide at lower right (x≈560–750, y≈640–800), with 2px hatch strokes on the big ones. Unify the module, or make the change a deliberate course with a visible boundary.
+- The wall face strip at y≈420–450 is a single row of small dark rectangles at even spacing, identical left and right of the corridor. Vary block widths and add a shadow under the lip so it reads as a face rather than a border stamp.
+- The hatch-mark scribbles on floor tiles at lower right look like pen strokes; replace with pitting and chipped corners in the palette.
+- The light hot spot at the figure's feet (x≈380–450, y≈470–520) blows out to near-white and erases the joints; cap the light so brick detail survives under it.
+
+FLIP 2:
+- All of the FLIP 1 items; the base is identical.
+- The pillar at x≈268–300, y≈550–620 is flat orange with two unshaded faces, no edge detail and no floor shadow — a placeholder block. Redraw in stone using the wall palette, with a plinth and a contact shadow.
+- The bench at x≈395–490, y≈595–630 is a flat orange slab with a red underline. Redraw with planks, grain, legs and a shadow.
+- The chest and shelf (x≈640–750, y≈460–510) and barrel (x≈585–615, y≈590–630) are drawn at a finer pixel density and with full shading, while the pillar and bench are coarse and flat; unify the prop set to one density and one finish.
+- The chest and shelf are drawn front-on, the pillar side-on, on a straight-top-down grid; pick one projection for props and hold it.
+
+FLIP 3:
+- All of the FLIP 1 items; the base is identical.
+- The brazier at x≈570–625, y≈525–580 shows live flame with zero light on the surrounding floor — the stones around it are as dark as the stones two tiles away. Either add a warm local falloff from it, or make it dead embers if the figure's lamp is meant to be the only light.
+- The pillar (x≈255–300, y≈540–640) is a standing side view and the broken bench is oblique, on a straight-top-down grid; pick one projection.
+- None of the three props casts a contact shadow on the floor; add one on the side away from the figure.
+- The black keyline on the timber stack is two sprite-pixels wide on its lower edge versus one everywhere else; make it consistent.
+
+FLIP 4:
+- No light falloff anywhere; the frame is uniformly lit. Add a radial falloff from the figure (x≈215–235, y≈0–25) so the far corners drop into dark.
+- Replace the dirt floor's random speckle fill (x≈55–245) with drawn ground: ruts, worn paths, a few large stones, at the same pixel density as the crates.
+- Draw three or four moss variants and vary rotation/scale; retire the single stamp used at (x≈20–45, y≈55–80), (x≈15–40, y≈205–230), (x≈310–345, y≈5–30), (x≈355–380, y≈150–170).
+- The water pool (x≈248–343, y≈0–192) needs a bank tile along its edges and a broken repeat; the honeycomb pattern is visible at a glance and the straight dirt/water boundary has no edge.
+- Wall tops (grey squares) need a bevel on the north edge and a drop shadow onto the floor along the south face; at present the wall face (bottom row y≈270–288, and the strip at x≈0–55, y≈100–115) is the only thing distinguishing wall from open ground.
+- The door at x≈28–35, y≈125–165 is an orange vertical bar that runs from inside the wall face out onto the floor; draw it as a door within the face, with a frame, not through it.
+- The two crate stacks at x≈65–95, y≈0–85 are the same sprite twice, and the two barrels at (x≈115–145, y≈195–215) and (x≈165–190, y≈195–215) are the same stamp twice; vary each pair and give both a contact shadow.
+- The bone pile at x≈210–235, y≈115–130 is a scatter of white pixels; draw readable bones.
+
+Model used: Claude Opus 5 (1M context).

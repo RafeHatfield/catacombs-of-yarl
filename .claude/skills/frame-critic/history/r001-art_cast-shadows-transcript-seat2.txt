@@ -1,0 +1,43 @@
+RANK: 4 > 1 > 3 > 2
+
+BEST: 4
+BEST_WHY: The floor in 4 is the one surface in the deck where the stone actually reads as cut. In the lit area around the figure (roughly x 200–600, y 460–660) the joints vary in width and darkness stone to stone, the hatched scratch marks sit inside individual blocks rather than running across them, and the block sizes break the grid (long stones under the figure at y≈530, short ones at right x≈560). The wall-top surface (y 60–395, and the whole band above the face) sits clearly darker and cooler than the floor, and the brick face strip at y 392–420 is a distinct band with its own value, so wall-top / face / floor are three separable planes at a glance. The light falloff down the corridor (x 380–440, y 60–460) goes from lit floor to true black without a visible step or banding. The pixel density of the floor tiles and the figure match — the figure does not look pasted in at a different scale, which it does in 1 and 3.
+
+WORST: 2
+WORST_WHY: Everything in 2 is flat and even. There is no light source and no falloff, so the dirt room (x 55–250, y 0–215) is one uniform noise fill with red-rust and blue speckle sprinkled at random — the blue flecks at (180,55), (185,150), (225,165) sit on top of the dirt with no reason to exist. The grey wall/floor tiles at left (x 0–55) and bottom (y 215–265) are identical stamps with one mortar value, and it is not clear at a glance whether that grey region is wall-top or floor. The green moss splotches at (15–45, 55–85), (10–40, 200–235) and (350–380, 150–175) are soft-alpha blobs pasted over hard-edged pixel tiles — a decal at a different rendering language from the surface underneath. The two chest/box pairs at (65–95, 0–40) and (65–95, 48–90) are pixel-identical copies stacked, and the two barrels at (110–145, 195–215) and (160–195, 195–215) are the same. The water at (250–345, 0–190) is a flat hex-scale pattern with lily pads in bright saturated green — nothing about it is cold, dry, or administered. It reads as an asset pack laid down on a grid.
+
+FLAGGED: 3, 2
+
+SHIP: NONE
+
+FLIP 1:
+- The wall-top surfaces (the band y 390–430 above the room, the left strip x 120–190, the corridor walls x 440–505 and x 555–630) are a soft, low-frequency blurred mottle with no pixel structure, sitting next to a crisp pixel floor. Redraw the wall tops at the same texel size as the floor with a legible stone or rubble surface, or at minimum quantise the mottle to the floor's pixel grid.
+- The crack lines (the long one from (245,495) down to (300,640), the polygonal ones over the wall top at (560–750, 300–420) and on the corridor at (510–555, 200–330)) are 1-screen-pixel anti-aliased hairlines drawn over tiles whose texels are 2–3 px. Draw the cracks at the tile texel size, aliased, and stop them at wall-top edges instead of running straight across the wall-top's geometry in Voronoi-style straight segments.
+- The floor has a hue seam: the tiles left of about x 345 (x 190–345, y 460–720) are grey-green while the tiles to the right are warm tan, and the change lands on a tile column, not on the light falloff. Either make the colour shift follow the light's radial falloff or make the two floor sets the same base hue.
+- The figure is drawn at a coarser pixel size (≈3 px texels) than the floor (≈2 px). Match one to the other.
+- The corridor floor at x 505–555 and the room floor use different block widths at a hard boundary (y≈450); add a threshold or a change of stone at the doorway so the change of tiling reads as intended.
+
+FLIP 3:
+- The pale pillar at (265–300, 530–640) is an untextured pink-beige slab, brighter than the floor directly under the light source, with a single brown strap across it. It is a placeholder. Give it the dungeon's stone palette, a surface texture at floor texel size, and bring its value below the lit floor.
+- The shadows cast by the crate and pillar are hard-edged black wedges (the wedge left of the pillar running to (190,660), the black lobe at the crate's top-right corner at (275–330, 480–500), and the wedge under the log at (400–500, 640–660)). Pure-black, penumbra-free 2D raycast shadows are the one thing in the frame darker than the unlit dungeon. Soften the edges, reduce opacity so the floor stays visible inside them, and keep them shorter than the object's own height.
+- The crate at (200–300, 476–520) and the log bundle at (380–500, 590–640) are drawn at ≈4 px texels versus the ≈2 px floor, and the crate is a saturated orange found nowhere else in the frame. Redraw both at the floor's texel size and pull the crate's hue toward the timber/hide palette of the walls.
+- The fire pit at (585–615, 530–565) is the second light in the room but casts no shadow from the log bundle beside it and only a faint warm tint on the floor. Either let it light the floor around it (so the log's shadow falls away from it) or drop it to embers that are not expected to light anything.
+- Same wall-top and hairline-crack fixes as FLIP 1 (blurred mottle on all wall tops; 1-px cracks over 2-px tiles).
+- The figure's pixel size does not match the floor's; match them.
+
+FLIP 2:
+- Add the carried light and its falloff. The frame is evenly lit corner to corner; there is no reason the far end of the dirt room at (55–250, 200–215) should be the same value as the tile beside the figure.
+- Replace the blue and red-rust speckle on the dirt floor (visible at (180,55), (185,150), (225,165), and as a red haze throughout x 55–250) with marks that describe something — worn paths, spilled material, cart ruts — at the same pixel size as the tiles.
+- The moss splotches at (15–45, 55–85), (10–40, 200–235), (350–380, 150–175) and (130–150, 220–230) are soft-alpha decals over hard-edged tiles. Redraw them as aliased pixel clusters that respect the tile joints.
+- De-duplicate the props: the chest/box pairs at (65–95, 0–40) and (65–95, 48–90) are identical stacks, and the barrels at (110–145, 195–215) and (160–195, 195–215) are the same sprite. Give each a variant, and give them a contact shadow so they sit on the floor instead of on top of it.
+- Separate wall-top from floor. The grey tile field at left (x 0–55) and bottom (y 215–265) uses the same stamp, mortar value and lightness as a floor would; darken the wall tops or change their surface so the dark brick strip at (0–384, 268–288) reads as the face of the same wall.
+- The water at (250–345, 0–190) is a uniform hex pattern with no edge treatment where it meets the dirt at x≈250 — add a bank or lip, and desaturate the water and lily pads; the current bright green is the wrong key for the place described.
+- The single orange plank door at (85–100, 128–160) is one tile wide, brighter than anything around it, and has no frame; give it a frame in the wall's brick and pull its saturation down.
+
+FLIP 4:
+- The crack lines (from (100,470) to (250,520) at lower-left, the long one from (330,580) to (620,640), and the two thin ones across the corridor at (375–440, 240–300)) are 1-screen-pixel anti-aliased hairlines drawn over ≈3–4 px texels. Redraw them at texel size, aliased.
+- The wall-top surface at (60–380, 60–395) and (440–750, 60–395) is a featureless soft-blurred mottle with a visible cloudy noise pattern in the half-lit zone at (380–560, 200–380). Give the wall tops a surface drawn at the floor's texel size, or quantise the noise to the pixel grid so it does not read as a filter.
+- The brick face strip at (25–345, 392–420) and (410–735, 392–420): each brick is rendered with a soft per-brick blur, smeared against the crisp floor below it. Redraw the face row hard-edged.
+- The floor under the figure at (340–430, 520–550) is one uniformly brighter stone that reads as a highlight tile rather than a stone lit by the carried light; either let the light shape it or bring its value in line with its neighbours.
+
+Model: Claude Opus 5 (1M context)

@@ -1,0 +1,53 @@
+{
+ "wave": "projection2",
+ "candidate": "A",
+ "props": [
+  {
+   "key": "A_stone",
+   "w": 1,
+   "h": 2,
+   "ids": [
+    9878,
+    9879
+   ],
+   "url": "FILL-ME"
+  },
+  {
+   "key": "A_chest",
+   "w": 1,
+   "h": 1,
+   "ids": [
+    9880
+   ],
+   "url": "FILL-ME"
+  },
+  {
+   "key": "A_barrel",
+   "w": 1,
+   "h": 1,
+   "ids": [
+    9881
+   ],
+   "url": "FILL-ME"
+  },
+  {
+   "key": "A_altar",
+   "w": 2,
+   "h": 1,
+   "ids": [
+    9882,
+    9883
+   ],
+   "url": "FILL-ME"
+  },
+  {
+   "key": "A_rack",
+   "w": 1,
+   "h": 1,
+   "ids": [
+    9884
+   ],
+   "url": "FILL-ME"
+  }
+ ]
+}

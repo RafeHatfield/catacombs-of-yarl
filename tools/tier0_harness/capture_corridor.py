@@ -81,7 +81,7 @@ def capture(out_png, theme_config, cfg, godot=DEFAULT_GODOT,
             light_overrides=None, scene_spec=None, log_out=None, timeout=180,
             floor_overlays=None, wang_floor=None, ashlar_floor=None,
             boundary_wall=None, void_choice=None, wall_bindings=None, wall_cap=None,
-            void_ring=None):
+            void_ring=None, shadows=None):
     """Invoke the engine. Returns (returncode, log, cmd)."""
     w = cfg["resolution"]["width"]
     h = cfg["resolution"]["height"]
@@ -157,6 +157,10 @@ def capture(out_png, theme_config, cfg, godot=DEFAULT_GODOT,
     # for tile-frequency seams - which looks like a wall, so nothing else would report it.
     if wall_cap:
         cmd += ["--wall-cap", wall_cap]
+    for flag, key in (("--occluders", "occluders"), ("--shadow-softness", "softness"),
+                      ("--shadow-darkness", "darkness"), ("--fire-flicker", "flicker")):
+        if shadows and shadows.get(key) is not None:
+            cmd += [flag, str(shadows[key])]
 
     os.makedirs(os.path.dirname(out_png) or ".", exist_ok=True)
     proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
@@ -229,6 +233,13 @@ def main():
                          "the engine lays it rather than the theme.")
     ap.add_argument("--log-out")
     ap.add_argument("--godot", default=DEFAULT_GODOT)
+    # CAST SHADOWS (§12.1a walls, §3.2 objects, #205 the fire): the occluder cull mode, the
+    # softness and darkness knobs, the fire's flicker flag. Omitted = no occluders = every
+    # capture taken before the round.
+    ap.add_argument("--occluders", help="none | cw | ccw | all (see ReviewLighting)")
+    ap.add_argument("--shadow-softness")
+    ap.add_argument("--shadow-darkness")
+    ap.add_argument("--fire-flicker")
     args = ap.parse_args()
 
     cfg = read_config()
@@ -259,7 +270,9 @@ def main():
                            void_ring=args.void_ring,
                            wall_bindings=args.wall_bindings, wall_cap=args.wall_cap,
                            log_out=args.log_out, floor_overlays=args.floor_overlays,
-                           wang_floor=args.wang_floor, ashlar_floor=args.ashlar_floor)
+                           wang_floor=args.wang_floor, ashlar_floor=args.ashlar_floor,
+                           shadows=dict(occluders=args.occluders, softness=args.shadow_softness,
+                                        darkness=args.shadow_darkness, flicker=args.fire_flicker))
 
     if not os.path.exists(args.out):
         # Exit 2 from the engine is a REFUSED capture (junction-lit check failed), not a crash.

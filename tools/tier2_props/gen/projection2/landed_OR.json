@@ -1,0 +1,76 @@
+[
+  {
+    "key": "OR_stone",
+    "w": 1,
+    "h": 2,
+    "ids": [
+      9864,
+      9865
+    ],
+    "opaque_fraction": 0.4209,
+    "per_cell_opaque": [
+      0.3066,
+      0.5352
+    ],
+    "quantised_share": 0.9854,
+    "source": "FILL-ME"
+  },
+  {
+    "key": "OR_chest",
+    "w": 1,
+    "h": 1,
+    "ids": [
+      9866
+    ],
+    "opaque_fraction": 0.5625,
+    "per_cell_opaque": [
+      0.5625
+    ],
+    "quantised_share": 0.8711,
+    "source": "FILL-ME"
+  },
+  {
+    "key": "OR_barrel",
+    "w": 1,
+    "h": 1,
+    "ids": [
+      9867
+    ],
+    "opaque_fraction": 0.501,
+    "per_cell_opaque": [
+      0.501
+    ],
+    "quantised_share": 0.9502,
+    "source": "FILL-ME"
+  },
+  {
+    "key": "OR_altar",
+    "w": 2,
+    "h": 1,
+    "ids": [
+      9868,
+      9869
+    ],
+    "opaque_fraction": 0.4561,
+    "per_cell_opaque": [
+      0.4512,
+      0.4609
+    ],
+    "quantised_share": 0.8213,
+    "source": "FILL-ME"
+  },
+  {
+    "key": "OR_rack",
+    "w": 1,
+    "h": 1,
+    "ids": [
+      9870
+    ],
+    "opaque_fraction": 0.8076,
+    "per_cell_opaque": [
+      0.8076
+    ],
+    "quantised_share": 0.6162,
+    "source": "FILL-ME"
+  }
+]

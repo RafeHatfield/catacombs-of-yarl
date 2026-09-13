@@ -1,0 +1,52 @@
+RANK: 3 > 4 > 1 > 2
+
+BEST: 3
+BEST_WHY: The floor. In 3, the stone blocks in the lit area (roughly x 190–560, y 460–720) are laid in a running bond where the block widths vary along a course, the joints are not a single value — some are a dark 1px line, some open into a 2–3px gap with a lighter mortar showing — and each block face carries its own directional scratch hatching (see the blocks at ~x 420–520, y 560–620, where the hatch direction changes block to block). The wall-face strip at y 425–455 has small brick with dark vertical driven pins at irregular spacing (x ≈ 230, 300, 380, 450), which reads as the orcs' repairs without announcing itself. The light falls off smoothly and warm-to-cool across the room, and the block detail survives in the half-lit zone rather than being crushed to black. Nothing is pasted on top of it, which is why it ranks above the two frames that share the same base.
+
+WORST: 2
+WORST_WHY: Every surface is a flat fill. The grey tiles (left column x 0–170 and the bottom band y 640–800 in the enlarged view) are a single value with a uniform 1px joint grid and no edge shading on any tile; the same teal moss blob is stamped unchanged at least three times (top-left ~x 60–140, y 160–240; bottom-left ~x 40–120, y 620–700; right edge ~x 1080–1140, y 450–520). The dirt floor is a brown base with red-speckle noise and no structure — no wear paths, no edge against the grey tiles, it simply butts up. The water at x 745–1030 is a hexagonal pattern fill with round bright-green lily pads on it. The two barrels at y 585–650 are pixel-identical clones, as are the two crate+slat units at x 190–290. The bottom dark-brick wall row has a lighter rectangle at ~x 490–560, y 815–830 that reads as a mis-set tile. There is no lighting anywhere in the frame. It looks like a tileset test scene.
+
+FLAGGED: 1, 2, 4
+
+SHIP: NONE
+
+FLIP 1:
+- The three crossed-timber props at (275,612), (405,615), (535,615) are the same small sprite placed three times in a row at nearly the same y; replace with at least two distinct pieces and break the row.
+- The middle crossed-timber at (405,615) is a saturated red-orange that nothing else in the palette uses and reads as a highlighted/selected state; bring its value and saturation down to match the one at (275,612).
+- The small gold figure at (343,545) is ~16px tall against a 48px player and has no ground contact shadow; either scale it to the player's grid or give it the same drop shadow so it sits on the floor.
+- The brazier at (600,550) is drawn at a lower pixel density than the floor beneath it (the ring is 8 flat grey teeth); redraw the ring at the floor's resolution with a shadow side.
+- The wall masses (x 120–440, y 60–140; x 120–180, y 140–400; x 570–750, y 60–140) are a soft brown mottled fill with no masonry; they sit next to a pixel-crisp floor and read as a blurred/cloud-filter layer. Draw them at the same pixel density as the floor, or hard-edge the noise.
+- The two crack lines (the one from (240,520) to (420,470) and the arc at (560–750, 630–750)) are single continuous lines that cross mortar joints without deflecting; make them step along joints or break at each joint.
+- The tiles directly around the player (x 380–470, y 470–560) are blown to near-white and lose their joints; cap the light so joint detail survives under the figure.
+- The dark recessed square at (310–380, 645–705) has no rim or lip and is ambiguous between pit, trapdoor and dirt; give it a readable edge.
+
+FLIP 2:
+- Add light. The frame has no falloff from the figure at all; every tile is at full value.
+- Give the grey tiles a top-edge highlight and a bottom/right-edge shadow so they read as stone rather than a grid fill; vary the joint width along a course.
+- Delete the duplicate moss stamp; draw at least three different blobs, and stop placing them on tile centres.
+- Replace the dirt's red-speckle noise with drawn wear: a darker trodden path between the door at left (x 85–105, y 380–500) and the crates, dirt gathered against the grey-tile edge.
+- Put a transition between dirt and grey tile (a broken edge, dirt over the tile lip); currently the boundary at x 170 and y 640 is a hard straight line.
+- The water at x 745–1030: remove the hexagonal pattern fill; use a flat dark surface with a single value of edge foam against the tile, and remove the bright-green lily pads, which are the most saturated thing in the frame and nothing else is.
+- The bottom dark-brick wall row (y 800–864) has no top surface; the room needs a wall cap between the grey floor and the brick face. Fix the lighter rectangle at (490–560, 815–830).
+- Redraw one of the two barrels and one of the two crate units so they are not clones; add a contact shadow to both.
+
+FLIP 3:
+- The wall masses (x 120–440, y 60–140; x 120–180, y 140–400; x 570–750, y 60–140; the strip under the voids at y 395–425) are a soft brown mottled fill with no masonry structure, sitting next to a pixel-crisp floor. Draw them at the floor's pixel density, or replace the noise with drawn block tops.
+- The crack line from (240,520) to (420,470) and the arc at (560–750, 630–750) are continuous smooth lines that cross tile joints without deflecting; route them along joints or break them per block.
+- The tiles under and right of the player (x 380–470, y 470–560) are blown out; cap the light so the joints stay visible at the source.
+- Left of the player (x 200–300, y 460–520) a column of blocks has a distinct green-yellow cast against the warm brown blocks beside it; unify the tint under the light so it doesn't read as a material seam.
+- The right half of the lit floor (x 560–750, y 460–620) is a pale desaturated grey while the left half at equal distance is warm brown; either the light tints both or neither.
+- The dark recessed square at (310–380, 645–705) has no rim and reads ambiguously; give it a lip or a hard edge.
+- The corridor at x 510–560, y 60–430 is lit to full value at its far end, further from the figure than wall tops that are black; reduce the corridor's far-end brightness to match the falloff everywhere else.
+
+FLIP 4:
+- The standing post at (260–300, 540–635) is drawn in elevation — full vertical side, capital at top, base plinth at bottom — in a frame that is otherwise seen straight from above. Redraw it as a top-down footprint with a shadow, or lay it down as a fallen column with a cast shadow along its length.
+- The timber stack at (190–300, 475–515) and the crossed planks at (385–500, 590–640) are a clean saturated orange with a bright-orange strap and no grime; the fiction is four hundred years of rope-and-hide repair. Desaturate, darken the end grain, add wear where they touch the floor.
+- The same two timber props are drawn with a hard black outline and 3/4 shading (visible top face and side face); the floor beneath has neither. Match their rendering to the floor's — drop the black outline or give the floor blocks one.
+- Neither timber prop has a contact shadow; both float.
+- The brazier at (598,548): the stone ring is at a lower pixel density than the floor beneath it (flat grey with two tones); redraw at the floor's resolution.
+- The wall masses (x 120–440, y 60–140; x 120–180, y 140–400; x 570–750, y 60–140) are a soft brown mottled fill next to a pixel-crisp floor; draw them at the floor's density.
+- The crack lines (from (240,520) to (420,470) and the arc at (560–750, 630–750)) cross joints without deflecting; route or break them per block.
+- The tiles under the player (x 380–470, y 470–560) are blown out; cap the light at the source.
+
+Model: Opus 5 (1M context).

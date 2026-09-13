@@ -1,0 +1,48 @@
+RANK: 4 > 2 > 1 > 3
+
+BEST: 4
+BEST_WHY: The floor stonework in the lit band around the figure is genuinely cut, not stamped: directly below and right of the figure (roughly x 440–640, y 440–600) there is one long pale slab beside a run of half-size squares, joint lines shift between 1px and 3px along the same run, and two long cracks (one from ~(240,470) to ~(500,510), one arcing at bottom-right ~(560,700)→(750,650)) cross stone boundaries instead of stopping at tile edges. The light does what the brief says — the stones go from pale cream at the figure to near-black at the room's edges with no visible tile-quantised steps — and the corridor at x 500–560 reads as a real gap in the wall band rather than a painted-on opening. It is also the only frame in the shared scene where nothing has been placed on the floor that breaks the projection.
+
+WORST: 3
+WORST_WHY: Every surface is a fill, not a drawing. The dirt floor (x 55–250, y 0–215) is a single cellular-noise texture — dark red-brown cell edges with blue-grey flecks — repeated across ~7×6 tiles with no structure, wear, or path. The pool (x 250–345, y 0–190) is a flat teal with a visible repeating hexagon pattern under it and green circles-with-a-cross for lily pads. The grey stone tiles in the left corridor (x 20–55) are identical repeats with a 1px grid; the "moss" is the same soft teal blob pasted at half opacity at (~15–45, 55–85), (~15–40, 205–230) and (~350–380, 145–175). There is no light model at all — the frame is uniformly lit from nowhere — so nothing has volume; the barrels at (~110–195, 195–215) and the chests are the only things with any edge shading. It is internally consistent (all props are top-down, and the orc at (~215,5) is the only figure in any frame with a contact shadow), but it is a free tileset, not a made place.
+
+FLAGGED: 1, 2, 3
+
+SHIP: NONE
+
+FLIP 1:
+- The pale block at (~265–300, 540–640) is drawn in side elevation — a standing slab with a strap round its base, seen from the side — in a straight-down scene. Redraw it top-down (a footprint with a top face) or remove it.
+- The orange crate at (~195–300, 475–515) shows its front face (3/4 view) and is a flat saturated orange in the dim zone left of the figure; it does not take the scene's light. Redraw top-down, desaturate to the floor's palette, and attenuate it with the same falloff as the stones under it.
+- The bound timber at (~380–500, 590–640) is oblique, not top-down, and is bright orange at a distance where the floor is mid-brown. Same fix: top-down, lit by the scene.
+- None of the three props has a contact shadow or ambient occlusion where it meets the floor; they float. Add a 1–2px dark edge on the floor under each.
+- The ember pile at (~580–620, 525–570) glows orange but casts nothing on the surrounding stones; either give it a small local light on the floor or dull it to a dead ember so it doesn't claim to be a light source.
+- The figure at (~395–430, 465–515) carries a sword and shield and no lamp, yet is the light source. Give it a visible light, or move the light origin to whatever is meant to be carrying it.
+- The figure is rendered at ~3 screen px per sprite pixel with clean outlines and full saturation; the floor is 1px detail, low saturation, and partially blurred. Match the sprite's pixel density and saturation to the ground, and give it a contact shadow.
+- Same base-scene fixes as FLIP 4 below.
+
+FLIP 2:
+- The brazier at (~578–622, 528–572) is a ring of pale stones with a yellow flame, and the floor around it is in shadow. A fire that lights nothing is wrong on sight. Give it a local falloff on the surrounding stones, or remove the flame.
+- The small orange chest at (~332–360, 535–565) is in 3/4 view showing its front face, pasted next to a figure seen from above. Redraw top-down.
+- The crossed timbers at (~260–300, 595–630), the bound cross at (~390–425, 595–635) and the pinned pair at (~515–555, 600–630) are all clean-edged, saturated red-orange, with no shadow where they touch the floor and no light attenuation. Desaturate to the floor palette, apply the same falloff as the stones, and add a 1–2px contact shadow.
+- Figure has no visible light source while being the light source; sprite pixel density and saturation do not match the ground. Same fix as FLIP 1.
+- Same base-scene fixes as FLIP 4 below.
+
+FLIP 3:
+- There is no light falloff. Add a light source and darken the frame away from it; at the moment every tile is at the same value and nothing has form.
+- Replace the cellular-noise dirt fill (x 55–250, y 0–215) with drawn ground: a worn path, patches at different values, breaks in the noise. As it stands it reads as a generated texture.
+- Remove the visible hexagon pattern under the pool (x 250–345, y 0–190); draw the water surface with a couple of value bands and a reflected edge instead of a repeating pattern.
+- The three moss decals on the grey stone are the same shape re-used at half opacity; draw them individually and let them respect the joint lines instead of sitting on top of them.
+- The grey stone tiles in the left corridor (x 20–55, y 0–290) are identical repeats with a 1px grid; vary the joint depth and add per-stone value so the tiling isn't visible.
+- The wall torch at (~28–35, 128–165) is a side-view orange rectangle stuck on a top-down wall band; either redraw the wall face convention consistently or move the torch to the wall face and light the floor in front of it.
+- The white scatter at (~205–235, 115–130) doesn't read; either draw it as identifiable debris or remove it.
+
+FLIP 4:
+- The wall mass above the room (x 120–750, y 0–420) is a mottled brown blur with no stone read — it looks like a photo texture with a filter over it, sitting next to a crisply drawn floor. Draw the wall top as stone (joints, blocks, the same crack language as the floor) at the same pixel density as the floor.
+- Mixed sharpness on the floor: the stones left of the figure (~x 190–330, y 460–560) have smeared, soft joint lines, while the slab directly under the figure has hard 1px edges. Pick one; the blur reads as an upscale or a filter pass.
+- The highlight immediately around the figure (~x 380–470, y 460–540) blows out to flat cream and the stone detail disappears. Clamp the light so the brightest stones still show their joints and speckle.
+- The wear hatching on the stones is the same 45° stroke group stamped on at least six stones at (~x 520–640, y 470–580); vary the angle and length per stone or replace with drawn chips at the joints.
+- The dark square at (~315–380, 645–720) has a soft left edge, a lighter top-left corner and a lighter bottom band, and doesn't read as anything — grate, trapdoor, or rubble. Draw it as one of those with a hard edge, or remove it.
+- The figure at (~395–430, 465–515) carries a sword and shield, no lamp, and is the only light. Give it a visible light source.
+- The figure is ~3 screen px per sprite pixel, fully saturated (cyan, orange, pink shield) with clean black outlines, and casts no shadow; the ground is 1px detail, desaturated, painterly. Re-render the sprite at the ground's pixel density, pull its saturation toward the scene, and add a contact shadow.
+
+Model: Claude Opus 5 (1M context).

@@ -1,0 +1,42 @@
+RANK: 1 > 4 > 3 > 2
+
+BEST: 1
+BEST_WHY: The wall-base band along the top of the room (y≈420–450, x≈185–505 and x≈565–750) is the best-made thing in the deck: a dark timber rail with lighter driven posts at irregular spacing, the rope/lashing texture sitting *on* the stone rather than replacing it, and it darkens with distance the same way the floor does — so it reads as one surface under one light. The wall tops in the upper-left block (x≈120–500, y≈70–400) carry cracks that fork and terminate rather than continue as a single stroke, and the corridor mouth at (505–565, 440) has a clean corner where the wall face meets the wall top. The figure's light falls off smoothly with no banding anywhere in the gradient. Nothing in this frame is a placed object, so nothing has been pasted on.
+
+WORST: 2
+WORST_WHY: It is a stamped tileset with no lighting and no wear model. The grey wall along the bottom (y≈205–290) repeats the same brick arrangement every 32 px with identical mortar — you can count the seams. The dirt floor is one speckle texture repeated with no variation; the "wear" spots on the left wall at (≈20,60) and (≈10,210) are the same lighter blob stamped twice. The green pool (x≈250–355, y≈0–190) meets the floor along a hard straight line with no bank, lip or wet edge — a water tile butted against a dirt tile. The hearth at (≈30,130) is drawn in side elevation with the fire visible through its front, while the walls around it are top-down; the two crates at (≈80,15) and (≈80,60) are the same sprite at full saturation with a black outline that nothing else in the frame has. It looks like the free one.
+
+FLAGGED: 2, 3, 4
+
+SHIP: NONE
+
+FLIP 1:
+- The floor directly under and right of the figure (x≈380–560, y≈480–570) blows out to near-white and loses the brick joints entirely; clamp the light's peak so mortar lines survive at the centre of the pool.
+- The floor is three brick scales butted together — small dense courses at (190–330, 460–520), large blocks at (390–560, 510–590), medium at (560–720, 470–560). Either commit to one course size, or put a visible break (a kerb, a change in level, a row of headers) where the scale changes so it reads as two pavings rather than two textures.
+- The large smooth arc in the lower right (≈570–700, 620–720) is a clean compass curve; stone doesn't crack on a radius. Break it into two or three straight-ish segments with a change of weight at each kink.
+- The floor cracks (the polyline running ≈240,530 → 330,590 → 330,640) cross brick joints without deviating; a crack in a paved floor follows the mortar for a stretch before jumping. Route it along at least one joint.
+- The corridor floor at (505–560, 70–440) is a vertically smeared texture with none of the room's brick structure; give it the same paving, darkened.
+
+FLIP 3:
+- The brazier at (≈600,550) has a burning fire in it and casts no light. In a game where light is the premise, that is the first thing a player notices. Give it a warm local falloff.
+- The three crossed-stick piles at (280,615), (405,615), (535,615) sit on the same row at ~125 px intervals; move them off the line and vary the spacing, or cut one.
+- Those piles are full-saturation orange on a desaturated floor and have no contact shadow; pull their saturation to the floor's range and add a soft dark ellipse beneath each.
+- The chest at (≈345,545) is smaller than the figure's head; scale it to at least a full tile or change it to something that is legitimately that small.
+- Same floor/crack fixes as FLIP 1 (blown highlight under the figure, brick scale seams, compass arc, cracks ignoring joints, corridor smear).
+
+FLIP 4:
+- There is a straight hard edge in the lighting running from about (505,445) diagonally to (745,800) with nothing casting it; the rest of the light is soft radial, so this reads as an unsmoothed shadow polygon. Either give it a caster the player can see or soften it to match the falloff.
+- The crate at (≈250,500) is a saturated orange-red box with a flat pale rectangle for a top; it is the only thing in the frame that colour. Bring it into the scene's palette and give the top a plank or hide texture.
+- The bound timber at (≈440,615) and the standing stone at (≈280,590) have no ground contact — the stone in particular floats over the crack it should be sitting on. Add a contact shadow to both.
+- The wall tops in the upper-left block go to near-black much faster than in frame 1 (compare the crack lines that are visible at (300,200) in 1 and gone in 4); the ambient floor has been dropped too far and the walls have lost their structure.
+- Same floor/crack fixes as FLIP 1.
+
+FLIP 2:
+- Introduce a light source and falloff; a fully flat-lit frame in this fiction reads as unlit placeholder art.
+- Break the wall tiling: at minimum three variant wall tiles with different brick arrangements, randomly placed, so the bottom wall (y≈205–290) doesn't repeat every 32 px.
+- Give the pool a bank: a one-tile transition (wet stone, mud, a lip) between water and dirt on all sides rather than a straight seam at x≈250 and y≈190.
+- Redraw the hearth at (≈30,130) top-down to match the walls, or accept elevation for all props and redraw the walls to suit — not both projections in one frame.
+- Drop the black outlines on the crates and barrels, or give every sprite in the frame the same outline treatment.
+- Replace the stamped "wear" blobs on the left wall with wear that follows the geometry — the base of the wall, the corners, the doorway.
+
+Model used: Claude Opus 5 (1M context).

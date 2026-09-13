@@ -1,0 +1,60 @@
+RANK: 3 > 1 > 2 > 4
+
+BEST: 3
+BEST_WHY: The floor cracks are the best-made thing on the deck. From (230, 480) down through (320, 600) and out to (600, 680) they are 1px, continuous, and cross tile joints without respecting them, so the flagstones read as one cut surface that has failed over time rather than as a stamped tile. The joint linework itself varies — the run at y≈520 between x≈460 and 560 has joints that thicken and thin — and the light falloff is correct: the joints stay visible at the edge of the light (e.g. around (620, 700)) instead of collapsing to noise. The north wall's south face at y≈430–450 is a distinct value band with its own stone rhythm, which gives the wall mass a readable edge. Image 3 wins because it carries only the shared base's faults and nothing else.
+
+WORST: 4
+WORST_WHY: Everything in it is flat. There is no light model at all — the corner at (0, 280) is the same brightness as the tile under the figure at (225, 10). The grey brick wall along (0–50, 0–290) and (0–384, 200–290) repeats the same course tile-for-tile with identical mortar; the 32px repeat is visible on a glance. The dirt floor across (50–250, 0–200) is one uniform speckle noise with no tile structure, no wear and no direction. The pool at (250–345, 0–190) is a hard-edged rectangle that meets dirt with no bank, and the lighter green shapes on it at (320, 25), (325, 115), (270, 160) are soft round smudges. The chests at (80, 10) and (80, 55) are drawn in front elevation (lid and front face both visible) while the barrels at (130, 200) and (175, 200) are correctly drawn from above — two projections in one frame. It reads as an asset pack.
+
+FLAGGED: 1, 2, 4
+
+SHIP: NONE
+
+FLIP 1:
+- Brazier at (600, 550): the bowl is burning red-orange but the floor around it is the same value as the floor everywhere else. Either give it a warm falloff onto the surrounding tiles, or put it out (the fiction says the figure carries the only light — a burning brazier that casts nothing is the worst of both).
+- The three crossed-timber items at (280, 615), (405, 615), (535, 615) sit on one row at ~125px spacing; they read as a grid placement. Break the row and vary the spacing.
+- Those same items are saturated orange-brown with black outlines at a coarser pixel scale than the floor's 1px painterly texture, and have no contact shadow, so they float as icons. Desaturate toward the floor's brown-grey, drop the outline, add a 1px darker edge on the floor-contact side.
+- The small yellow chest at (345, 545) is a ~20px high-contrast icon; it reads as a UI marker dropped on the map. Redraw it at scene palette and pixel density with a ground contact.
+- Corridor at x≈500–560, y≈70–430: corridor floor and the wall tops either side share the same value and the same mottled texture; there is no edge or value step where walkable stops. Give the wall top a flatter, darker treatment and a 1–2px edge line at the boundary, as the north wall already has at y≈430.
+- The wall face band exists only on the north wall (y≈430–450). The left wall's south end at (120–185, y≈640) and the corridor walls have none. Draw the face on every south-facing wall edge or remove it from the north wall.
+- Black rectangles at (120–440, 135–390), (630–750, 135–390) and (0–120, 0–640) are pure black with hard 1px edges against textured wall. Either fill them with wall-top texture falling to black, or soften the edge by 4–8px so they read as unlit rock, not a mask.
+- Soft blurred patches on the floor — the dark smear at (250–330, 560–620) and the light patch at (500–560, 510–560) — have feathered edges while every crack is crisp. Repaint as hard-edged wear consistent with the crack linework, or remove them.
+- The figure at (405, 490) is a 2–3px pixel-scale sprite with a cyan helmet, saturated skin and black outline on a 1px painterly environment with no outlines anywhere. Re-render at the environment's pixel density and palette, or at minimum drop the black outline.
+- The hotspot at (360–460, 460–540) pushes the floor to near-white and the joints vanish. Clamp the light so the brightest tile still shows its joints.
+
+FLIP 2:
+- Standing post at (280, 590): drawn in full elevation — you see its whole height standing up — in a straight-down view. Redraw as seen from above (its top end plus a footprint shadow), or lay it flat.
+- Timber stack at (245, 495): drawn front-on, plank ends stacked vertically. That is an elevation. Redraw from above: the top plank's face with the lower planks' edges just visible.
+- Pile at (440, 615): mixed projection — some planks flat in plan, one tilted in 3/4. Pick plan view for all of them.
+- All the timber is saturated orange with clean black outlines at a coarser pixel scale than the floor; the frame has two rendering languages in it. Bring the timber toward the floor's brown-grey and drop the outline.
+- Brazier at (598, 550): visible embers, no light on the surrounding floor. Same fix as image 1.
+- Corridor at x≈500–560, y≈70–430: floor and wall tops share value and texture; add the wall-top treatment and edge line.
+- Wall face band only on the north wall at y≈430–450; add it to the other south-facing edges or remove it.
+- Hard-edged black rectangles at (120–440, 135–390), (630–750, 135–390), (0–120, 0–640); soften or texture them.
+- Soft blurred patches at (250–330, 560–620) and (500–560, 510–560); repaint with hard edges or remove.
+- Figure at (405, 490): sprite pixel density and outline style do not match the environment; re-render.
+- Hotspot at (360–460, 460–540) burns out the joints; clamp it.
+
+FLIP 3:
+- Corridor at x≈500–560, y≈70–430: corridor floor and the wall tops either side sit at the same value with the same mottled texture, so there is no readable boundary where walkable ends. Give the wall top a flatter, darker treatment and a 1–2px edge line at the wall/floor boundary, matching what the north wall has at y≈430.
+- The wall face band (y≈430–450, x≈185–750) exists only on the north wall. The left wall's south end at (120–185, y≈640) and the corridor's walls have none. Draw it on every south-facing edge or remove it.
+- Black rectangles at (120–440, 135–390), (630–750, 135–390) and (0–120, 0–640) are pure black with hard edges against textured wall. Fill with wall-top texture falling to black, or soften the edge 4–8px so they read as unlit rock rather than a mask.
+- Soft blurred patches on the floor — dark smear at (250–330, 560–620), light patch at (500–560, 510–560) — have feathered edges while every crack is 1px crisp. Repaint as hard-edged staining/wear in the crack linework's language, or remove.
+- Wall-top brick lines at (185–500, 0–70) and (560–750, 70–135) appear in some blocks and not others. Commit to either a bricked wall top or solid rock, throughout.
+- The figure at (405, 490): 2–3px pixel-scale sprite with black outline, cyan helmet and saturated skin on a 1px painterly environment with no outlines. Re-render at the environment's density and palette, or at least drop the outline and pull the saturation down.
+- Hotspot at (360–460, 460–540) pushes the nearest tiles to near-white and the joints disappear. Clamp the light's peak so the brightest tile keeps its joints.
+
+FLIP 4:
+- No light falloff anywhere: the tile at (0, 280) is as bright as the tile under the figure at (225, 10). Add a radial falloff from the figure.
+- Wall at (0–50, 0–290) and (0–384, 200–290): identical brick courses repeat tile-for-tile, same mortar depth, and the 32px repeat is visible. Add at least two or three wall-tile variants with different joint depth and a few missing or displaced bricks.
+- Dirt floor across (50–250, 0–200): one uniform speckle noise fill, no tile structure, no wear path. Tie the texture to the grid and add directional wear toward the doorways.
+- Pool at (250–345, 0–190): water meets dirt on a hard 1px rectangular edge with no bank. Add a shore/edge treatment.
+- The light-green shapes on the water at (320, 25), (325, 115), (270, 160) are soft round smudges. Draw them as ripples or algae with defined edges.
+- Chests at (80, 10) and (80, 55) are in front elevation (lid and front face visible) while the barrels at (130, 200) and (175, 200) are correctly in plan. Redraw the chests from above.
+- The ladder/bench in the wall alcove at (35, 135) is in elevation; same projection fix.
+- Moss blobs on the wall at (20, 215) and (50, 100) are soft green smudges; give them edges and let them follow the mortar lines.
+- Bone scatter at (220, 120): a handful of white marks with no shape. Draw recognisable fragments or remove.
+
+(The orc at (225, 10) being cut off by the frame edge in image 4 is the viewport, not a defect, and is not counted.)
+
+Model: Claude Opus 5 (1M context).
