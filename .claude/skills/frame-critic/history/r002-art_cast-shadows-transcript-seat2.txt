@@ -1,0 +1,45 @@
+RANK: 1 > 4 > 3 > 2
+
+BEST: 1
+BEST_WHY: The stone floor and the north wall are actually built, not stamped. Along the wall run at y≈400–460 the face is a course of brick with dark vertical pins driven through it at irregular spacing (x≈300, 345, 395, 530, 560), and the row above it is a distinct top surface at a darker value — the wall reads as a thing with thickness that has been repaired. On the floor, the joint marks between stones are short dark bars that vary in length and stop short of the corner rather than forming a lattice, so the stones read as individually laid. The bound timber prop at (380–500, 590–640) has a rope lashing that sits on top of two crossed logs with a visible shadow under the upper log — it's the one prop in any frame that looks like an orc-soldier repair. The falloff from the firepit at (600,545) and from the figure blends into a single warm field without a visible seam between the two light sources. Note: 1 and 4 are the same frame within a max 2-level per-channel difference (a fire flicker); 1 is ranked above 4 only because the ranking forbids ties.
+
+WORST: 2
+WORST_WHY: The green pool at (248–343, 0–192) is a hard-edged rectangle with no bank, rim, depth shading or transition into the dirt — its left edge at x=248 is a single-pixel straight line from top to bottom. The dirt floor (55–343, 0–215) is one uniform red-brown speckle with no structure, no wear paths, and no variation in density; it reads as "add noise" over a flat fill. The moss on the grey wall tops is the same soft green blob stamped at (15–40, 55–80), (15–40, 205–230), (345–384, 150–175) and (255–275, 5–15) without rotation or scale change. The crates at (65–97, 0–40) and (65–97, 50–90) show a front face; the barrels at (115–145, 195–215) and (160–190, 195–215) show a lid only — two projections in one room. In the south wall face (y≈265–288) there is a stray lighter brick block at (163–186, 268–276) that doesn't match the courses either side of it. Everything is at one flat value with no light hierarchy, so nothing in the frame is more important than anything else.
+
+FLAGGED: 1, 3, 4, 2
+
+SHIP: NONE
+
+FLIP 1:
+- The crate at (190–300, 475–520) is a flat saturated orange box with a lighter top face and no grain, edge wear or fastening; replace it with a textured prop at the same material/value level as the bound timber at (380–500, 590–640).
+- The pillar at (265–300, 535–640) is an untextured pale box with a single brown strap; give it a stone or timber surface, a top face that matches the floor's stone language, and a contact shadow so it stops reading as blockout.
+- The character sprite (390–425, 465–515) and the firepit (575–625, 525–565) are drawn at ~3px chunky pixels over an environment drawn at 1px; pick one pixel grid and re-render the other side to it.
+- The firepit's glow disc is a soft circular halo at ~1.5× the sprite's radius with a visible edge at (560–640, 510–580); either bake it into the floor lighting or extend the falloff so it has no discernible boundary.
+- The dark wall-top masses (180–480, 70–390) and (570–750, 70–390) carry a low-frequency cloudy wash — a lighter diagonal band running from (180,70) toward (480,390) and a lighter triangular facet at (640–750, 70–200) — that reads as a cloud-filter overlay; replace with stone structure (joints, spalls) at the same scale as the room floor, darkened by falloff.
+- The north corridor floor (500–570, 70–390) shows no joint structure, only a smooth vertical gradient with one crack; give it the same stone joints as the room so it doesn't read as a gradient-filled column.
+- The floor's diagonal hatching strokes are all the same "//" orientation at the same density across the lit area (e.g. every stone in 560–750, 460–720); vary orientation and density per stone so it stops reading as a scratch brush stamped everywhere.
+
+FLIP 4:
+- Same frame as 1 within 2 levels per channel; every item in FLIP 1 applies here unchanged.
+
+FLIP 3:
+- The pillar at (265–300, 545–625) is a flat orange rectangular prism with a lighter top face and zero surface texture — pure blockout; replace it with a textured prop.
+- The bench at (395–490, 595–625) is a flat orange slab with a single darker underside line and no grain, legs or wear; replace it with a textured prop.
+- The chest at (640–690, 465–505) and the barrel at (585–615, 590–630) are at full saturation and full brightness while the floor around them is in the cool, dim zone; apply the same distance falloff to props as to the floor.
+- The shelf at (705–750, 465–510) IS dimmed while the chest one tile to its left is not; props in one room must share one lighting rule.
+- The chest and barrel are ~3px chunky pixel art over a 1px-painted environment (same mismatch as the character sprite); pick one pixel grid.
+- The dark wall-top masses at (180–480, 70–390) and (570–750, 70–390) carry the same cloudy wash and lighter triangular facet at (640–750, 70–200) as frame 1; replace with stone structure.
+- The north corridor floor (500–570, 70–390) has no joint structure; give it the room's stone joints.
+
+FLIP 2:
+- The pool at (248–343, 0–192) needs a bank: a darker rim course of stone or eroded dirt at least one tile wide around all three visible edges, and a depth gradient from edge to centre instead of a single hex-pattern fill.
+- The hex/scale pattern inside the pool reads as tiled texture, not liquid; replace with a surface that has directional highlights or ripples that break at the lily pads.
+- The dirt floor (55–343, 0–215) needs structure: wear paths, varying speckle density, a few larger stones or cracks, and visible edges where it meets the grey stone so it stops being one noise fill.
+- The moss stamp is reused at (15–40, 55–80), (15–40, 205–230), (345–384, 150–175) with no rotation or size change; author at least three variants or rotate/mirror per placement.
+- The crates at (65–97, 0–40) and (65–97, 50–90) show a front face while the barrels at (115–145, 195–215) and (160–190, 195–215) show only a lid; pick one projection for every prop.
+- The stray lighter brick at (163–186, 268–276) in the south wall face doesn't match the courses either side of it; remove or re-course it.
+- The grey wall-top slabs (0–55, 0–215), (343–384, 0–215) and (0–384, 215–265) are ~48px squares at the same value as the floor lighting, so they read as a second floor; separate wall tops from floor by value and give them a smaller, denser joint pattern than the walkable surface.
+- There is no light hierarchy anywhere in the frame; introduce falloff from the figure (or from any source) so the eye has somewhere to go.
+- The orc at (205–235, 0–25) is cut off by the top frame edge; if this is a capture, recapture with the figure inside the frame — if it's the camera rule, the camera needs a margin.
+
+Model: Opus 5 (1M context).
