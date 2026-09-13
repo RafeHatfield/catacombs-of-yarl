@@ -60,3 +60,20 @@ picture; the critic runs once, last, on the frozen tree.
 - Residual, for Rafe's eye: seats hedge with "broken" / "sawhorse-style" — a standing frame in a
   front elevation on a top-down floor is §3.2's inherent tension, and the seats read it as
   fallen or as a workshop object. The word is met; whether the register is, is the walk's.
+
+### 2. #212 prop placement / depth order — DONE
+- **The law, as built:** a floor prop whose north neighbours are all wall is AGAINST that wall.
+  Its sprites shift north so its base line sits on the shared edge — the reveal's foot, which is
+  where §3 says the wall's south surface rises from — measured off the sprite's own bottom
+  transparent rows, not typed. It draws over the face (its row sorts later). The wall's **cap
+  band** (the cap texture's upper half) is re-laid as a child at the prop's own z, added after
+  it, so the top surface stays in front: **face < prop < cap band**. Its occluder follows the
+  shift, so its shadow starts at the wall's foot too. Floor props only; #167's wall-top props are
+  untouched. `DungeonRenderer` (the shift, `PropShift`, `CapBandCells`), `Tier1BoundaryWall`
+  (`Tier1CapBand`, reported as `cap_bands_over_props=N`), `ReviewLighting` (the occluder).
+- Between props in adjacent rows the order was already right (row-major sort); recorded.
+- Demonstrated on B against the north wall beside the fire: base at the foot, apex under the
+  band. Cold naming still PASS.
+- Not done, named: where a prop's base sits in a cell that is NOT against a wall stays at the
+  §12.2 render anchor (4 px above the cell's south edge); a base-line rule for open floor is
+  #212's second half and would need a walk.

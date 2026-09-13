@@ -320,10 +320,13 @@ public sealed class ReviewLighting
                     new Vector2(right + run, bottom - run), new Vector2(left + run, bottom - run),
                 };
             }
+            // #212: an against-wall prop's sprites were shifted north to the wall's foot; its
+            // footprint — and so its shadow — goes with it.
+            float shiftY = layer.PropShift.TryGetValue(i, out var sh) ? sh : 0f;
             root.AddChild(new LightOccluder2D
             {
                 Occluder = new OccluderPolygon2D { CullMode = ParseCull(mode), Polygon = pts },
-                Position = new Vector2(p.X * _tileW, p.Y * _tileH),
+                Position = new Vector2(p.X * _tileW, p.Y * _tileH - shiftY),
             });
             n++;
         }
