@@ -1,0 +1,48 @@
+RANK: 3 > 2 > 4 > 1
+
+BEST: 3
+BEST_WHY: The lit floor around the figure (roughly x 200–560, y 450–620) is the one place in the deck where the stone reads as cut. Individual flags differ in size (a 1½-wide block at (430–500,520–555) beside single blocks), the joints are broken 1px lines that vary in darkness along one run, and tile faces carry different chisel tones rather than one repeated shade. The light falls off smoothly without clipping — the brightest pixel in the file is 244, so joints stay visible right under the figure. The wall face row at y≈415–450 sits at a clearly lower value than the floor, so the room has an edge you can read at a glance.
+
+WORST: 1
+WORST_WHY: It is lit flat edge to edge. The only figure (green, at (222,10)) carries no light and nothing darkens away from it. The dirt floor is a single 32px tile repeated with its red-brown crack pattern visible at (150–300, 50–180). Scattered on it are saturated cyan specks at (135,10), (195,50), (185,150), (225,115) and a four-point "sparkle" at (215–235,115–125) — confetti in a value unrelated to anything else in the frame. The chests at (65–100, 5–35) and (65–100, 50–80) are drawn as front-facing lid-over-slats boxes standing upright on a top-down floor. The green pool at (250–345, 5–190) is a flat hex stamp meeting the dirt along a straight 1px line with no bank. This is the free tileset.
+
+FLAGGED: 4, 1
+
+SHIP: NONE
+
+FLIP 1:
+- Add the radial light falloff from the figure at (222,10); the frame currently has zero value gradient anywhere.
+- Remove the cyan specks on the dirt at (135,10), (195,50), (185,150), (225,115) and the sparkle at (215–235,115–125), or repaint them as debris in the floor's own brown range.
+- Break the dirt floor's 32px repeat (visible at (150–300, 50–180)) with 2–3 tile variants and rotate them.
+- Redraw the chests at (65–100, 5–35) and (65–100, 50–80) from above, or commit the whole room to one oblique angle; right now props are front-on and floor is straight-down.
+- Move the barrels at (115–150, 190–215) and (160–195, 190–215) fully onto the dirt or give them a shadow; their bottoms currently sit on the dirt/grey seam at y≈210.
+- Give the pool at (250–345, 5–190) an edge tile where water meets dirt; the boundary is a hard straight line.
+- Vary the bottom wall face (y 265–288): one lighter brick at (165–185,270) is the only variation across 16 bricks; vary joint depth and add a shadow under the wall-top ledge at y≈262.
+- Decide what the green splotches at (40–60,55–80) and (125–140,210–220) on the grey stone are; they use the pool's colour with no source, so they read as misplaced water decals.
+
+FLIP 2:
+- Raise the floor's minimum value: at (60–200, 620–780) tiles are identifiable only by 1px lighter joints, and the room's left wall at x≈50 and top wall at y≈200–280 read as a void edge rather than a wall.
+- Shade the crate/grate at (183–247, 455–520) with the same falloff as the tiles around it; it is one flat value with no lit side and no shadow on the floor, so it reads as pasted.
+- Define or remove the hard-edged darker squares at (395–430,395–415) and (410–480,590–620); with no rim or drawn detail they read as missing tiles.
+- Separate the wall face (y≈240–280) from the floor by value; at the same distance from the figure they land on the same brown, so the wall has no height.
+- Replace the vertical-stripe band at (0–750, 780–840) with a drawn wall face or cut it to void; it reads as a placeholder strip.
+- Cut the cracks per tile so they deflect or stop at joints; the curves at (200–330, 300–480) and (560–700, 460–510) run across joints as one continuous 1px overlay line.
+- Vary the diagonal hatch stamp per tile; it repeats at one angle across every tile (visible at (430–560, 520–600) in the lit zone).
+
+FLIP 4:
+- Clamp the lamp: 1,492 pixels around (330–450, 470–600) are at luminance ≥245 and the joints vanish there. Cap the lit floor so the darkest joint stays visibly below the tile face (image 3 does this with the same scene).
+- Remove the notched extra course on the wall face (y 385–450); its top edge pokes above the wall-top line at (350–380, 385) and (640–680, 380), so it reads as a second wall standing behind the first.
+- Trim the wall face at the left: it now runs over the wall top at x 120–185 where there is no floor below it; start it at the floor's left edge (x≈185) as the corner requires.
+- Remove the dark cap row at (300–380, 640–660) that has appeared above the small square item at (310–380, 650–700).
+- Use one face height: the corridor face at (0–190, 660–700) and the room face at y 385–450 are now different block heights on the same wall kit.
+- Then the wall-top, crack and hatch items listed under FLIP 3.
+
+FLIP 3:
+- Redraw the wall tops at pixel resolution: the fills at (120–500, 70–140), the pillar (505–560, 140–450) and the right block (560–750, 70–140) are soft ~2px cloud-noise blobs while the floor has crisp 1px joints, so they read as a blurred filter layer over pixel art.
+- Cut the cracks per tile so they deflect or terminate at joints; the curve from (250,600) to (470,500) and the one from (300,470) to (330,600) cross joints as one continuous 1px line.
+- Vary the diagonal hatch stamp per tile; it repeats at the same angle across every tile (visible at (430–560, 520–600)).
+- Give the wall face (y≈415–450) height: it is a single row of flat dark rectangles under a 1px light line; add a second course and a shadow cast onto the floor.
+- Give the small dark square at (310–380, 650–700) a rim highlight on the lit side so it reads as a grate or hatch rather than a hole in the tile layer.
+- Close the corridor mouth at (505–560, 380–450): the pillar's mottled top runs straight into the floor with no face or edge between them.
+
+Model: Claude Opus 5 (1M context).

@@ -1,0 +1,312 @@
+{
+  "schema": "frame-critic/1",
+  "verdict": "INSTALL-LATEST",
+  "lane": "props",
+  "round": 1,
+  "surface": "combined",
+  "axis": "tonal",
+  "commit": "7ebc0c929801156b9fc680fab24d825412779bca",
+  "dirty": false,
+  "build_id": "9fa79508f98929e738cb1e3f91e5f68c05f50a764a1cae20287adf778c399090",
+  "timestamp": "2026-09-10T12:33:29",
+  "build_frame": {
+    "path": "tools/tier1_floors/evidence/combined.png",
+    "sha256": "4c514c5e78916faf91ba0f6b8c5ccce235068c944b201ed62a533f49d5a980b9",
+    "log": "tools/tier1_floors/evidence/combined.log",
+    "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/autonomy --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_floors/evidence/combined.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_props_review.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 6.0 --light-falloff 1.0 --light-ambient-level 1.5 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-ring 1 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
+  },
+  "deck": {
+    "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-1924f213d65f66e9",
+    "slots": {
+      "1": {
+        "what": "build",
+        "source": "tools/tier1_floors/evidence/combined.png",
+        "sha256": "4c514c5e78916faf91ba0f6b8c5ccce235068c944b201ed62a533f49d5a980b9",
+        "crop": [
+          0,
+          90,
+          750,
+          1001
+        ],
+        "delivered": [
+          750,
+          911
+        ]
+      },
+      "2": {
+        "what": "bar",
+        "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+        "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+        "crop": [
+          304,
+          192,
+          688,
+          480
+        ],
+        "delivered": [
+          384,
+          288
+        ]
+      },
+      "3": {
+        "what": "approved",
+        "source": ".claude/skills/frame-critic/approved/combined-2026-09-09.png",
+        "sha256": "42f6941bc10d00235a58a727dd79d5635f4ca2adcaa667e98e5c1ef9f25def54",
+        "crop": [
+          0,
+          90,
+          750,
+          1001
+        ],
+        "delivered": [
+          750,
+          911
+        ]
+      },
+      "4": {
+        "what": "plant",
+        "source": ".claude/skills/frame-critic/morgue/blown-highlight.png",
+        "sha256": "753f9c3f9584dcc69a919036ef6e16d7f227dd20a8b7e8e93ec0aded2fdb2ccc",
+        "crop": [
+          0,
+          90,
+          750,
+          1001
+        ],
+        "delivered": [
+          750,
+          911
+        ]
+      }
+    },
+    "build": "tools/tier1_floors/evidence/combined.png"
+  },
+  "plant": {
+    "slot": 4,
+    "file": "blown-highlight.png",
+    "sha256": "753f9c3f9584dcc69a919036ef6e16d7f227dd20a8b7e8e93ec0aded2fdb2ccc",
+    "culled_by": "TWO INDEPENDENT EYES. Rafe, device walk, 2026-09-06; and round 30's blind seat, 2026-09-06.",
+    "verbatim": "flat pale block, no interior texture (seat) / too shiny on worn areas, character washed out (Rafe)",
+    "caught": true,
+    "how": {
+      "ranked_last": false,
+      "named_worst": false,
+      "flagged": true,
+      "shipped": false,
+      "outranked_build": false,
+      "every_frame_flagged": false
+    }
+  },
+  "seat": {
+    "BEST_WHY": "The floor is painted, not stamped. Across the slab field from (180,460) to (740,820) I ran a 32×32 comparison and found zero byte-identical cells out of 187 — and only 4 duplicates out of 770 at 16×16. Every slab was individually worked. You can see the consequence at (200–320, 540–600): the joint between the two large slabs left of the player is a 2px dark line for part of its run and then thins to a single dark pixel and vanishes for about eight pixels before resuming, so the two stones read as sitting hard against each other in one place and settled apart in another. That is cut stone, not a tile.\n\nThe wall band at y428–460, x185–500 also does the one thing walls in this genre usually fail at: it terminates. There is a crisp 2px shadow line along its whole base where it meets the floor, and above that line the block coursing stays continuous — you can follow a single horizontal joint from x190 to x440 and count the vertical breaks in it. The wall has a footprint and a top surface at different values from the floor.\n\nAnd the corridor at x490–570 reads as depth rather than as a dark rectangle: at y380 the floor is (118,95,61), at y300 it is (78,67,46), at y260 (43,38,29), at y220 (31,25,22). That's a continuous falloff with the joint structure still faintly legible down to about y280 before it goes.",
+    "WORST_WHY": "Three incompatible projections in one frame. The stone floor along the bottom (y215–263) is drawn flat top-down — you see only the top faces. The two barrels at x113–143 and x162–192, y192–217 are drawn in three-quarter — you see the lid ellipse *and* the staved side below it. The crates at x63–97, y2–88 are drawn face-on from the side — you are looking at the front panel of a crate, complete with a latch, in a frame where the ground is seen from directly overhead. Nothing reconciles these; they are three different cameras.\n\nThe dirt field is stamped and the stamp is visible without zooming. In the region x56–248, y0–215, 96 of 156 16×16 cells are byte-identical duplicates of another cell — 60 unique tiles doing the work of 156. The same red-flecked cluster lands on the same 16px grid over and over. Water is worse: 41 of 66 cells duplicated.\n\nThe water edge at x=248 is a perfectly straight, unmodulated vertical line from y0 to y190. No bank, no darkening at the margin, no wet dirt — the dirt tile ends and the teal tile begins on a pixel boundary. Same at its lower edge at y190, where it stops on a horizontal line.\n\nThere is no light in it anywhere. The torch on the left wall at x28, y125–168 emits nothing; the wall it is mounted on is the same value above and below it. No ambient occlusion where the grey stone meets the dirt, no contact shadow under the barrels, under the crates, or under the green figure at x215, y0–25. The bottom strip at y263–288 is a flat dark grey band with a small lighter notch at x160–175 and no top surface at all — that is a placeholder, not a wall.",
+    "FLAGGED": "1, 2, 4",
+    "RANK": "1 > 3 > 4 > 2",
+    "BEST": "1",
+    "WORST": "2",
+    "SHIP": "NONE\n\n---"
+  },
+  "flip_list": [
+    "The grate at (597,548) is lit wrong. Its pale stone ring reads (165,120,82), luminance 129, while the bare floor under it is 89 and the floor 30px right at (630,545) is 59 — the prop is 2.2× brighter than the surface it is set into, in a corner the lamp does not reach. Attenuate the grate by the same falloff curve as the floor beneath it so it lands near 85–90.",
+    "Same fault on the loose planks at (505–550, 605–620): the plank pixel at (520,612) is luminance 96 against floor at (560,612) of 64. The props are receiving a contact shadow — (560,612) drops from 83 in the bare frame to 64 with the prop present — but the props themselves are not being attenuated. Apply the light term to the prop sprites, not only their shadows.",
+    "The centre X at (385–425, 600–625) is (158,49,20) — a saturated red with no yellow in it, in a frame where every other surface carries the amber cast of the lamp. Repaint it in the same wood ramp as the left X at (263–300, 600–622), which is (75,26,7) there, then let falloff separate them rather than hue.",
+    "The brazier at (332–362, 528–568) reads as a fire and casts nothing: pixels immediately around it are unchanged from the unlit frame. Either give it a small radial contribution to the floor within ~40px, or repaint the interior so it reads as cold and empty rather than as flame.",
+    "Same for the orange flame inside the grate ring at (597,548) — it glows in the sprite and puts zero light on the surrounding stone.",
+    "The crate at (310–378, 638–708) has no cast shadow. The lamp is up and left of it at (405,485), so it should throw down and right. It throws nothing, and it has no visible height cue — only a top face and two dark bands. Add the cast shadow and a 1–2px lighter lip on the lamp-facing top edge.",
+    "The crack running from about (230,520) through the fork at (320,590) out to (740,600) is a constant-width, constant-value black line that crosses at least eight slab joints without stepping, jogging or widening at any of them. Break it at the joints, vary its width from 1px to 3px along the run, and let it pick up the light — right now it stays the same pure black on floor that ranges from luminance 200 to under 20."
+  ],
+  "flip_list_withheld": null,
+  "withheld_because": null,
+  "panel": {
+    "seats": 5,
+    "ruling": "five seats; block only on strong-majority regression (>=4 of 5 rank below the reference); else install if exit met and plant caught. Rank-in-deck cannot resolve polish-sized deltas at a 40% flip rate. — Rafe, 2026-09-09",
+    "law": "a gate's binding term must have a measured noise floor and must never be a single sample. — Rafe, 2026-09-08",
+    "verdict_at_round": "INSTALL-LATEST",
+    "above_reference": 1,
+    "not_below_reference": 4,
+    "below_reference": 1,
+    "strong_regression": false,
+    "ref_slack": 1,
+    "flagged_by": 5,
+    "shipped_by": 0,
+    "majority_above": false,
+    "majority_not_below": true,
+    "all_caught": true,
+    "dissent": 1,
+    "plants_distinct": 1,
+    "per_seat": [
+      {
+        "seat": 1,
+        "rank": 1,
+        "reference_rank": 2,
+        "above_reference": true,
+        "not_below": true,
+        "build_flagged": true,
+        "shipped": false,
+        "plant": "blown-highlight.png",
+        "caught": true,
+        "transcript": ".claude/skills/frame-critic/history/r001-props-transcript-seat1.txt",
+        "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-1924f213d65f66e9"
+      },
+      {
+        "seat": 2,
+        "rank": 2,
+        "reference_rank": 1,
+        "above_reference": false,
+        "not_below": true,
+        "build_flagged": true,
+        "shipped": false,
+        "plant": "blown-highlight.png",
+        "caught": true,
+        "transcript": ".claude/skills/frame-critic/history/r001-props-transcript-seat2.txt",
+        "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-038fda0af335de60"
+      },
+      {
+        "seat": 3,
+        "rank": 4,
+        "reference_rank": 2,
+        "above_reference": false,
+        "not_below": false,
+        "build_flagged": true,
+        "shipped": false,
+        "plant": "blown-highlight.png",
+        "caught": true,
+        "transcript": ".claude/skills/frame-critic/history/r001-props-transcript-seat3.txt",
+        "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-ae8732b1895017b4"
+      },
+      {
+        "seat": 4,
+        "rank": 2,
+        "reference_rank": 1,
+        "above_reference": false,
+        "not_below": true,
+        "build_flagged": true,
+        "shipped": false,
+        "plant": "blown-highlight.png",
+        "caught": true,
+        "transcript": ".claude/skills/frame-critic/history/r001-props-transcript-seat4.txt",
+        "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-3fcb9cc752c4fc3b"
+      },
+      {
+        "seat": 5,
+        "rank": 2,
+        "reference_rank": 1,
+        "above_reference": false,
+        "not_below": true,
+        "build_flagged": true,
+        "shipped": false,
+        "plant": "blown-highlight.png",
+        "caught": true,
+        "transcript": ".claude/skills/frame-critic/history/r001-props-transcript-seat5.txt",
+        "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-54b3a28c6044ff10"
+      }
+    ]
+  },
+  "seat_redraw": null,
+  "item_exit": {
+    "_what": [
+      "THE ITEM'S OWN MEASURED EXIT — required by INSTALL-LATEST (Rafe, 2026-09-08).",
+      "",
+      "A build installs because it DID THE THING IT SET OUT TO DO. The rank test only says",
+      "the doing cost nothing against the seeded reference; this says what was done. Without",
+      "it, 'not worse than the reference' would mean 'not different from it', and a round",
+      "that changed nothing would install as readily as one that fixed something.",
+      "",
+      "Declared here per item, recorded into the verdict, re-checked at the gate. The gate",
+      "refuses a `met` with no measurement behind it."
+    ],
+    "item": "the tier-two props pass — orc work standing in the lit radius (#167's exit)",
+    "claim": "orc work is visible AS STANDING OBJECTS IN THE LIT RADIUS of the walked scene — the acceptance criterion routed here from the wall lane — on the landed floors and walls, with the floor painting correctly beneath them",
+    "measured": "SUBSTRATE: the review scene can seat standing objects at all, which is what the wall lane's r003 was routed here for ('the review scene has no prop system'). Proved with a magenta stub at the props' own id — 904-908 magenta pixels at each of four declared cells, which no floor repaint can fake; the first proof was WRONG (it measured pixels changed at the cell, which was MarkPropCell repainting the floor, not a sprite) and is corrected. METHOD: basic generation cannot hold §3 — 15 generations came back isometric, vegetated, or as objects the identity cards reject by name (a gravestone with a skull, four fences). Style-matched generation CONDITIONED ON THE LANDED FRAME, which is the method CC-SESSION-tier2-props.md specifies and which waves 1 and 2 skipped, holds §3: the marker and the fire both came back orthogonal, square to the screen, in the scene's own palette, with no vegetation. Downsampled 2:1 (87% and 72% of their 2x2 blocks already uniform, so a sample per block recovers the native art rather than authoring a sub-pixel gradient §4.3 forbids). LANDED: B-PROP-001 the marker stone at (5,13) and (4,17), B-PROP-003 the orc fire at (9,13), all inside the lit radius. B-PROP-002 the barricade did NOT land and is recorded as outstanding rather than shipped badly. ENGINE FIX: a prop's cell is still floor. Tier1AshlarFloor skipped prop cells because it used IsWalkable — a MOVEMENT predicate — to decide what to PAINT, so every prop sat on the theme's magenta placeholder. That is #128's conflation in a second painter, and the magenta was §4.2's guard working. Magenta pixels remaining in the frame: 0.",
+    "instrument": "the magenta-stub substrate probe; the clause screen in tools/tier2_props/screen_wave.py, which is a builder's tool and gates nothing — it passed the gravestone and two of the fences, because §13.4 is right that register conformance is never instrumented",
+    "met": true
+  },
+  "progress": {
+    "rank_position": 1,
+    "deck_size": 4,
+    "rank_score": 1.0,
+    "bar_position": 4,
+    "approved_position": 2,
+    "approved_frame_in_deck": true,
+    "beats_approved": true,
+    "near_bar": true,
+    "near_bar_slack": 1,
+    "new_best": true,
+    "best_before": null,
+    "capture_signature": "02020202020e0f0f12120e131315100e0f121010121012121212110e0d112c2302020202020c100f10100e1313120f0c0e11100f101212111112100e0d10412f02020202020d0f100c0b0e0d0c0c0d0b0d0b0c0d0b0d12110d0d0c0c0d0b0a0a02020202020d0f0f0f101110101112100d0c0d0e0c0c100f0d0e110f0f0e0e0d02020202020b0c0d0c0c0d0c0c0d0d0a0a0a0c101b0d110f0d0e0f0c0a0a0a080202020202020202020202020203030303030815160f14100d0f0d020202020202020202020202020202030303030303040408181e1118130e0f0d02020202020202020202020203030303030405050405050b222217231c15140d0202020202020202020202020303040505050606060707112f2b2329221b190e03020202020202020202030304040405060708080909081036382f332d2318150303020202020202020303040405060708080a090a0a0b1943433745392422190403020202020202020303040506070709090b0b0c0c0b1b404142624a221f1704030302020202020303040405070809090b0c0c0d0d0f1f4f4c4a7462362b1c050303020202020203030c0e11101414181c1d1c1f24253162545b85693f31270e0e0b080602020303041e222c25302f413f3f525350685b59656488543c3330251e1a140f02020203041f222826292b3139354052414a3840495c804e242b211d1c11100c02020304041e292943445b646674a1a19d7f9aa29892877158483d3529221a120202020304222f2a44687d929cb8c6c3a88abdbd9e80776e5d4e413e32261c1a0405050607212a263e4e576287a1babec2bdad92a28e867363553e3731251e180b1010112b2f1e1f2d30647ca6b396aeb3b8928781747066543639342e231d17050707080818182138436d8b9996a4a7a2a3887665555352443936302b231b16020202020312141f3549605d677d88695d506359674e4a433d36372d231d1914060506050613181c303f495460564b3f4d51565b604e4a3b383330241d1814130e100e0d0c0f12151f2f3a403f242c2c475c60584a42423e362e29211b1210150d0e0a080a09090c18222d30321a2020475352533c423d382c28211d181412150f0f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e12100e100e12141214131620252728292e2f2d2b242424211d1a1714120f121211120d100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d10100c0f0e101211110f0f111614151515151517151513101211100f100e0f0d11100e0c0c0d0b0b11100f0f121112111110111313101213100f0e0d0d0e0f0f221e130f1110100e1010121314131111110f1214121212121011100d0f0f0e0f141d0e0c0c0f100d0f11111213121010120f10120f13121111100f0d100f1110",
+    "moved": null,
+    "two_strikes_advisory": null,
+    "series": [
+      {
+        "round": 1,
+        "verdict": "INSTALL-LATEST",
+        "rank_position": 1,
+        "deck_size": 4,
+        "rank_score": 1.0,
+        "capture_signature": "02020202020e0f0f12120e131315100e0f121010121012121212110e0d112c2302020202020c100f10100e1313120f0c0e11100f101212111112100e0d10412f02020202020d0f100c0b0e0d0c0c0d0b0d0b0c0d0b0d12110d0d0c0c0d0b0a0a02020202020d0f0f0f101110101112100d0c0d0e0c0c100f0d0e110f0f0e0e0d02020202020b0c0d0c0c0d0c0c0d0d0a0a0a0c101b0d110f0d0e0f0c0a0a0a080202020202020202020202020203030303030815160f14100d0f0d020202020202020202020202020202030303030303040408181e1118130e0f0d02020202020202020202020203030303030405050405050b222217231c15140d0202020202020202020202020303040505050606060707112f2b2329221b190e03020202020202020202030304040405060708080909081036382f332d2318150303020202020202020303040405060708080a090a0a0b1943433745392422190403020202020202020303040506070709090b0b0c0c0b1b404142624a221f1704030302020202020303040405070809090b0c0c0d0d0f1f4f4c4a7462362b1c050303020202020203030c0e11101414181c1d1c1f24253162545b85693f31270e0e0b080602020303041e222c25302f413f3f525350685b59656488543c3330251e1a140f02020203041f222826292b3139354052414a3840495c804e242b211d1c11100c02020304041e292943445b646674a1a19d7f9aa29892877158483d3529221a120202020304222f2a44687d929cb8c6c3a88abdbd9e80776e5d4e413e32261c1a0405050607212a263e4e576287a1babec2bdad92a28e867363553e3731251e180b1010112b2f1e1f2d30647ca6b396aeb3b8928781747066543639342e231d17050707080818182138436d8b9996a4a7a2a3887665555352443936302b231b16020202020312141f3549605d677d88695d506359674e4a433d36372d231d1914060506050613181c303f495460564b3f4d51565b604e4a3b383330241d1814130e100e0d0c0f12151f2f3a403f242c2c475c60584a42423e362e29211b1210150d0e0a080a09090c18222d30321a2020475352533c423d382c28211d181412150f0f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e12100e100e12141214131620252728292e2f2d2b242424211d1a1714120f121211120d100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d10100c0f0e101211110f0f111614151515151517151513101211100f100e0f0d11100e0c0c0d0b0b11100f0f121112111110111313101213100f0e0d0d0e0f0f221e130f1110100e1010121314131111110f1214121212121011100d0f0f0e0f141d0e0c0c0f100d0f11111213121010120f10120f13121111100f0d100f1110"
+      }
+    ],
+    "guards": {
+      "stall_rounds": 3,
+      "round_ceiling": 15,
+      "no_change_mad": 0.25,
+      "no_change_max": 4,
+      "sig_grid": 32,
+      "judge_misses": 2,
+      "flip_same": 0.6
+    }
+  },
+  "transcript": ".claude/skills/frame-critic/history/r001-props-transcript-seat1.txt",
+  "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read. The guards measure progress — rank in the deck — never rounds elapsed.",
+  "dispositions": [
+    {
+      "state": "ROUTED",
+      "lane": "props",
+      "cites": "#204",
+      "item": "The grate at (597,548) is lit wrong. Its pale stone ring reads luminance 129 while the bare floor under it is 89 and the floor 30px right is 59 — the prop is 2.2x brighter than the surface it is set into.",
+      "measured": "Three of five seats measured this independently and they are right. The landing route never snapped the generated art to the family's ladder — compose_props.py reads the wall manifest's ladder and quarry tint and lays every value on a rung, and land_props.py, the route that shipped, only downsamples. The props carry the generator's values, not the family's. Filed as #204 with the fix named: snap in the LANDING route so both paths agree, never by editing the PNGs, which would drift at the next prop."
+    },
+    {
+      "state": "ROUTED",
+      "lane": "props",
+      "cites": "#204",
+      "item": "Same fault on the loose planks at (505-550, 605-620): the plank pixel at (520,612) is luminance 96 against floor at (560,612) of 64. The props ARE receiving a contact shadow.",
+      "measured": "Same defect, and the seat's own control settles what it is NOT: it measured the floor dropping 83 -> 64 under the prop, so the props receive the contact shadow correctly and the rig is lighting them like everything else. That leaves albedo, which is #204."
+    },
+    {
+      "state": "ROUTED",
+      "lane": "props",
+      "cites": "#204",
+      "item": "The centre X at (385-425, 600-625) is (158,49,20) — a saturated red with no yellow in it, in a frame where every other surface carries the amber cast of the lamp.",
+      "measured": "The quarry tint half of the same defect. tier1_walls/MANIFEST.json carries quarry_tint [1.024, 1.010, 0.826], which is what gives every landed surface its amber cast; a prop that skips it reads as a different rock in the same room. I had noticed this variant sitting brighter than its siblings and put it in front of the seats anyway, which was the right call — it is their question — but the answer is unambiguous."
+    },
+    {
+      "state": "ROUTED",
+      "lane": "props",
+      "cites": "#205",
+      "item": "The brazier at (332-362, 528-568) reads as a fire and casts nothing: pixels immediately around it are unchanged from the unlit frame. Either give it a small radial contribution to the floor, or repaint the interior.",
+      "measured": "DELIBERATE, AND OWED. B-PROP-003's identity card splits the prop: the sprite is authored to RECEIVE light and the emission is the engine's, because a painted glow is §6.3's outlawed rim by another name and would not move when the carried lamp does. The pit shipped with no PointLight2D attached so the card's carried-only capture could judge the object first — and it passed that test: three seats named it as a fire with no light coming off it. The two-source scene is #205."
+    },
+    {
+      "state": "ROUTED",
+      "lane": "props",
+      "cites": "#205",
+      "item": "Same for the orange flame inside the grate ring at (597,548) — it glows in the sprite and puts zero light on the surrounding stone.",
+      "measured": "The same prop, seen at its other placement, by a second seat. Both are #205. The seat's phrasing is exact and is the reason the sprite must NOT change: it glows in the sprite and not on the stone, which is what an engine light is for."
+    },
+    {
+      "state": "ROUTED-ALREADY",
+      "lane": "floor",
+      "cites": "#193",
+      "item": "The crate at (310-378, 638-708) has no cast shadow. The lamp is up and left of it at (405,485), so it should throw down and right. It throws nothing, and it has no visible height cue — only a top face and two dark bands.",
+      "measured": "#193's patch to the pixel, and the SEVENTH independent seat to name it — as a crate here, a box, an alcove, a shadowless block. Each one describes it differently, which is #193's own finding: it reads 'as one unresolved mass'. There is no crate. #193 measured a run of pale spanning ashlar stones, byte-identical across #185's face-placement fix, and its exit is that the run reads AS MASONRY — explicitly not by giving it a top face or a contact shadow, which would make it the object it is being mistaken for."
+    },
+    {
+      "state": "ROUTED-ALREADY",
+      "lane": "floor",
+      "cites": "#194",
+      "item": "The crack running from about (230,520) through the fork at (320,590) out to (740,600) is a constant-width, constant-value black line that crosses at least eight slab joints without stepping, jogging or widening at any of them.",
+      "measured": "#194's item 2 in its own words — 'Floor cracks: light them and break them at the joints' — where the issue records the first half as already done and the live half as 'break them at the joints, and that is §8.3.1 territory'. A second independent seat has now found the live half unaided, and this one counted the joints: at least eight crossed without a step."
+    }
+  ]
+}

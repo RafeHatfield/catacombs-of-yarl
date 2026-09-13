@@ -1,9 +1,16 @@
-{
+[
+ {
   "_what": "A ruling that clears a loop guard. LOOP-PROCESS/SKILL.md §5: a guard clears by an ADDED artifact, never by removing evidence — the lane that most wants a guard gone is the lane holding the evidence against itself. Nothing here deletes a verdict.",
   "lane": "combined",
   "guard": "no-change",
-  "rounds_covered": [1, 2],
-  "builds": ["6e4f980012c4", "08be3c7e6e32"],
+  "rounds_covered": [
+   1,
+   2
+  ],
+  "builds": [
+   "6e4f980012c4",
+   "08be3c7e6e32"
+  ],
   "cleared_by": "Rafe",
   "date": "2026-09-05",
   "ruling": "The no-change STOP is procedural (doc commits re-staled round 1) — cleared by this ruling, not a stalled lane.",
@@ -11,4 +18,19 @@
   "prevention": "Run the critic LAST, on a frozen tree. CRITIC-VERDICT.json, STALL-REPORT.md, PARK-CLEARED.json and the history directory are excluded from the build id by name, so the round's own artifacts may be committed after it without re-staling the verdict.",
   "known_gap": "SKILL.md §5 documents this marker and says 'the guard then counts rounds after the marker'. NOTHING READS THIS FILE. frame_critic.py's history() loads only history/*.json and guards() never consults a marker. The convention is documented and unimplemented; this file is written to the documented contract so the record is correct, and the gap is reported rather than closed here — building the consumer is a change to a ruled mechanism and is not this round's.",
   "not_cleared": "broken-judge is never clearable by a lane ruling, and is not claimed here. The plant was CAUGHT in both rounds."
-}
+ },
+ {
+  "_what": "A ruling that clears a loop guard. SKILL.md §5: a guard clears by an ADDED artifact, never by removing evidence. Nothing here deletes a verdict — r001 and r003 stand on disk exactly as they were recorded, FAIL and all.",
+  "lane": "polish-abc-install",
+  "guard": "no-change",
+  "rounds_covered": [
+   1,
+   2,
+   3
+  ],
+  "cleared_by": "Rafe",
+  "date": "2026-09-08",
+  "ruling": "PASS-INSTALL for polish rounds = non-regression, not victory. INSTALL-LATEST = majority of seats do not rank the build below the seeded reference (above or tied), AND the item's own measured exit is met, AND no unrouted flags. Beating the reference is not required to install.",
+  "what_actually_happened": "THE GUARD'S OBSERVATION IS CORRECT AND ITS INFERENCE IS NOT. r001 and r003 are byte-identical and both FAIL, and no-change reads that as 'whatever was changed did not reach the capture'. Nothing was changed. THE BAR MOVED, not the picture: both rounds were judged against a rule requiring the build to BEAT its seeded reference, which the ruling above replaced with non-regression after the same bytes returned 3-of-3 above and then 1-of-3 across two rounds — a measured 40% flip rate (§13.13) standing in for a threshold. r003's own ballots read above / tied / tied, i.e. 3 of 3 NOT BELOW, so under the ruling it never was a stalled lane. The rounds are excluded from THIS guard on THIS lane only; every other guard still counts them, and r002's VOID is untouched."
+ }
+]

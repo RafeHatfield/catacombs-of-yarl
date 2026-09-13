@@ -1,0 +1,46 @@
+RANK: 4 > 2 > 1 > 3
+
+BEST: 4
+BEST_WHY: The wall run above the room (y≈370–455, full width) is stacked in the right order and reads as built: soft-lit top surface, then a continuous 2px dark cap line at y≈423, then one crisp course of face bricks with staggered joints, then floor. The corridor mouth at x≈505–560 resolves into a coherent lit pillar whose shaft shading runs vertically and whose face course ends cleanly against it. On the floor, the joints between stones vary in width and darkness along a single course (compare the run at y≈540–560 from x≈420 to x≈640), individual stones carry different hatch densities, and the lit patch dims stone-by-stone rather than as a flat gradient, so the floor reads as laid, not stamped. Nothing in the frame is a prop that can go wrong; the base tileset is doing all the work and it holds up.
+
+WORST: 3
+WORST_WHY: The pool at (248–343, 0–192) is a hard-edged rectangle of hex-pattern green with a 1px lighter border and no bank, lip, shadow or wet edge where it meets the dirt — it reads as a placeholder region fill. The same moss decal is pasted three times on the wall tops at (13–47, 55–90), (13–45, 205–230) and (350–384, 145–175), unchanged; the same lily pad is pasted four times in the pool; the two crates at (63–97, 0–40) and (63–97, 48–88) are pixel-identical, as are the two barrels at (115–143, 195–215) and (163–191, 195–215). The crates, barrels and orc are drawn 3/4-view (they show a front face and a top) while the walls and floor are strict top-down, so the objects sit on the floor at a different projection from the room. The frame is evenly lit edge to edge — no light source, no falloff, no shadow under any object. The "bones" at (207–237, 113–130) are an unreadable white pixel scatter.
+
+FLAGGED: 1, 2, 3
+
+SHIP: NONE
+
+FLIP 1:
+- The wall run above the room is stacked upside down: the brick face course sits at y≈390–425 directly under the void, and the soft mottled "top surface" fill sits at y≈425–455 directly against the floor. Swap them: top-surface fill against the void, cap line, face course against the floor — as in frame 4.
+- Remove the dark studs poking up out of the face course into the void at x≈295, 355, 470 (y≈385–395); they are the face sprite's edge pixels bleeding above the wall line.
+- At the corridor mouth (x≈500–560, y≈395–520) the corridor floor bricks are drawn over the wall face at offset positions, producing a stack of overlapping bright and dark rectangles. Give the corridor a pillar cap and terminate the face course cleanly against it.
+- Along the right of the wall run (x≈600–700, y≈400–440) overlapping dark/mid rectangles pile up with no course logic; re-tile so a single course of face bricks runs the length.
+- The lit hotspot at (330–420, 470–520) clips to flat cream and the brick hatching disappears; cap the light multiplier so stone texture survives at the centre of the light.
+- The wall top surface between the void and the face is a soft, unpixelated cloud-noise fill (clearest at (120–500, 60–135)); replace it with a pixel-drawn top surface (slab joints or rubble) at the same pixel scale as the face and floor.
+- The dark square at (300–370, 650–710) is a bordered patch with no legible contents; either make it a readable hatch/drain/pit or remove it.
+
+FLIP 2:
+- The brazier at (575–625, 525–580) has drawn flames but casts no light: the floor at (560–640, 500–600) is the same dim value as the floor around it. In a scene where the carried light is the only light, a lit fire must emit — add a warm falloff around it or put the fire out.
+- The pale vertical slab at (267–299, 540–625) is a flat beige rectangle with a 2px dark right edge and almost no surface detail; it reads as an untextured block. Give it grain, chips and an edge highlight, or replace it with a finished prop.
+- The brazier is drawn with a near-black 2px outline while every stone on the floor has no outline; the sprite's outline weight does not match the tileset. Drop the outline to a dark-brown 1px or lose it.
+- The dark timber bundle at (200–280, 460–510) is flat dark brown despite sitting inside the lit patch, while the bound timber at (400–480, 590–630) is fully lit further from the figure; light both props with the same falloff as the floor.
+- The lit hotspot at (330–420, 470–520) clips to flat cream and loses brick hatching; cap the light multiplier.
+- The wall top surface (clearest at (120–500, 60–135)) is a soft cloud-noise fill against crisp pixel bricks; replace with a pixel-drawn top surface at the tileset's pixel scale.
+- The dark square at (315–380, 645–710) is illegible as a prop; make it readable or remove it.
+
+FLIP 3:
+- Draw a bank around the pool at (248–343, 0–192): a dark wet rim on the dirt side, a 1–2 tile shadowed edge on the water side, and let the shore vary instead of running dead straight on all four sides.
+- Break up the repeated decals: the three moss blobs at (13–47, 55–90), (13–45, 205–230), (350–384, 145–175) and the four lily pads need at least three distinct variants, not one sprite stamped.
+- The two crates at (63–97, 0–40)/(63–97, 48–88) and the two barrels at (115–143, 195–215)/(163–191, 195–215) are pixel-identical pairs placed side by side; vary the sprites or the placement.
+- The crates, barrels and orc are drawn in 3/4 view (front face + top visible) on a strict top-down room; either redraw the props as top-down (lids only, with a cast shadow) or commit the whole tileset to 3/4.
+- No light source and no falloff anywhere: the frame is one flat exposure. Introduce a carried light with radial falloff and a contact shadow under every prop so objects sit on the floor instead of on top of it.
+- The wall tops (grey slabs, 32px) have no edge treatment where they meet floor or water — add a 1px darker seam and a face-side shadow on the south edges so walls have height.
+- The bones scatter at (207–237, 113–130) is an unreadable cluster of white pixels; draw it as a legible object or cut it.
+
+FLIP 4:
+- The wall top surface between the void and the cap line is a soft, blurred cloud-noise fill (clearest at (120–500, 60–135), where it is the only thing on screen); it reads as a filter texture next to the hard-edged pixel bricks. Replace it with a pixel-drawn top surface at the same pixel scale as the face course.
+- The lit hotspot at (330–420, 470–520) clips to flat cream and the brick hatching vanishes; cap the light multiplier so stone texture survives under the figure.
+- The dark bordered square at (312–382, 645–712) has no legible contents; make it a readable hatch, grate or pit, or remove it.
+- The corridor floor at (515–550, 300–400) is close to the value of the room floor at the figure's feet despite being ~200px further from the light; tighten the falloff so distance reads consistently in every direction.
+
+Model: Claude Opus 5 (1M context)

@@ -96,5 +96,56 @@
   ".claude/skills/frame-critic/history/r001-rank-noise-floor-transcript-seat3.txt",
   ".claude/skills/frame-critic/history/r001-rank-noise-floor-transcript-seat4.txt",
   ".claude/skills/frame-critic/history/r001-rank-noise-floor-transcript-seat5.txt"
- ]
+ ],
+ "second_measurement": {
+  "_what": [
+   "THE PANEL OF THREE IS ITSELF NOISY — measured 2026-09-08 on a second frozen frame.",
+   "",
+   "The three-seat panel was the remedy for a single seat's flip rate. It has now been run",
+   "TWICE ON IDENTICAL BYTES and returned opposite answers on the term that gates the",
+   "install:",
+   "",
+   "    r002-polish-198-halo   NOT BELOW the reference in 3 of 3 seats   -> install bar met",
+   "    r003-polish-198-halo   NOT BELOW the reference in 1 of 3 seats   -> no majority",
+   "",
+   "Same picture, byte-identical: the round's own progress line reads 'picture moved mean",
+   "0.000 / worst 0 luminance levels'. Six independent seats in total on this frame.",
+   "",
+   "⚠ THE BAR IS NOT RE-TUNED HERE. LOOP-PROCESS §8: a bar found wanting mid-run is held",
+   "frozen, cleared honestly and impeached in the same report, never adjusted once the",
+   "answer is visible. r003 is the round that describes this tree, r003 says no majority,",
+   "and nothing installed. Choosing r002 because it agrees with me is the exact move the",
+   "rule exists to forbid, and a third panel run after seeing r003 would be the same move",
+   "wearing a better name.",
+   "",
+   "WHAT THE NUMBER ACTUALLY SAYS. Seat-level, this build is not below its reference in",
+   "4 of 6 seats — p = 0.667. A majority of three drawn from that lands not-below with",
+   "probability p^3 + 3p^2(1-p) = 0.296 + 0.444 = 0.741, so ABOUT ONE PANEL IN FOUR will",
+   "report 'no majority' on a build that is genuinely 2-of-3 at seat level. The panel",
+   "narrowed the error bar; it did not remove it, and it cannot: it is three samples of a",
+   "statistic whose per-sample flip rate is 40%.",
+   "",
+   "This is recorded as evidence for whoever rules on the bar next, not as an argument for",
+   "a particular ruling. Options a ruling might weigh, none of them taken here: more seats",
+   "(the error falls as 1/sqrt(n) and five was already ruled once); a rank margin rather",
+   "than a strict majority; or accepting that a polish increment this small is simply below",
+   "the comparator's resolution, which would make 'not worse' unmeasurable and would move",
+   "the install decision to the item's own measured exit alone."
+  ],
+  "rounds": [
+   "r002-polish-198-halo",
+   "r003-polish-198-halo"
+  ],
+  "build_frame_sha256_note": "identical between the two rounds; picture moved 0.000 mean, 0 worst",
+  "seats_total": 6,
+  "not_below_total": 4,
+  "seat_level_rate": 0.667,
+  "panel_majority_probability_at_that_rate": 0.741,
+  "panel_flip_observed": true,
+  "verdicts": {
+   "r002": "3 of 3 not below",
+   "r003": "1 of 3 not below"
+  },
+  "consequence": "nothing installed from this lane; the build stands unshipped on its own merits"
+ }
 }

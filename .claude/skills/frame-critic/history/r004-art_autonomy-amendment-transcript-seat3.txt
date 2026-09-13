@@ -1,0 +1,49 @@
+RANK: 3 > 1 > 2 > 4
+
+BEST: 3
+BEST_WHY: It is the only frame drawn at one resolution throughout. Every element — the grey flagstone floor (left column and bottom band), the dark brick wall face along the bottom edge and beside the door at left, the two chests with crates under them at top-left, the two barrels at bottom-centre, the orc with sword at top, the bone scatter at centre-right — is nearest-neighbour pixel art on the same 32px grid with the same 1px line weight. The flagstones carry sparse per-tile cracks (the grey tile at top-left, the tile at far right around y=100) that are drawn inside the tile rather than overlaid across it, so the floor reads as laid stone. The wooden door in the left wall gap has a visible plank grain and a darker header block above it, so it reads as a door in a wall, not a coloured rectangle. Nothing in it is blurred, smeared, or at a different pixel density from the thing next to it.
+
+WORST: 4
+WORST_WHY: The pale vertical block at roughly x=270–300, y=540–625 (left of the figure, under the RIG button) is a soft-edged, bilinear-scaled rectangle with no top face, no side face, no shadow and no surface detail — it is a placeholder standing in a finished room. The brazier at right (x≈575–625, y≈525–575) has visible flames and casts no light on the floor around it while the fiction says the figure carries the only light; an emitter that doesn't emit is a broken prop. The prop set is also inconsistent with itself: the brazier sits on a hard dark shadow disc, but the log pile at top-left (x≈200–280, y≈455–510) and the rope-bound crossed planks at centre (x≈395–480, y≈585–635) have no shadow at all, so they float. All of that is on top of the defects it shares with 1 and 2 (below).
+
+FLAGGED: 4, 1, 2, 3
+
+SHIP: NONE
+
+FLIP 1:
+- The wall-top mass north of the room (everything brown above y≈425 and the whole left column x<185) is a bilinear-blurred texture next to nearest-neighbour floor bricks. Re-render the wall top at the same pixel density as the floor, or quantise it to the tile's pixel grid so there are no soft gradients inside a tile.
+- The long crack lines crossing the lit floor (from x≈235,y≈480 down to x≈330,y≈700, and the arc at right x≈560–700,y≈640–700) are 1px screen-resolution strokes drawn over tile boundaries. Either bake cracks into individual floor tiles at tile resolution or remove the overlay.
+- The pale scrubbed patches on the floor bricks right of the figure (x≈490–560, y≈480–560) read as an eraser brush, not wear. Replace with tile-resolution chipping that respects mortar lines.
+- The wall face band (y≈425–455) is crisp pixel art with driven vertical pins; the wall top directly above it is soft. Bring both to the same line weight so the wall reads as one object.
+- The north corridor floor (x≈505–565) uses a pink mortar colour that doesn't appear anywhere else in the room; unify mortar colour with the main floor.
+- The floor-to-void transition on the left edge of the room (x≈180–200, y≈460–640) has no wall face; add one so the room has a west wall like it has a north wall.
+
+FLIP 2:
+- Identical to FLIP 1. The only measurable difference from 1 is a slightly shorter light throw in the north corridor (e.g. the pixel at 513,345 is value 76 in 1 and 46 in 2); nothing that changes the list.
+- The wall-top mass north of the room and the left column are bilinear-blurred against crisp floor bricks; re-render at tile pixel density.
+- Remove or bake in the 1px screen-resolution crack overlay across the lit floor.
+- Replace the scrubbed white patches right of the figure with tile-resolution wear.
+- Match the wall-top line weight to the wall-face band at y≈425–455.
+- Unify the north corridor's pink mortar with the room's mortar colour.
+- Add a west wall face where the lit floor cuts to void at x≈180–200.
+
+FLIP 3:
+- The water at x≈250–345, y≈0–195 is a flat rectangle with hard straight edges cut directly into the dirt; add a bank/edge tile set (at least a darker damp-earth rim and a 1px lighter waterline) so it reads as a pool and not a filled selection.
+- The moss patches on the grey flagstones (≈x=20–55,y=55–85; ≈x=15–50,y=210–235; ≈x=350–380,y=150–175) are semi-transparent soft-edged blobs at a finer density than the pixel art; redraw them as opaque, pixel-crisp decals on the tile grid.
+- The dirt floor (x≈55–250) is a uniform procedural speckle fill with the same red/blue noise density edge to edge; break it up with tile variants so it doesn't read as a noise filter.
+- The dirt/flagstone boundary at x≈55 and at y≈215 is a straight hard seam with no threshold or transition tile; add an edge tile.
+- The whole frame is at one flat value; there is no light source and no falloff, so nothing has depth. Add the carried-light falloff from the figure, or at minimum a vertical ambient so wall faces are darker than floors.
+- The two chests at top-left (x≈65–95, y≈0–75) are the only objects with a stacked crate beneath them, and the crate is the same width as the chest, making them read as a single tall furniture sprite; separate them or give the crate its own footprint.
+
+FLIP 4:
+- Delete or finish the pale block at x≈270–300, y≈540–625: give it a top face, a shaded side face, a hard pixel edge and a shadow, or remove it.
+- The brazier at x≈575–625, y≈525–575 shows flame and lights nothing; either it emits a small warm radius on the surrounding floor or the flame is removed and it becomes a cold brazier.
+- The log pile (x≈200–280, y≈455–510) and crossed planks (x≈395–480, y≈585–635) have no shadow while the brazier has a hard shadow disc; pick one shadow treatment and apply it to all three props.
+- The log pile is drawn at a coarser pixel density than the floor bricks under it; redraw at the floor's pixel grid.
+- The wall-top mass north of the room and the left column are bilinear-blurred against crisp floor bricks; re-render at tile pixel density.
+- Remove or bake in the 1px screen-resolution crack overlay across the lit floor.
+- Replace the scrubbed white patches right of the figure with tile-resolution wear.
+- Unify the north corridor's pink mortar with the room's mortar colour.
+- Add a west wall face where the lit floor cuts to void at x≈180–200.
+
+Model: Opus 5 (1M context)

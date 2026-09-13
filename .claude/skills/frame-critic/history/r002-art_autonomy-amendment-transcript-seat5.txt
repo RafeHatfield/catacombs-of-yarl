@@ -1,0 +1,45 @@
+RANK: 1 > 3 > 4 > 2
+
+BEST: 1
+BEST_WHY: The floor. In the lit area around the figure (roughly x 190–560, y 450–720) the flagstones are cut at three or four different widths per course, the courses don't align vertically, and the joints are a consistent 1–2 px dark line that shows up as a dark chip-out where a corner has broken (e.g. the stone directly left of the figure at ~(300,500), and the run at ~(430–560, 520–540)). The chisel-scratch texture inside each stone is different per stone — short diagonal hatch on some, near-blank on others — so nothing reads as a stamp. The light falloff is a smooth radial gradient that carries all the way to the bottom edge without a visible banding step, and the darker stones at the periphery (bottom-right, ~(600–750, 640–800)) still keep their joint lines and scratches at low contrast rather than turning to mud. The south-face brick band under the wall cap (y ~425–450) has driven pins at ~(230,430), ~(390,430), ~(470,430) sitting at varied heights and breaking the course line, which is the repairs the fiction asks for, done without comment. The whole frame is one temperature, one value range, no colour that doesn't belong.
+
+WORST: 2
+WORST_WHY: Everything in it is uniformly lit and reads as flat tile fill. The dirt floor (x ~55–250, y ~0–200) is a noise texture with red-brown speckle that visibly repeats on a tile period. The pool (x ~250–345, y ~0–190) is a hard-edged rectangle with a repeating hex pattern and no bank, lip or shadow where it meets the dirt — water meeting earth along a ruler line. The green moss on the grey stone (e.g. ~(20–50, 55–80) and ~(360–384, 150–175)) is a soft-edged low-alpha blob at a lower resolution than the tiles it's on — it reads as an airbrush stamp, not growth. The two crate stacks at ~(60–95, 0–45) and ~(60–95, 50–90) are pixel-identical duplicates. The bottom wall band (y ~265–288) has a lighter rectangular panel at ~(160–185, 270–280) that is a stray tile, not a feature. No light source, no falloff, no cold — it is a generic tileset assembled, not a place.
+
+FLAGGED: 2, 3, 4
+
+SHIP: NONE
+
+FLIP 1:
+- The wall cap (the mottled brown surface at y ~395–425 and along the whole north wall, and the columns beside the corridor at x ~440–505 and 555–575) is a soft noise fill at a lower effective resolution than the floor; it blurs where the floor is crisp. Redraw the cap as pixel-crisp stone at the same pixel density as the floor, or give it the same joint/scratch language.
+- The crack at ~(200–500, 520–580) is a continuous 1 px stroke of constant weight that crosses eight stones and every joint without interruption; the arc at ~(590–750, 640–720) is a smooth curve. Break each crack at the joints, vary the weight (2 px where it opens, 1 px at the tips), and stop it inside a stone rather than running it across the field.
+- The dark rectangular block at ~(310–380, 640–720) does not read: it's neither a pillar base (no cap, no shadow) nor a hole (no lip). Pick one and give it the corresponding edge treatment — a lit top face plus a south shadow if it's a pillar; a darker inner edge and lit rim if it's a pit.
+- The brick band on the wall face terminates at x ~190 with a hard vertical cut into the cap texture rather than a corner stone; add the corner.
+
+FLIP 3:
+- The fire pit at ~(600,550) and the brazier at ~(345,545) emit no light: the floor under and around the pit sits at the same falloff value as the floor two tiles away from it. Add a local light contribution to both (a small warm radius that lifts the surrounding stones and the ring of stones on the pit), or take the flames out.
+- The ring of stones on the fire pit is near-white and flat, higher in value than any lit floor stone; drop it into the floor's value range and give it a shadow side.
+- The three timber props at ~(280,610), ~(405,610), ~(535,615) are a saturated orange-red that appears nowhere else in the frame; they read as pasted from another palette. Desaturate and shift them to the sepia range of the floor so they sit under the same light.
+- The same three props are the same X composition at even spacing along one row; vary them (one collapsed pile, one single beam, one lashed pair) and break the spacing.
+- The timber and pit props have no contact shadow; add a 1–2 px dark shadow on the side away from the figure so they sit on the floor instead of floating on it.
+- Apply every item in FLIP 1 (this is the same base frame).
+
+FLIP 4:
+- The wall construction is inverted: the brick south-face band (with pins) is on the far side of the wall at y ~390–420, and the mottled cap sits between it and the floor at y ~420–450. From above, the face must be the row touching the floor and the cap must be behind it. Swap the two bands back on every wall in the frame (north wall, the bottom-left wall at ~(0–190, 640–720), and the right-hand wall at ~(555–750, 390–450)).
+- Because of that inversion, the pins at ~(270,385), ~(355,385), ~(470,385) stick up past the wall into the black void; after the swap they should sit inside the face band as they do in 1.
+- The light hotspot is blown out: the stones immediately right and below the figure (~(400–520, 480–560)) have gone to near-white and lost their scratch texture and joint contrast. Clamp the peak of the light so the brightest floor stone still shows its joints and hatching.
+- The dark block at ~(310–380, 640–720) is drawn here with a stepped, jagged outline and a brown brick cluster on top; it looks like a wall cap overlapping a floor tile. Give it one clean edge and the pillar/pit treatment from FLIP 1.
+- Apply the cap-resolution and crack items from FLIP 1.
+
+FLIP 2:
+- There is no light source and no falloff. Introduce a carried light on the figure at ~(220,10) and darken the frame with distance from it.
+- The pool at ~(250–345, 0–190) meets the dirt along a hard rectangle; add a bank — a 2–4 px lip of darker earth or stone around the water and a shadow on the water's inner north and west edges.
+- The hex water pattern repeats visibly; replace it with a non-tiling surface or vary it per tile.
+- The dirt floor speckle noise repeats on the tile period (visible in the run from ~(55,0) to ~(250,200)); rebuild it with at least four variant tiles or a larger repeat period.
+- The moss on the stone (~(20–50, 55–80), ~(360–384, 150–175), ~(10–50, 200–230)) is a low-alpha soft blob at lower resolution than the tiles; redraw it as hard-edged pixel growth that follows the joints.
+- The two crate stacks at ~(60–95, 0–45) and ~(60–95, 50–90) are identical; differ one of them.
+- The barrels at ~(130,205) and ~(175,205) are identical; rotate or damage one.
+- The lighter panel at ~(160–185, 270–280) in the bottom wall band is a stray; either make it a deliberate feature (grate, drain) or remove it.
+- The whole frame is saturated and mid-value; pull the palette toward the cold, dry range the fiction calls for.
+
+Model: Claude Opus 5 (1M context).

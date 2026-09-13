@@ -1,0 +1,238 @@
+{
+ "family": "boundary_props_v1",
+ "_what": [
+  "THE BOUNDARY'S PROPS — structure composed, material taken from generation.",
+  "",
+  "No generated pixel is copied into a shipped tile. What crosses is the GRAIN STATISTIC: each donor's residual after a box blur removes its own structure, re-laid onto this family's ladder. The donors are listed so the audit trail is complete, and every one of them FAILED as a finished object — on projection, on role, or on a painted glow.",
+  "",
+  "Values are rungs of the WALL family's ladder, read from its manifest rather than restated (§13.12), so a prop standing against a wall is the same rock at the same rungs. Re-derive the walls and the props follow.",
+  "",
+  "PALETTE REGIME: ladder, not locked. §5.1's values are PLACEHOLDER."
+ ],
+ "planes": {
+  "top_rung": 5,
+  "face_rung": 1,
+  "top_rows": 10,
+  "occlusion_rows": 2
+ },
+ "ladder": [
+  48.5627,
+  61.7893,
+  75.016,
+  88.2427,
+  101.4693,
+  114.696,
+  127.9227,
+  141.1493,
+  154.376
+ ],
+ "donors": [
+  "tools/tier2_props/gen/wave1/barricade_a.png",
+  "tools/tier2_props/gen/wave1/barricade_b.png",
+  "tools/tier2_props/gen/wave1/barricade_c.png",
+  "tools/tier2_props/gen/wave1/barricade_d.png",
+  "tools/tier2_props/gen/wave1/fire_a.png",
+  "tools/tier2_props/gen/wave1/fire_b.png",
+  "tools/tier2_props/gen/wave1/fire_c.png",
+  "tools/tier2_props/gen/wave1/fire_cold.png",
+  "tools/tier2_props/gen/wave1/marker_a.png",
+  "tools/tier2_props/gen/wave1/marker_b.png",
+  "tools/tier2_props/gen/wave1/marker_c.png",
+  "tools/tier2_props/gen/wave1/marker_d.png",
+  "tools/tier2_props/gen/wave2/barricade_e.png",
+  "tools/tier2_props/gen/wave2/fire_e.png",
+  "tools/tier2_props/gen/wave2/marker_e.png"
+ ],
+ "donor_note": "taken for grain only; every one failed as a finished object",
+ "tiles": [
+  {
+   "name": "marker",
+   "id": 9800,
+   "file": "tier1_ashlar_9800.png",
+   "cell": "1x2 top"
+  },
+  {
+   "name": "marker",
+   "id": 9801,
+   "file": "tier1_ashlar_9801.png",
+   "cell": "1x2 bottom"
+  },
+  {
+   "name": "barricade_a",
+   "id": 9810,
+   "file": "tier1_ashlar_9810.png",
+   "cell": "2x1 left"
+  },
+  {
+   "name": "barricade_a",
+   "id": 9811,
+   "file": "tier1_ashlar_9811.png",
+   "cell": "2x1 right"
+  },
+  {
+   "name": "barricade_b",
+   "id": 9812,
+   "file": "tier1_ashlar_9812.png",
+   "cell": "2x1 left"
+  },
+  {
+   "name": "barricade_b",
+   "id": 9813,
+   "file": "tier1_ashlar_9813.png",
+   "cell": "2x1 right"
+  },
+  {
+   "name": "fire",
+   "id": 9820,
+   "file": "tier1_ashlar_9820.png",
+   "cell": "1x1"
+  }
+ ],
+ "method": "style-matched generation conditioned on the LANDED FRAME, inpainted into a crop of the delivered scene, downsampled 2:1 to the family's 32px native. THE CROP IS NOW THE PROP'S WHOLE FOOTPRINT rather than one cell (§12.2): 64x128 for a 1x2 standing stone, 128x64 for a 2x1 barricade. Basic generation was tried first and could not hold §3.",
+ "landed": [
+  {
+   "name": "B-PROP-001 the boundary marker stone",
+   "id": 9800,
+   "source": "wave3/marker_styled.png",
+   "sha256": "4a4d605063dcf22db1301db34cc8736810bd7054574a2f8b606e331b1cfa813d",
+   "content": [
+    10,
+    15
+   ],
+   "quantised": 0.87
+  },
+  {
+   "name": "B-PROP-003 the orc fire",
+   "id": 9820,
+   "source": "wave3/fire_styled.png",
+   "sha256": "bd08029615c137dd2cbffce335ab7925f84c8fe2f48d3cce97e69b106ca86ec6",
+   "content": [
+    22,
+    22
+   ],
+   "quantised": 0.719
+  },
+  {
+   "name": "B-PROP-002a barricade, crossed baulks",
+   "id": 9810,
+   "source": "wave4/barricade_heap.png",
+   "sha256": "f4d9437c8060c909f7d34b4603a262a44073e3fadaea83bb8f67e90039cd012c",
+   "content": [
+    18,
+    12
+   ],
+   "quantised": 0.863
+  },
+  {
+   "name": "B-PROP-002b barricade, bound stack",
+   "id": 9811,
+   "source": "wave4/barricade_stack.png",
+   "sha256": "d6ba1f8097520be50e2c804841d71ad042c08ea6d1737132ab2b148481539452",
+   "content": [
+    18,
+    16
+   ],
+   "quantised": 0.8
+  },
+  {
+   "name": "B-PROP-002c barricade, parallel bound beams",
+   "id": 9812,
+   "source": "wave4/barricade_three.png",
+   "sha256": "e432a00ebe220247e6630dca2603d5c077ea4cb17467c1bf459d62fbd94e26e1",
+   "content": [
+    19,
+    15
+   ],
+   "quantised": 0.871
+  }
+ ],
+ "outstanding": {
+  "B-PROP-002 variants": "TWO variants at readability scale. The card asks for a family and two is thin; the scale re-author reset the three 1x1 variants it had. 66 of the barricade's 72 generations remain.",
+  "grammar": "unchanged and reconfirmed at the new scale — 'a barricade' returned a FENCE on the first attempt of this round, exactly as it did sixty generations ago. Describe the arrangement ('a heap of thick timber beams crossed over one another'), never the object. 'Leaning and crossed at angles' with 'splintered ends' produced thin sticks; the word that fixed it was MASS.",
+  "#205": "the engine still does not emit light from the fire. The sprite receives and the engine emits, and the engine half is unbuilt — a fifth seat has now measured it.",
+  "#204": "the landing route still does not snap generated values to the family's ladder or quarry tint. Bounded now by §12.2's colour freeze."
+ },
+ "palette_regime": "ladder, not locked — §5.1's values are PLACEHOLDER and its derivation has not landed",
+ "readability_scale": {
+  "clause": "bible §12.2 — RULED (Rafe, 2026-09-10)",
+  "occasion": "the props walk FAILED on identifiability: 'small, unrecognizable except the fire; colouring quite good.'",
+  "law": "a prop's size relative to the tile and the character is exaggerated until its identifying feature reads at device 1x. Real proportions preserved — never squashed, never stretched, never a cartoon outline. The shape stays honest; what changes is how much of the frame the honest shape occupies.",
+  "before": {
+   "marker_content_px": [
+    10,
+    15
+   ],
+   "canvas": [
+    32,
+    32
+   ],
+   "note": "a fifth of the cell, twenty device pixels across"
+  },
+  "after": {
+   "marker_content_px": [
+    20,
+    49
+   ],
+   "canvas": [
+    32,
+    64
+   ],
+   "footprint_cells": [
+    1,
+    2
+   ],
+   "barricade_content_px": [
+    53,
+    22
+   ],
+   "barricade_footprint_cells": [
+    2,
+    1
+   ],
+   "fire_content_px": [
+    27,
+    27
+   ],
+   "fire_footprint_cells": [
+    1,
+    1
+   ]
+  },
+  "colour": "APPROVED AND FROZEN IN KIND at the same walk — 'colouring quite good'. The re-author changes scale and keeps the colour treatment. That also bounds what #204 may do."
+ },
+ "instrument": {
+  "cold_naming": ".claude/skills/frame-critic/cold_naming.py",
+  "what": "a blind seat is shown the delivered frame, told nothing about what is in it, and asked to name every placed object. A miss is a FAIL on §12, not a style note.",
+  "why": "the failed build had passed every instrument AND a five-seat panel that ranked it first of four. Not one of its six flips said 'I cannot tell what that is'. A seat asked to rank craft will rank craft; nobody had asked the naming question.",
+  "calibration": "§13.5 — run against the frame the human gate failed (evidence/props_pre_1212.png). It must MISS the marker and the barricade and NAME the fire, because that is exactly what Rafe saw. It does: three seats, none named the marker (they offered 'a bottle or vial', 'a lantern/candle', 'an orange chest or crate'), the barricade came back as 'sticks' — the card's own role_reject — and all three named the fire."
+ },
+ "naming_history": {
+  "_what": "Three cold-naming rounds on the delivered frame. The instrument did not merely pass or fail the props — it said WHAT they were being mistaken for, and every correction below came from a seat's own words rather than from my eye.",
+  "round_0_the_failed_build": {
+   "marker": "MISS — no seat named it. Offered: 'a bottle or vial', 'a lantern or candle', 'an orange chest or crate'.",
+   "barricade": "MISS — 'sticks', the identity card's own role_reject.",
+   "fire": "NAMED. Which is exactly Rafe's 'unrecognizable except the fire'."
+  },
+  "round_1_scale_only": {
+   "marker": "NAMED as 'post' — but all three seats said WOODEN. Scale fixed the silhouette and left the material wrong.",
+   "barricade_a": "MISS — 'a pile of red bricks', 'a red brick wall segment'. Horizontally stacked beams with regular gaps ARE brick courses.",
+   "barricade_b": "MISS — 'a wooden crate or chest', all three. A dense rectangular mass IS a crate; the silhouette has to be ragged."
+  },
+  "round_2_material_and_arrangement": {
+   "barricade": "NAMED as 'planks' — crossing with the ends out, at a lower inpainting fraction so the shape has room to be irregular.",
+   "marker": "REGRESSED to MISS — 'a wooden barrel', 'a stack of wooden crates', 'stacked wooden crates (two boxes, one atop the other)'. The grey version's regular horizontal lashings SEGMENT the column, and stacked segments are boxes. I had traded a material error for an identity failure."
+  },
+  "round_3_pass": {
+   "marker": "NAMED — 'tall narrow stone slab or pillar', 'a tall stone pillar or column', 'a tall upright stone slab or pillar'. One continuous face, no horizontal band anywhere, narrow and tall.",
+   "barricade": "NAMED — 'crossed wooden planks or logs', 'a bundle of wooden planks tied together with rope'.",
+   "fire": "NAMED."
+  },
+  "what_it_taught": [
+   "A regular horizontal band across a column turns it into stacked boxes. This is the single most useful thing the instrument said, and no instrument that measures value, contrast or grain could have said it.",
+   "A dense rectangular silhouette is a crate no matter what is drawn inside it. §12's own second clause — silhouette carries the read, interior detail not at all — with a worked example.",
+   "Horizontally stacked beams at a regular pitch read as BRICK COURSES. §8.3.1's motif trap, arriving inside a single sprite.",
+   "The inpainting fraction is a readability lever: at 0.9 the generator fills the rect and returns a slab; at 0.7 the silhouette has room to be ragged."
+  ],
+  "flagged": "ONE SEAT OFFERED 'tombstone' FOR THE MARKER, which is the identity card's role_reject. The test passed on the other two seats under its own stated rule (any seat naming it counts), and that rule is not being changed after the fact. But it is a real collision and it is recorded rather than smoothed: the most readable form of an upright dressed stone slab is a grave marker. Whether that matters for a boundary stone is a direction call, not a builder's."
+ }
+}

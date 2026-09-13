@@ -1,0 +1,73 @@
+Read all four at 1:1 and at magnification, and measured the things I wasn't willing to eyeball.
+
+Two facts worth stating before the answers, because they shaped the ranking:
+
+- **1 and 3 are the same art plate.** Pixel diff is confined to x 189–566, y 263–708 — the light region only. Everything else is byte-identical. So 1 vs 3 is purely a call on the light layer.
+- **The wall band above the figure is measurably unlit in 1 and 3.** Sampling the band at y 425–450 against the floor at y 470–500: in image 1 the floor climbs 67 → 187 across the run while the wall goes 36 → 50. In image 2 the same wall goes 36 → 109 as the floor climbs 67 → 186. Only 2 puts light on a vertical surface.
+
+RANK: 2 > 3 > 1 > 4
+
+BEST: 2
+
+BEST_WHY: The wall run at y≈390–450 is the only vertical surface in the deck that receives the scene's light — measured above, it tracks the floor from 36 to 109 as the lamp approaches, so the wall reads as a standing mass rather than a cut-out. Two vertical timbers are driven across the courses at x≈345 and x≈620, crossing three block joints each and breaking the top course line where they pass — a repair that interrupts the geometry it repairs, not a decal sitting on top of it. The top course is a separate, thinner band of blocks with its own joint rhythm above the wall face, so the wall has a top and a side rather than one flat value. And the figure at (400,485) is the brightest thing in the frame (sprite mean 176 R vs 158 in image 1), which is the only version where the thing carrying the light out-values what it's lighting. Detail survives inside the pool too — highest local-detail std of the three (26.06) at the widest value range.
+
+WORST: 4
+
+WORST_WHY: The water body is a perfect axis-aligned rectangle. I sampled every 15th row from y=0 to y=180 and got xmin=248, xmax=343 every single time; every column from x=260 to x=335 terminates at exactly y=191. That is a 96×192 block — six tiles by twelve — meeting the dirt at a hard 90° corner at (343,191) with no shoreline, no transition tile, not one pixel of erosion. The dirt field is the same: straight vertical seams and a straight horizontal bottom. The frame is three coloured rectangles. Second: the two chests at (126,0) and (126,96) are the same chest stamped 96px apart — mean per-pixel difference 2.57, i.e. identical down to the smudge on the lid and the gold diamond. Third: there is no light at all. Quadrant means are 67.5 / 66.4 / 70.4 / 70.4 — flat corner to corner. The other three frames run 10.6 / 28.4 / 44.2 / 54.6. The brief describes a figure carrying the only light there is; this frame has no such system. Fourth: the bottom half, y 190–260, is roughly thirty identical grey slabs at one value with a sprinkle of single-pixel noise, in a place described as in continuous heavy use since before records began.
+
+FLAGGED: 1, 2, 3, 4
+
+The shared flag on 1, 2 and 3: the wall mass down the left side, x 120–185, is a soft brown cloud with no cut edges in it. Its 99th-percentile edge energy is 17/12 against the floor's 25/32 — it carries blobs, not joints. It meets the room at a dead-straight vertical seam at x≈187 with no wall face, no corner turn, and no top surface. That is the "a filter was run over it" read, and it's the largest single area of all three frames.
+
+SHIP: NONE
+
+---
+
+**FLIP 1:**
+- The wall band at y 425–450 sits at value 36–50 while the floor 30px below it reaches 187. Light it from the same source: the run should reach ~110 directly above the figure and fall to ~40 at x=190.
+- The sprite at (400,485) reads 158 R against a floor of 248 R. The lamp-bearer is darker than the ground it lights. Raise the sprite above its immediate floor value, or the light has no visible origin.
+- The pool is the brightest and flattest region in the deck — mean 163 with local-detail std 22.4, versus 25.7 in image 3 on the identical plate. The light is being applied as a brightness lift over the painting. Multiply the plate instead, so the slab joints left of the figure at x 230–330 survive at full pool brightness.
+- The pool's edge is a lumpy hard-cut blob: it bulges left to x≈180, is cut short at x≈460, and has a notch bitten out around (350,560). Replace with a falloff that is monotonic with distance from the sprite.
+- The crate at (295,640)–(380,720) has a 4px soft gradient on its right edge and no contact shadow — the floor value 10px around it equals the floor 40px away. Give it a 1px hard silhouette and a directional occlusion shadow away from the sprite.
+- The long crack from (300,600) to (750,560) is a constant-width bezier that crosses eleven slab joints without jogging, narrowing, or terminating. Break it at joints and vary its width.
+- The same crack passes over the top-left corner of the crate and continues out the other side. A ground crack cannot cross a raised object. Clip it at the silhouette.
+- The wall run's top and bottom edges are ruler-straight and unbroken for 320px. Chip the course line — this is a wall repaired for four hundred years.
+- Replace the sprite or the environment so they share a rendering language: the sprite is indexed pixel art with 1px black outlines, the environment is a 6,821-colour anti-aliased painting with no outlines anywhere.
+
+**FLIP 2:**
+- The left wall mass at x 120–185 has no cut edges (edge99 17/12). Build it as masonry with joints, or as a distinct material with a stated edge — not a mottle.
+- The wall face below the top course, y 400–450, is the same cloud problem at higher value: large soft blobs, no block reading. Cut blocks into it with joints of varying depth.
+- The object at (280,640)–(380,720) has no silhouette. Its left side merges into a dark horizontal bar that runs off-frame at the same value, so the object and the shadow are one shape. Separate them.
+- No contact shadow under that object; the surrounding floor value is unchanged. Add one.
+- Same crack-overlay problem as 1: the line from (300,600) to (750,560) crosses slab joints without acknowledging them, and the second crack crosses it at (290,590) in a plain X with no interaction.
+- The sprite is still darker than the floor beneath it (176 vs 237). Push it further or dim the floor immediately under the figure.
+- The environment is a 7,625-colour blurred render and the sprite is a hard-edged indexed sprite. Reconcile the two.
+- Floor detail density is inconsistent between adjacent slabs of the same material: the slabs at (200,470)–(340,520) carry dense hatching while their neighbours at (250,620)–(400,700) are plain value fields. Even it out or motivate the difference.
+
+**FLIP 3:**
+- Identical to FLIP 1's wall item: the band at y 425–450 stays at 36–70 while the floor below reaches 182. Light the vertical surface.
+- Sprite at 157 R against a 222 R floor. The light source is darker than what it lights. Fix the ordering.
+- Left wall mass x 120–185 is a structureless cloud meeting the room at a straight seam at x≈187. Give it joints and a corner.
+- The crate at (295,640)–(380,720): soft right edge, no contact shadow, and the diagonal crack runs across its top-left corner and out the far side. Hard silhouette, occlusion shadow, clip the crack.
+- The long crack from (300,600) to (750,560) is a uniform-width curve ignoring eleven joints. Break and vary it.
+- The wall run's edges are straight and unbroken for 320px. Break them.
+- Same pixel-language mismatch between sprite and environment as 1 and 2.
+
+**FLIP 4:**
+- The water is exactly x 248–343, y 0–191 — a hard rectangle. Build a shoreline: transition tiles on all three visible edges, an irregular boundary, and a value shift in the dirt where it meets the water.
+- The dirt field is likewise a rectangle with straight seams at x≈62, x≈248 and y≈190. Add edge tiles and scatter so dirt encroaches on stone rather than stopping at a ruler line.
+- The chests at (126,0) and (126,96) are the same asset stamped twice (mean diff 2.57). Vary one, or remove it.
+- The frame has no light falloff — quadrant means 67.5 / 66.4 / 70.4 / 70.4. Add the light system the fiction requires: a source at the figure and a fall to near-black at the frame edges.
+- The stone floor at y 190–260, x 60–330 is ~30 identical slabs at one value. Introduce cracked, sunken, replaced and stained slabs. Nothing in this frame has been used.
+- The chests are drawn in three-quarter projection — front face with lock and vertical planks below a visible lid — while the barrels and floor are straight top-down. Pick one projection.
+- The green figure at (208,4) has no cast shadow onto the dirt it stands on; the barrels at (128,196) do have one. Make it consistent.
+- The white specks at (140,215)–(165,235) are eight loose pixels that resolve to nothing. Either make them read as bone or remove them.
+- The chest with a gold diamond inlay on its lid and the saturated grass-green lily pads at (270,25) and (295,180) are stock-asset motifs against a stated tone that is dry, cold and has no sense of humour about itself. Redraw or drop them.
+
+---
+
+Nothing here ships. Frame 2 is the only one where the lighting is doing physical work rather than being a wash, and that's worth keeping — but its walls are still clouds and its one prop has no silhouette. Frame 4 is at a different and earlier stage: the pixel craft inside individual props is the best in the deck (those barrels have staves, a rim highlight and a contact shadow), but the scene around them is unbuilt.
+
+The thing I'd fix first across 1/2/3, because it's one change that lifts all three: the environment is a high-colour anti-aliased render, not pixel art, and the sprite is. Until those share a grid and a palette discipline, every other fix is being applied to a frame that already reads as two games stacked.
+
+*Model used: Claude Opus 5 (1M context).*

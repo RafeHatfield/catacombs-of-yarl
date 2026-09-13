@@ -76,6 +76,10 @@ T = 32
 FACE_TOP_ROW = 16          # WALL-RECIPE section 2.1: the face is the lower half, 16 native px.
 OCCLUSION_ROWS = 2         # the face under the overhang, dark from every azimuth
 BED_ROWS = 2               # a joint between courses
+# THE COPING COURSE — #202. The band where the top plane meets the face, belonging to both.
+# Two native rows: one is a line rather than a course, and three would eat a third of the face
+# at this tile size (the same argument JOINT_PX makes about a 2px joint on a 6px course).
+COPING_ROWS = 2
 # Head-joint width, native px, PER PLANE and not one number for both.
 #
 # The two planes are looking at different things. A wall top shows blocks the width of the wall,
@@ -105,9 +109,68 @@ FACE_DONORS = {
 }
 LEDGER = os.path.join(REPO, "tools/pixellab/wall_gauntlet/rounds")
 
+# ⚠ THE RUNGS ARE DERIVED FROM VALUES, NOT WRITTEN AS INDICES — section 5.7, found live.
+#
+# These were index constants "on the nine-rung ladder of bible section 5.6", and the comment was
+# the assumption that broke: THE FLOOR'S LADDER IS ELEVEN RUNGS NOW. It gained two at the bottom
+# (22.11 and 35.34) when the reach was extended, and a wall family composed against the old list
+# kept its indices while their meaning moved two rungs down:
+#
+#     top   rung 5   114.696  ->   88.243     a whole plane, 26 levels darker
+#     face  rung 1    61.789  ->   35.336
+#
+# Nobody saw it because nobody recomposed. The tiles ON DISK are the nine-rung ones and the
+# composer had silently stopped reproducing them — a recompose for an unrelated reason (#202's
+# coping course) is what surfaced it, and the control that proved it was recomposing with that
+# change REVERTED and finding the face still 26 levels down.
+#
+# Section 5.7 is exactly this: "anchors must be means and stable under field size". An index into
+# a list whose length can change is not stable under field size. So the arms now carry the RATIOS
+# that section 6.5 states — the floor's own anchor of 101.16, times 1.11 for the top and 0.60 for
+# the face — and the rung is whichever one is nearest. Grow the ladder again and the values hold.
+ANCHOR = 101.16
+
+# ⚠ AND THE SAME LAW ONE LAYER DOWN - THE FLOOR, found by #206 after the planes were fixed.
+#
+# Fixing the arms to ratios did NOT make the composer reproduce its family. A recompose still came
+# back with the top plane exact to 0.01 and every FACE tile 3 to 8.6 levels light, and the face's
+# palette collapsed: the approved tile carries a joint value at 96px and an occlusion band at
+# 64px, the recompose carried one value at 148px. Two authored values had become one.
+#
+# The cause is that a joint and a value break are stated as INDEX OFFSETS from the plane's rung -
+# `rung(face, -3)` for the joint, -2..+2 for the blocks - and `rung()` clipped at index 0. On the
+# NINE-rung ladder the face sat at rung 1, so everything below rung 0 piled up on 48.5627:
+#
+#     face joint   rung 1 - 3  ->  CLIPPED to 48.5627   (one rung down, not three)
+#     dark block   rung 1 - 2  ->  CLIPPED to 48.5627   (the same value as its own joint)
+#     top joint    rung 5 - 3  ->  75.016               (never clipped, so never moved)
+#
+# The eleven-rung ladder reaches two rungs further down, so it GRANTS the -3 for the first time
+# and delivers 22.11. That is the composer's stated law arriving, and it reads as a regression:
+# the panel ranked it below the reference. What the gate walked and approved is the CLIPPED
+# family, whose face joint is one rung down.
+#
+# So index-0 was never the intended bottom - it was wherever the ladder happened to end, which is
+# section 5.7 again: an index into a list whose length can change is not stable under field size.
+# A clip is an anchor, and this one has to be a value. The family's floor is stated as a ratio of
+# the same anchor the arms use, and the rung is whichever one is nearest. Grow the ladder again
+# and the floor holds.
+#
+# ⚠ THIS DOES NOT CLOSE THE QUESTION IT SURFACED. The deeper joint is now reachable and has
+# never been seen at the gate. Whether the face's joints should be three rungs down - the depth
+# this file's own comment argues for on rig grounds - is a LOOK CHANGE and a ruling, not a
+# builder's call. It is filed, not taken.
+FLOOR_RATIO = 0.48   # x ANCHOR = 48.56, the darkest value the approved family puts on a plane
+
+
+def _nearest_rung(ladder, value):
+    """The rung closest to a value. Section 13.12: derive, never copy."""
+    return min(range(len(ladder)), key=lambda i: abs(ladder[i] - value))
+
+
 ARMS = {
-    # (top rung index, face rung index) on the nine-rung ladder of bible section 5.6.
-    "material":    dict(top=5, face=1,
+    # RATIOS, not indices — see the note above. Kept as `top`/`face` ratio multipliers of ANCHOR.
+    "material":    dict(top_ratio=1.11, face_ratio=0.60, top=5, face=1,
                         why="section 6.5's ratios read as ALBEDO: top 1.11x and face 0.60x the "
                             "floor's own anchor of 101.16. No rig baked into the asset."),
     "compensated": dict(top=8, face=2,
@@ -162,6 +225,68 @@ VOID_RING = 1  # rings of stone drawn before the void; see the manifest note. 0 
 AGES = 4
 AGE_BASE_ROWS = 6          # how deep the base treatment reaches at age 1, in native px
 AGE_SECOND_COURSE = 3      # the age at which patina climbs into the course above
+
+# THE WORN ARRIS — #202, and it is a STANDING RULING being executed rather than a new call.
+#
+# `WALL-RECIPE.md` section 4.1 MEASURED this on the bar: a single 1px row at the top-to-face turn
+# running 1.27-1.47x the top band's value, on 14 of 23 face tiles. It was refused, and the refusal
+# named its own condition exactly:
+#
+#     "The only register derivation available is section 8.1 polish-where-touched - a worn arris,
+#      pale because four hundred years of shoulders and gear have rubbed it. That derivation is
+#      real but it carries a condition: WEAR IS TRAFFIC-MODULATED ... A pale line of constant
+#      value on every turn is precisely the coping course section 12.1's worked example culled.
+#      Status: adoptable only in a traffic-modulated form. The uniform version is refused. This
+#      round does not have a wear system to modulate it with (section 8.2.1's tier-one
+#      requirement), so it is built with the cap OFF and the flag stands."
+#
+# THE CONDITION IS NOW MET. The face family carries a four-step `age` index keyed to traffic, and
+# it already implements the FORM half of section 8.1's polish - `age_face`'s arris-rounding, the
+# block's bottom corners giving up pixels. This is the VALUE half of the same clause on the same
+# key. #202's three earlier attempts all built a UNIFORM band and all failed, which is the recipe's
+# refusal arriving on schedule; none of them was traffic-modulated.
+#
+# ⚠ ABSENT AT AGES 0 AND 1, AND THAT IS THE POINT, not a shortcut. "A worn arris must be pale
+# where traffic passes and ABSENT WHERE IT DOES NOT." An arris on every tile is the ribbon. It is
+# also what keeps section 13.8 honest: against the top plane's 114.696 the first rung up is Weber
+# 0.115, UNDER the 0.1440 floor, so an age-1 arris would be authored and not there. Two ages carry
+# it, at two amplitudes that both clear the floor, and two do not.
+#
+# RATIOS, NOT INDICES (section 5.7, and #206 is why this comment exists). Stated against the top
+# plane's own value and snapped to whichever rung is nearest.
+ARRIS_AGE_MIN = 2
+# ⚠ AGAINST THE CAP, NOT AGAINST THE WALL'S OWN TOP PLANE — measured, after getting it wrong.
+#
+# The first build stated these against `ladder[top_rung]`, the face tile's own top-plane value.
+# It delivered 1.82x and 2.09x the surface above it, against the bar's 1.27-1.47. The reason is
+# structural and is written three screens down in `rgb()`: A FACE TILE'S TOP BAND IS CUT AWAY BY
+# ALPHA. Rows 0..15 are transparent and the CAP FIELD draws there. So `ladder[top_rung]` is a
+# value that is never once drawn beside the arris, and deriving a ratio against it is deriving
+# against something the frame does not contain.
+#
+# What sits above the arris is the cap's own top value, read from the cap manifest at compose time
+# rather than written here (section 13.12: derive, never copy). It comes back 88.243 - and the bar
+# measured its own turn at 129.8 against a top band of 89.5, so the two families are within 1.5%
+# of each other on the surface the ratio is taken against. The rungs that bracket the bar's range
+# on ours are 114.696 (1.30x) and 127.923 (1.45x), which is where these two numbers come from.
+ARRIS_RATIOS = (1.30, 1.45)   # x THE CAP's top value, for ages 2 and 3; the bar measured 1.27-1.47
+
+
+def cap_top_value(default=None):
+    """The value the cap field lays above a face tile — the arris's actual neighbour.
+
+    ⚠ AND READING IT FOUND THE SAME §5.7 DEFECT ONE FAMILY OVER, UNFIXED. The cap manifest
+    carries `top_rung: 3` beside a NINE-rung ladder. #206 fixed that class here; `compose_cap.py`
+    still states its plane as an index, and the floor's ladder is eleven rungs now. Recompose the
+    cap today and index 3 resolves to 61.789 instead of 88.243 — the cap goes 26 levels dark, the
+    exact failure the walls shipped. Nothing is wrong on disk, because the cap has not been
+    recomposed; it is a landmine, not a fault, and it is FILED rather than fixed here (one logical
+    change per commit, and the cap is not this issue's subject).
+    """
+    p = os.path.join(REPO, "src/Presentation/assets/tier1_cap/MANIFEST.json")
+    if not os.path.exists(p):
+        return default
+    return float(json.load(open(p))["top_value"])
 
 
 def h(*parts):
@@ -261,8 +386,16 @@ class Family:
         self.tint = np.array(tint, dtype=float)
         self.bank = bank
         self.seed = seed
-        self.top_rung = ARMS[arm]["top"]
-        self.face_rung = ARMS[arm]["face"]
+        # Derived from the ratio against the floor's anchor, so a ladder that grows does not
+        # silently move a whole plane (section 5.7). The old index constants are kept in ARMS as
+        # a record of what they were on the nine-rung ladder, and are no longer read.
+        a = ARMS[arm]
+        if "top_ratio" in a:
+            self.top_rung = _nearest_rung(self.ladder, ANCHOR * a["top_ratio"])
+            self.face_rung = _nearest_rung(self.ladder, ANCHOR * a["face_ratio"])
+        else:
+            self.top_rung, self.face_rung = a["top"], a["face"]
+        self.floor_rung = _nearest_rung(self.ladder, ANCHOR * FLOOR_RATIO)
 
     # ---- the edge families -----------------------------------------------------------------
     def vjoint(self, course, key):
@@ -296,7 +429,8 @@ class Family:
         return a, b, v
 
     def rung(self, base_index, offset):
-        i = int(np.clip(base_index + offset, 0, len(self.ladder) - 1))
+        # The bottom is FLOOR_RATIO's rung, not index 0 - see the note on FLOOR_RATIO. #206.
+        i = int(np.clip(base_index + offset, self.floor_rung, len(self.ladder) - 1))
         return self.ladder[i]
 
     def stones_in_row(self, course, kw, ke, var=0, width=T):
@@ -425,6 +559,30 @@ class Family:
                     img[cy0:cy1, max(x0, x1 - jw):x1] = joint
         return img
 
+    def arris(self, img, keys, var, age):
+        """The worn top edge of the face — #202. Absent below ARRIS_AGE_MIN; see the note there.
+
+        It is laid PER STONE, not across the tile. A head joint has no arris: there is no stone
+        edge there to rub. So the row is broken on course 0's own joint spans, which makes the
+        pale run a property of each block rather than a line drawn along the wall — the exact
+        difference between section 8.1's polish and section 12.1's culled ribbon.
+        """
+        if age < ARRIS_AGE_MIN:
+            return img
+        ratio = ARRIS_RATIOS[min(age - ARRIS_AGE_MIN, len(ARRIS_RATIOS) - 1)]
+        base = cap_top_value(default=float(self.ladder[self.top_rung]))
+        v = self.ladder[_nearest_rung(self.ladder, base * ratio)]
+        jw = JOINT_PX["face"]
+        for (x0, x1, _off, _gkey, _gx) in self.stones_in_row(0, keys["w"], keys["e"], var):
+            a, b = x0, x1
+            if a > 0:
+                a += jw                      # the joint keeps its darkness
+            if b < T:
+                b -= jw
+            if b > a:
+                img[FACE_TOP_ROW, a:b] = v
+        return img
+
     def age_face(self, img, age, grain_amp):
         """Lay the base-course aging on a face tile. Age 0 is untouched, and must stay so."""
         if age <= 0:
@@ -523,9 +681,36 @@ class Family:
             # THE TURN, DRAWN BY OCCLUSION ONLY (section 6.3, and the gauntlet's own hazard note).
             # The top plane is NOT brightened; the first rows of the face are darkened, because a
             # face under an overhang is occluded from every azimuth and declares no direction.
+            #
+            # ⚠ #202'S COPING COURSE WAS BUILT HERE AND REVERTED. It is the ruled remedy — "build
+            # the seam treatment the sighted round measured on the bar so the mass turns a corner"
+            # — and three attempts did not reach its exit. Averaging the wall's own two plane
+            # rungs delivered 89.3, BRIGHTER than the cap above it at 77.1, which is a highlight
+            # at the turn that section 6.3 forbids. Deriving it one rung above the face delivered
+            # 76.7, which merges with the cap instead and leaves the same hard rule below it. The
+            # step fell 50.33 -> 42.63, and the face came back 5-6 levels down with its foot 19
+            # down FOR REASONS I COULD NOT EXPLAIN — grain amplitude was the obvious suspect and
+            # was ruled out, since grain is zero-mean and shifts no means.
+            #
+            # A half-fix with an unexplained regression in it would make the next round's
+            # comparison against the reference dishonest, so it is not shipped. What the attempt
+            # DID buy is banked below the arms: the ladder drift it surfaced was real and is
+            # fixed. #202 stays open with three closed doors recorded in it.
+            # RESTORED BY #206 - IT HAD BEEN DELETED, AND ONLY THE COMMENT WAS LEFT.
+            # The two lines below went out in bceb7446, the cap pass, when face tiles became
+            # face-only RGBA. The paragraph above them describing the turn stayed, and so did the
+            # manifest's `occlusion_rows: 2`, so the composer went on ADVERTISING a band it no
+            # longer painted. The tiles on disk still carry it - they predate the deletion - which
+            # is why nothing looked wrong: the only way to see it was to recompose and compare,
+            # and that is what #206 finally did. Rows 16-17 came back at 48.56 against the
+            # approved 26.64, a 22-level band across every face tile in the family.
+            #
+            # A deleted feature and a silent manifest are the same defect the ladder drift was:
+            # an assertion that outlived the thing it asserts (section 13.12).
             lip = img[FACE_TOP_ROW:FACE_TOP_ROW + OCCLUSION_ROWS, :]
             img[FACE_TOP_ROW:FACE_TOP_ROW + OCCLUSION_ROWS, :] = np.minimum(
                 lip * 0.55, self.rung(self.face_rung, -2))
+            self.arris(img, keys, var, age)
             self.age_face(img, age, grain_amp)
         return img
 
@@ -707,7 +892,23 @@ def compose(arm, out_dir, grain_amp, void_values):
     return man, mp
 
 
+def _headroom_or_stop():
+    """A COMPOSE IS THE WORST THING TO HAVE KILLED: it writes a whole tile family, and a family
+    left half-written is judged by the next round without anyone knowing (ruled 2026-09-10)."""
+    import importlib.util
+    hp = os.path.join(REPO, "tools", "tier0_harness", "headroom.py")
+    if not os.path.exists(hp):
+        return
+    spec = importlib.util.spec_from_file_location("headroom", hp)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    ok, msg = m.require("write")
+    if not ok:
+        raise SystemExit("STOP: " + msg)
+
+
 if __name__ == "__main__":
+    _headroom_or_stop()
     ap = argparse.ArgumentParser()
     ap.add_argument("--arm", choices=sorted(ARMS), default="material")
     ap.add_argument("--grain-amp", type=float, default=0.90,

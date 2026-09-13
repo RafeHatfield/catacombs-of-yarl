@@ -1,0 +1,67 @@
+Read all four at native art resolution (1, 3 and 4 are 2× nearest-neighbour upscales of a ~375×455 render; 2 is a 384×288 render on a 24px grid — measured, not assumed).
+
+**RANK:** 1 > 3 > 4 > 2
+
+**BEST:** 1
+
+**BEST_WHY:** The wall run along y≈428–450, x≈190–500. It is a horizontal timber laid over stone with vertical pins driven through it, and the pins are not on a rhythm — measuring left to right the gaps come out roughly 40, 62, 28, 55, 48px, and two of them (x≈355, x≈490) are noticeably fatter than the rest. One pin at x≈420 stops short of the timber's lower edge; the one at x≈490 overshoots it. That's a run somebody built rather than tiled. Underneath it there is a genuine terminating shadow at y≈456 (sampled value 23 against a floor at 85 immediately below), so the wall keeps a footprint instead of dissolving.
+
+Second thing, the floor right of the player: at native resolution there is a large scribed arc crossing four separate flagstones between x≈250–500, y≈250–290 (art px) — a single mark that ignores the joint grid. Wear that spans tiles is the hardest thing to fake and the fastest tell that the floor is a surface and not a tileset. The joints themselves vary: the run below the player has joints that go dark-thin, dark-thick, then almost vanish across three stones in a row, so the stones read as cut and settled rather than stamped.
+
+Third, the corridor at x≈500–560, y≈180–420: cables strung diagonally with pins at the anchor points, a pale rectangle at y≈300–340 carrying faint grey stroke-marks that reads as a pinned notice, and a small hanging object at y≈365. It is dressed, and dressed with the specific vocabulary of rope and driven pins.
+
+**WORST:** 2
+
+**WORST_WHY:** Four things, any one of which is disqualifying.
+
+The mud field is one 48×48px block stamped across the entire 190×288px area. I measured it: horizontal self-difference at a 48px offset drops to 5.04 against 7.2–7.6 at every other pitch; vertical the same, 8.83 at 48 against 9.4–11.5. That is roughly two dozen repeats of the identical dark-red branching mottle, and the seams are visible by eye in the upper mud around x≈100–200, y≈40–140 — the same three-pronged red fork recurs on a lattice.
+
+There is no light model at all. The brief says the picture darkens away from the figure. This frame is uniformly lit corner to corner; the stone at x≈360, y≈270 is the same value as the stone at x≈20, y≈20. Nothing anywhere falls off.
+
+The terrain boundaries are dead-straight full-height tile-column seams: mud meets water at exactly x=247, water meets stone at exactly x=343, stone meets mud at x=54. No bank, no wet margin, no spill, no debris. A water body with a ruled edge.
+
+The two chests at x≈64–96, y≈4–36 and y≈48–80 are drawn in three-quarter perspective — you can see the vertical front planks of a box receding below the lid — and dropped into a straight top-down frame. They also cast soft drop shadows onto the mud below them, and they and the green figure's black ellipse are the only shadows in the image; nothing else casts anything.
+
+Minor but of a piece: the teal moss blob at x≈18, y≈150 is the same asset, mirrored, as the one at x≈355, y≈150. The white scatter at x≈215, y≈118 is ten unstructured white pixels that resolve into no object.
+
+**FLAGGED:** 1, 2, 4
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- The middle prop at x≈408, y≈613 is not readable as an object. At native resolution it is a lumpy heart-shaped mass of saturated red-orange with loose yellow pixels along its lower edge — no straight plank edges, no consistent light direction, and it is the highest-chroma element in the entire frame. Redraw it with the same two-plank construction and the same silhouette discipline as the prop at x≈285, or cut it.
+- Those three props sit at y≈612, 613, 613, spaced 125px and 125px apart, and are three different sizes and three different colour temperatures of the same crossed-plank object. Break the row: move at least one off that y, and settle on one plank width and one wood hue across all three.
+- The round object at x≈597, y≈548 contains a lit flame and emits no light. The cobbles of its own ring, 1–2px from the flame, sit at the same value as unlit stones 30px away. Either give it a local falloff that brightens the surrounding four or five flagstones, or take the flame out.
+- That same object's interior is near-pure black with a hard edge; every other dark in the lit floor is a warm brown. Re-key the hole interior to the frame's darkest warm brown.
+- Its ring cobbles read brighter than floor stones that are closer to the player's lamp. Re-light the prop through the same distance falloff as the floor instead of drawing it at fixed value.
+- The flame inside it is four flat colour steps at ~10px tall — an interface-icon rendering. Redraw at the scene's material fidelity or remove.
+
+**FLIP 3:**
+- Under the brightest light in the frame the floor has the least detail. Seven or eight flagstones in the lit pool — the run immediately left of the player at roughly x≈300–390, y≈480–520, and the large stone below-left at x≈300–390, y≈525–555 — are completely featureless flat fills bounded only by joints. Give each of them at least the grain, chipping or staining that the dimmer stones at x≈600–700 already carry. Detail should rise with illumination, not fall.
+- Compare the right-hand floor at x≈430–750, y≈480–660 against the same region in 1: the scribed arc that crosses four stones there is absent here, and what's left is per-tile hatch marks that never cross a joint. Add two or three large-scale marks — a scrape, a drag line, a scribed arc — that ignore the joint grid.
+- The room is empty apart from one crate at x≈340, y≈675. A four-hundred-year-held line is not an empty room. Dress it with the repair vocabulary already established in the corridor: rope, driven pins, salvaged timber, hide.
+- There is a hard vertical discontinuity in the floor texture at x≈700, y≈480–660 where the stone pattern and value both jump on a straight column boundary. Break that seam.
+
+**FLIP 4:**
+- The lit floor is clipped. 16,586 pixels sit at ≥250 luminance inside the frame, against 1,782 in 3 and 4,686 in 1, and they form a single contiguous mass roughly x≈275–532, y≈401–606 with a solid core about x≈290–470, y≈455–530. Inside that core every joint line, grain mark and stain is gone — it is flat cream. Pull the peak floor value down to the ~179 that 3 reaches so the joints survive under the lamp.
+- The blown mass wraps the player sprite and eats its silhouette on the left and lower edges. Once the clipping is fixed this resolves, but check the sprite reads against the floor at its own tile after the change.
+- A regular 45° hatch pattern is laid across the entire lit region and runs continuously over joints, over stones, over the corridor floor and over the strung cables at x≈500–560, y≈200–420. It is a screen laid on top of the art rather than per-surface wear, and it is the single clearest "a filter was run over this" tell in the deck. Remove the overlay layer entirely; images 1 and 3 do not have it.
+- The wall face between y≈410 and y≈450, x≈340–560 is a soft non-grid mottle with no block structure, while the band above it at y≈390–410 does have blocks. Carry the block joints down through the full wall depth as in 3.
+- Bottom-right of the corridor, the wall corner at x≈545, y≈415 is a raw 90° step with a flat black top edge and no capping stone or timber. Cap it the way the wall run in 1 is capped.
+
+**FLIP 2:**
+- Replace the single 48×48px mud tile with a texture that does not repeat on a 48px lattice. Minimum: four to six variant blocks with the red mottle broken up, plus a few marks that cross tile boundaries.
+- Add the light model. The frame has none — a figure carrying the only light, with falloff, is the stated premise, and here x≈360, y≈270 and x≈20, y≈20 are the same value. Everything below follows from this being absent.
+- Break the ruled terrain edges at x=247 (mud/water), x=343 (water/stone) and x=54 (stone/mud). Each needs an irregular boundary: a wet margin either side of the waterline, mud tracked over onto the stone, stone chips fallen into the mud.
+- Redraw the two chests at x≈64–96, y≈4–36 and y≈48–80 as top-down. Their vertical front planks are a three-quarter-view construction and read as objects from another game dropped in.
+- They cast drop shadows and nothing else in the frame does. Either shadow everything from a single agreed direction, or drop them.
+- The water at x=247–343 is a flat teal fill with a faint cellular pattern, uniform top to bottom. It is the largest area in the frame and the only saturated hue, so the eye goes to the emptiest region. Darken it toward the far edge, break the surface, and take the chroma down.
+- The stone flags at x≈344–384 and x≈8–54 are uniform grey rectangles on a clean 24px grid with identical fill in every cell. Vary the fill value flag to flag and add chipping at the joints.
+- The teal moss at x≈18, y≈150 is the same asset mirrored at x≈355, y≈150. Vary or replace one.
+- The white scatter at x≈215, y≈118 resolves into no object. Draw it as something specific or remove it.
+
+The through-line: 1 is the only frame where somebody built the environment rather than tiled it, and its faults are all in a prop pass that clearly hadn't been finished — three states of one object in a row plus an interface-grade icon sitting on the floor. That is the cheapest gap in the deck to close. 3 and 4 are the same map with the dressing stripped out, and 4 additionally has a global overlay and a clipped exposure on top of it, which is the harder problem because it isn't in the art, it's in whatever pass runs after the art.
+
+*Model: Claude Opus 5 (1M context)*

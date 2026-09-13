@@ -1,0 +1,105 @@
+{
+ "schema": "frame-critic/gate-power/1",
+ "_what": [
+  "FALSE REFUSE AND TRUE CATCH for the INSTALL-LATEST regression term.",
+  "",
+  "RULED (Rafe, 2026-09-09): 'five seats; block only on strong-majority regression",
+  "(>=4 of 5 rank below the reference) ... publish the false-refuse/true-catch numbers",
+  "beside RANK-NOISE-FLOOR.json.'",
+  "",
+  "ONE NUMBER HERE IS MEASURED AND THE REST IS ARITHMETIC. q_good is the rate at which",
+  "a single blind seat ranks a NON-REGRESSED build below its reference, taken from six",
+  "seats on byte-identical frames (r002 and r003 of polish-198-halo, 4 of 6 not below).",
+  "The true-catch column has no measured q \u2014 no build has yet been shown to a panel",
+  "while known to be worse \u2014 so q is SWEPT there and labelled as swept. Inventing it",
+  "would have been inventing the answer.",
+  "",
+  "WHAT THE TABLE SAYS IN ONE LINE. The old rule refused a good build about a quarter",
+  "of the time; the new one refuses it about one time in twenty. The price is catch",
+  "power against SMALL regressions \u2014 a build six seats in ten would rank below is now",
+  "blocked about a third of the time instead of four fifths \u2014 and that price is",
+  "deliberate: a term that cannot resolve a polish-sized delta should not be the thing",
+  "that decides, and the item's own MEASURED EXIT, which no seat votes on, is what",
+  "carries 'did this do the thing it set out to do'.",
+  "",
+  "Regenerate: python3 tools/tier1_floors/measure_gate_power.py"
+ ],
+ "measured_input": {
+  "rounds": [
+   "r002-polish-198-halo",
+   "r003-polish-198-halo"
+  ],
+  "identical_bytes": true,
+  "seats": 6,
+  "not_below": 4,
+  "q_good": 0.3333,
+  "note": "q_good is the per-seat probability of calling a NON-regressed build 'below'"
+ },
+ "rule_old": "block unless a MAJORITY of seats are not-below (in force 2026-09-08 to 09-09)",
+ "rule_new": "block only when >= 4/5 of seats rank the build BELOW the reference",
+ "rows": [
+  {
+   "kind": "false_refuse",
+   "n": 3,
+   "q": 0.3333,
+   "old_rule": 0.2593,
+   "new_rule": 0.037
+  },
+  {
+   "kind": "false_refuse",
+   "n": 5,
+   "q": 0.3333,
+   "old_rule": 0.2099,
+   "new_rule": 0.0453
+  },
+  {
+   "kind": "false_refuse",
+   "n": 7,
+   "q": 0.3333,
+   "old_rule": 0.1733,
+   "new_rule": 0.0069
+  },
+  {
+   "kind": "true_catch",
+   "q": 0.5,
+   "meaning": "half the seats see it",
+   "old_rule_n3": 0.5,
+   "new_rule_n5": 0.1875
+  },
+  {
+   "kind": "true_catch",
+   "q": 0.6,
+   "meaning": "three seats in five see it",
+   "old_rule_n3": 0.648,
+   "new_rule_n5": 0.337
+  },
+  {
+   "kind": "true_catch",
+   "q": 0.7,
+   "meaning": "seven seats in ten see it",
+   "old_rule_n3": 0.784,
+   "new_rule_n5": 0.5282
+  },
+  {
+   "kind": "true_catch",
+   "q": 0.8,
+   "meaning": "four seats in five see it",
+   "old_rule_n3": 0.896,
+   "new_rule_n5": 0.7373
+  },
+  {
+   "kind": "true_catch",
+   "q": 0.9,
+   "meaning": "nine seats in ten see it",
+   "old_rule_n3": 0.972,
+   "new_rule_n5": 0.9185
+  },
+  {
+   "kind": "true_catch",
+   "q": 0.95,
+   "meaning": "all but one seat in twenty",
+   "old_rule_n3": 0.9928,
+   "new_rule_n5": 0.9774
+  }
+ ]
+}

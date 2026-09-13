@@ -1,0 +1,52 @@
+RANK: 2 > 1 > 4 > 3
+
+BEST: 2
+BEST_WHY: The floor brickwork in the lit zone (x≈190–560, y≈450–720) is the strongest surface in the deck: joints are 1px dark with a lighter chamfer on the upper edge of each brick, courses are offset a half-brick, individual bricks vary in tone (compare the pale run at x≈480–560, y≈520–560 against the mid-tone ones under the figure), and the falloff sits on top of that without erasing it — brick detail survives out to x≈650 before it drops into dark. The wall band at y≈385–450 has a real top/face split: a lighter top surface above a darker brick face, with a thin rail and driven pins at x≈295, 385, 475 that read as the orc repairs described. Nothing in 2 is out of palette and nothing is blown out (0% of the near-figure floor at ≥230 luminance).
+
+WORST: 3
+WORST_WHY: The floor at x≈100–248 is one 32px noise tile stamped across the room — the red-brown speckle repeats on every tile and the tile seams are visible as straight lines. The pond at x≈248–344, y≈0–192 is a dead-straight rectangle of uniform hex-scale fill with no bank, lip or shadow where it meets the floor. The two chests at x≈62–98 (y≈0–20 and y≈48–68) are pixel-identical, each with a pixel-identical crate below it. The door at x≈26–36, y≈118–145 is an eight-pixel-wide orange plank in a wall gap with a flat brown strip trailing below it to y≈180 — that is a placeholder, not a door. There is no carried light and no falloff anywhere; the scene is flat ambient. It looks like a free asset pack assembled in an afternoon.
+
+FLAGGED: 1, 3, 4
+
+SHIP: NONE
+
+FLIP 1:
+- Remove or redraw the salmon-pink block at x≈268–296, y≈540–625. It is a flat out-of-palette fill with a black right-hand side face — a side-on projection in a top-down frame — and it takes none of the light falloff. If it is a post or stone, draw its top face in the floor palette and shade it with the same gradient as the floor around it.
+- The brazier at x≈575–625, y≈525–580 has bright orange flames but casts no light: the bricks touching it sit at the same value as bricks two tiles further out. Add a local warm falloff around it, or unlight the flames.
+- The long crack (x≈230,y≈470 → x≈290,y≈700 and branch to x≈480,y≈520) is a single continuous 1px line drawn over the brick joints without breaking at any of them. Break it at each joint it crosses, or route it through the mortar.
+- The arc at bottom right (x≈560–720, y≈640–720) is a smooth, regular curve; stone does not crack in a circle. Replace with a jagged line that follows joints.
+- The wall top surface at y≈385–425 is a soft, blurry noise fill while the brick face beneath it and the floor below are hard-edged pixels. Redraw the wall top at the same pixel resolution as the bricks.
+- The lone wall tile in the floor at x≈315–375, y≈650–700 has a top face darker than the floor bricks beside it, even though its top is nearer the light. Raise its top-face value above the neighbouring floor.
+- The rail-and-pin repairs on the wall face repeat at a fixed ~90px interval (x≈295, 385, 475). Break the interval; a four-hundred-year repair is not evenly spaced.
+- The diagonal scratch hatching on individual bricks (e.g. x≈480–560, y≈520–560; x≈600–700, y≈560–600) reads as a procedural scratch pass because the same stroke angle and density appear on every marked brick. Vary angle and density per brick, or cut the pass to a third of the bricks.
+
+FLIP 2:
+- The long crack (x≈230,y≈470 → x≈290,y≈700 and branch to x≈480,y≈520) is a continuous 1px line drawn over brick joints without breaking at any of them. Break it at each joint or route it through the mortar.
+- The arc at bottom right (x≈560–720, y≈640–720) is a smooth regular curve; replace with a jagged line that follows joints.
+- The wall top surface at y≈385–425 is a soft, blurry noise fill against hard-edged bricks below it. Redraw at the brick pixel resolution.
+- The lone wall tile in the floor at x≈315–375, y≈650–700 has a top face darker than the adjacent floor. Raise its top-face value above the neighbouring floor.
+- The rail-and-pin repairs on the wall face repeat at a fixed ~90px interval (x≈295, 385, 475). Break the interval.
+- The diagonal scratch hatching on bricks uses one stroke angle and density everywhere it appears. Vary it per brick or reduce coverage.
+- The figure sprite is drawn at a coarser pixel size than the 1px joints and hatching under it, so it reads as pasted from a different game. Either draw the floor detail at the figure's pixel size or supersample the figure to the floor's.
+
+FLIP 4:
+- The floor under and right of the figure is blown out: 15% of the region x≈300–520, y≈440–620 sits at ≥230 luminance (versus 0–3% in the sibling frames), and the brick joints vanish inside it. Cap the light's peak so the brightest brick stays below the point where joints disappear.
+- Bricks at x≈480–620, y≈470–560 are pale slabs with a dark edge only on their right and bottom sides, so they read as raised blocks floating on the floor rather than bricks in it. Remove the one-sided dark edge or give every brick the same joint treatment.
+- A grey tile fragment sits on the black void at x≈100–150, y≈645–680 with no wall face or floor adjoining it. Remove it or connect it to the wall it belongs to.
+- The wall band at y≈385–450 has lost its top-face/front-face split: the top course is dark bricks with notches, the face is bricks, and the pins at x≈265, 355, 445 poke up into pure black. Restore a distinct lighter top surface as in the sibling frames, and stop the pins at the wall's top edge.
+- Near the corridor mouth (x≈450–520, y≈380–410) the wall face and the floor below it are at the same value, so the wall corner disappears. Separate them by at least one full value step.
+- Same crack-decal, regular-arc, and hatching items as FLIP 2.
+
+FLIP 3:
+- Add a light source and falloff. The fiction is a carried light and a picture that darkens away from it; this frame is flat ambient from edge to edge, so nothing has a value hierarchy.
+- Replace the single 32px floor stamp (x≈100–248) with at least four variants and a break-up pass so the red-brown speckle does not repeat tile-for-tile and the seams stop being visible as straight lines.
+- Give the pond (x≈248–344, y≈0–192) a bank: a darker rim on the floor side, a lighter lip, and an irregular edge instead of a dead-straight rectangle. Break the uniform hex-scale fill with at least a value gradient.
+- The two chests at x≈62–98 and the crates below them are pixel-identical duplicates stacked in a column. Use two different chest sprites, or rotate/offset one, and vary the crates.
+- Replace the door at x≈26–36, y≈118–145 — an orange plank in a gap with a flat brown strip below it — with a drawn door or gate that has hinge, frame and a shadow that reads as one.
+- The single lighter brick in the bottom wall face at x≈160–190, y≈262–270 is a mis-stamped variant that breaks the run. Match it to the rest or make the variation intentional and repeated.
+- The teal moss blobs on the grey wall tops (e.g. x≈20–45, y≈50–75) are soft-edged and anti-aliased against hard-pixel walls. Redraw them with hard edges at the tileset's pixel size.
+- The orc's flat dark ellipse shadow at x≈210–240, y≈25–30 is the only cast shadow in the frame. Either give every object a shadow in the same style or remove it.
+- The orc's palette (saturated green skin, orange armour) is far more saturated than the environment. Pull it toward the environment's chroma so it sits in the scene rather than on it.
+- The white scatter at x≈205–235, y≈112–128 is unreadable at play size. Redraw as recognisable bones or debris, or remove.
+
+Model used: Claude Opus 5 (1M context).

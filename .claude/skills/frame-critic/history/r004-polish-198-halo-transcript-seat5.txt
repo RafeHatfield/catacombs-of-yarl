@@ -1,0 +1,74 @@
+I read all four at native size and then at 3–10× on the regions that matter, plus numeric luminance and colour-count profiles to check what my eye was claiming.
+
+**RANK:** 2 > 4 > 3 > 1
+
+**BEST:** 2
+
+**BEST_WHY:** It is the only frame where the light actually has a defined core. Sampling the column at x=405 downward from the figure: 220, 184, 205, 177, 168, 135 — then a cliff to 80 at the wall-shadow. Image 4 peaks at 188 and image 3 at 185 over the same pixels, so 2 carries roughly 35 more levels of range between the lamp's centre and the same falloff edge, and it's the only one where the pool of light around the figure has a readable hot centre rather than an even wash. The repair carpentry on the wall run at y≈388–455 is also crispest here: the driven pins at x≈265, 330, 415 hold a 2–3px hard edge against the wall face, and the small right-angle bracket at (400–425, 400–412) still reads as a bracket. In image 3 the same pins have gone soft and dropped ~30px down the wall band. That is the best-made thing in the deck, and it is not enough.
+
+**WORST:** 1
+
+**WORST_WHY:** Three things, any one of which a player sees in the first second.
+
+The water at x≈248–344, y 0–191 is a raw rectangle. I sampled across its right edge at row 100: 61, 61, 58, 58, 58, 58, 61, **101**, 90, 90, 90, 90. That is the entire transition from water to stone floor — one 1-pixel highlight line, then flat. No bank, no shallow, no darkening at depth, no rim. The whole body is **7 unique colours** across 170×92 pixels. It is a green fill with a barely-visible hex pattern, not liquid. The dirt/stone seam at y=215 does the same thing (49 → 124 → 90) and the dirt/stone seam at x=55 does it again. Every material boundary in the frame is handled by the same single bright line.
+
+The scatter at (209–236, 112–129) is 69 isolated cream pixels in a 28×18 cloud with brown showing between them. It does not resolve into bones, a shell, a pot, or anything. At play size it reads as dirt on the monitor.
+
+One clover-shaped blob with a three-spoke asterisk in its middle is doing every organic job in the frame. It appears unrotated and identical as a lily pad at (318–333, 14–27), (305–318, 107–120), (320–333, 118–130), (271–284, 158–171) — and then recoloured pale teal as *moss on the stone floor* at (344–383, 147–184) and again at (12–28, 60–75). Same outline, same asterisk, same orientation. Water plant and wall growth are the same asset.
+
+Underneath all of that: there is no light source anywhere in the frame. Uniform flat illumination edge to edge, no falloff, and nothing — not the crates, not the barrels at (115–145, 190–215), not the orange post, not the figure — casts a shadow. The brown ellipse under the figure at (218–242, 18–27) is warmer and lighter than the dirt around it in places, so it doesn't read as one either.
+
+**FLAGGED:** 1, 2, 3, 4
+
+For 2, 3, 4 the glance-level fault is the same and it is the figure. It is a chunky, hard-outlined, 130-colour sprite in saturated cyan and orange, standing on a 2,300-colour continuous-tone floor whose entire palette is desaturated tan and grey. Nothing else in the frame carries cyan. It has no contact shadow — the floor under its boots is unchanged pale cream — and it carries a sword and a round shield, no lamp, no torch, nothing that could be the light the whole frame is built around. It is a cheerful sprite from a different, friendlier game dropped into a cold one.
+
+**SHIP:** NONE
+
+---
+
+**FLIP 2:**
+- The stone joints do not close. In the patch (430–610, 540–660): the horizontal joint bar at roughly (437–472, 602–606) is ~4px thick with blunt ends and stops in the middle of a block face, connecting to nothing on either side; the vertical stub at x≈459 runs from y 605 down to 647 and terminates in open stone. Rebuild the joint network so every block is bounded on all four sides, or delete the orphan bars entirely.
+- Give joints one behaviour. Right now some are 1px hairlines and some are 4px bars in the same course. Pick a single joint width for the floor and a different single width for the wall, and hold both.
+- The same triple-diagonal scratch decal is stamped at least five times inside a 180×120 patch — (565–580, 558–572), (578–598, 557–570), (562–577, 583–597), (580–597, 587–600), (547–560, 628–643) — all at the same angle, length and spacing. Cut it to one instance per ~4 tiles and mirror/rotate each placement, or replace three of the five with a different mark.
+- The dark cluster at (497–550, 580–607) is a blob of black strokes that reads as neither crack, stain, nor object. Resolve it into a specific thing (a burn, a chipped-out block, a drain) or remove it.
+- Attach the light to the figure and give it a contact shadow. Currently the sprite's boot line at y≈510 sits on unmodified floor. Add a 2–3px dark ellipse under the feet at the light's own colour temperature.
+- Give the figure a visible lamp. It is holding a sword and a shield in a frame whose stated premise is that it carries the only light there is.
+- Bring the sprite into the scene's palette: drop the cyan out of the helmet and sleeve entirely, desaturate the orange by roughly half, and re-key the whole sprite to the warm tan the lamp is actually throwing. It should look lit by the light, not lit by a different game's sun.
+- The falloff is non-monotonic. Down the column x=405: 184 at y=536 rises to 205 at y=552; 75 at y=648 rises to 100 at y=664; 43 at y=744 rises to 50 at y=760. Make the light term strictly decrease with distance, then let material albedo vary on top of it.
+- The vertical corridor at x≈505–560 is cooler and more desaturated than the warm stone immediately beside it, and at the top of the frame (y 60–180, L≈17–22) it is brighter than the wall next to it while being *farther* from the lamp. Either give it a real source in frame or re-key it to the same warm ramp as everything else.
+- The corridor's right boundary at x≈560 is a dead-straight full-height tonal step with no mortar line, no wall face and no cast-shadow gradient at it. Put a physical edge there or feather it.
+- The unlit regions are pure-black axis-aligned rectangles. Down column x=250 the values go 18, 16, 15 at y=130 then **3** at y=135 — a five-row cliff from readable to dead. Meanwhile (250,100) sits 415px from the figure at L=17.9 while (250,190) sits *closer* at 333px and is L=2.8. If that is remembered-vs-unseen terrain, the two layers still need to meet on a wall silhouette, not on a bare rectangle edge in open floor.
+- The remembered floor is cool blue-grey and the seen floor is warm tan, with nothing between them. The frame currently reads as two pictures stitched together. Narrow that hue gap so the memory layer is the same stone at lower value.
+- The object at (285–378, 645–712) fades into the floor on its left and bottom but is cut with a razor vertical on its right at x≈378, and that right edge lands exactly on a floor joint. It reads as a discoloured tile, not a thing. Give it one consistent edge treatment and a cast shadow so it reads as sitting on the floor rather than being part of it.
+- The thin dark curve running down through the floor terminates in open stone at about (430, 700). Anchor it or run it off a joint.
+
+**FLIP 4:**
+- Everything in FLIP 2. Images 2 and 4 are the same frame; only 2.9% of pixels differ by more than 10, all inside the box (269–534, 387–622).
+- Additionally, the light core is flatter than in 2 — 188 at the peak against 2's 220, over identical outer values. Restore the top ~30 levels of the core so the lamp has a centre.
+
+**FLIP 3:**
+- Everything in FLIP 2.
+- The light is flatter still. Along row y=620 it runs 36, 72, 92, 102, 122, 87 where 2 and 4 both run 36, 74, 100, 119, 133, 99 over the same pixels, and the peak at the figure is 185 against 220. The lamp currently reads as a brightness slider raised across the room rather than a source. Rebuild the falloff with the core restored and the mid-field left where it is.
+- Hard dark vertical seams appear at the corridor mouth that exist in neither other version: at y=360, x=506 reads **35** where 2 and 4 both read 94, and x=530 reads 52 against 84. Those are 50–60 level drops in single columns. Remove them.
+- The repair pins on the wall run have dropped ~30px down the band relative to 2 and 4 and gone soft — the bracket at (400–425, 400–412) no longer holds its right angle. Restore the pin row's position and hard edges.
+- In several places along the wall band the wall face is now brighter than the floor immediately below it, which inverts the read of what is walkable. Push the wall's top surface below the lit floor value.
+
+**FLIP 1:**
+- Build proper edge tiles. Water-to-dirt at x≈248, water-to-stone at x≈344, water's bottom at y≈191, dirt-to-stone at y≈215 and x≈55 are all dead-straight seams handled by a single 1px light line. Each needs a bank: a darker rim inside the water, a wet/stained band outside it, and a broken, non-straight silhouette.
+- Give the water depth. 7 unique colours across the whole body. Add at minimum a darker centre, a lighter shallow at the edges, and value variation that follows the shape rather than tiling.
+- Delete the pixel scatter at (209–236, 112–129) or redraw it as a specific object with a closed silhouette. As drawn it is 69 loose bright pixels with ground showing through.
+- Stop the clover blob doing two jobs. It appears as a lily pad four times and as stone moss twice, always the same outline and always the same three-spoke asterisk, never rotated. Draw a separate moss asset for stone, and mirror/rotate the lily instances.
+- Put a light source in the frame and let it fall off. The frame is currently uniformly lit corner to corner with no source at all.
+- Add contact shadows to every raised object: the crates at (63–97, 0–88), the barrels at (115–145, 190–215) and (162–192, 190–215), the post, and the figure. Right now nothing is attached to the ground.
+- The brown ellipse under the figure at (218–242, 18–27) is warmer and in places lighter than the dirt it sits on, so it reads as a hole rather than a shadow. Darken it toward the dirt's own hue and drop its saturation.
+- Resolve the orange post at x≈27–35, y≈124–166. It punches through the brick band with no interaction, has no top, no base, and ends in a flat cut in open dirt. It is also the most saturated colour in the frame and pulls the eye to the least meaningful object. Give it a cap and a base, or cut it.
+- The single 1px white line across the wall top at y≈118, x 8–55 is the only pure highlight in the frame and reads as a stray line. Either commit to a lit top edge on every wall run or remove it.
+- The dirt speckle repeats on a 48px vertical period and holds identical density edge to edge, so the whole field reads as noise rather than ground. Vary the density — heavier at the wall bases and around the barrels, near-clean in the open.
+- The crate lid and its plank face don't align: at the seam the planks are ~2px narrower on the right and flush on the left, and the face's bottom edge fades into dirt with no base line. Square the box and terminate the face.
+- Pick one projection. The crates and barrels show a front face (down = toward camera) while the water, the moss and the stone floor are pure top-down with no thickness anywhere. Commit the walls and the water to the same convention as the props.
+
+The honest summary: 2, 3 and 4 are the same frame with the lighting pass re-run, and all three fail on the same underlying material — masonry whose joints don't close, decals that repeat five times in a patch, and a hero sprite that belongs to another game. Image 1 is cleanly-drawn art assembled crudely, with no lighting at all in a frame whose entire premise is one carried lamp. Nothing here goes in front of a paying player.
+
+The thing I'd fix first, before any of the flip lists: decide whether the environment is drawn or textured. Image 2's floor holds 2,326 unique colours in a 200×100 patch while the sprite standing on it holds 130 across the whole figure. Until those two agree on what the picture is made of, every lighting pass will keep landing on mush.
+
+*Model: Claude Opus 5 (1M context).*

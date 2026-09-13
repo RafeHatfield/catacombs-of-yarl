@@ -1,0 +1,17 @@
+[LOST — BUILDER ERROR, 2026-09-08]
+
+This file held seat 2's ORIGINAL r004 ballot: the one that drew
+`replaced-tiles-lane.png` — mis-tagged `tonal` at the time — and MISSED it,
+voiding the round.
+
+I overwrote it with the re-drawn ballot while renaming files, and these
+transcripts are untracked, so the prose is not recoverable. Nothing else was
+lost: the ballot's FACTS are recorded in r004-polish-abc-install.json's
+`panel.per_seat[1]` — plant `replaced-tiles-lane.png`, caught false, build rank
+1, reference rank 3 — and that record is what the VOID rested on.
+
+The re-drawn ballot is beside this file as `-seat2-redraw.txt`. It is NOT this
+ballot and does not stand in for it.
+
+Recorded rather than quietly repaired: "nothing is ever deleted" is the law this
+mechanism runs on, and the one time it was broken it was broken by me.

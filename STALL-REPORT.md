@@ -1,16 +1,15 @@
-# STALL REPORT — stall
+# STALL REPORT — broken-judge
 
 **The line has stopped and is not restarting itself.** LOOP-PROCESS §1.1.4 ruling trigger: this report is the evidence.
 
-- **lane** `combined`
+- **lane** `art/autonomy-amendment`
 - **surface** `combined`
-- **guard** `stall`
-- **written** 2026-09-07T13:07:34
+- **guard** `broken-judge`
+- **written** 2026-09-11T20:13:25
 
 ## Why it stopped
 
-3 readable rounds with no new best rank. The best is 1.00, set at round
-1, and nothing since has beaten it. The lane is not converging.
+the picture-plant was missed 2 rounds running. The judging layer is broken; no round past it is readable and nothing ships past it.
 
 ## What was tried, round by round
 
@@ -18,68 +17,43 @@
 
 | round | verdict | rank | score | best? | Δpic | build | the seat's own words |
 |---|---|---|---|---|---|---|---|
-| 1 | FAIL | 1/3 | 1.00 | **new best** | — | `6e4f980012c4` | The dirt field is one 16×16 tile repeated across roughly 150 cells with no variation whatsoever. Crop x 100–244, y 20–164 and the same dark- |
-| 2 | FAIL | 1/3 | 1.00 |  | 0.000 / 0 | `08be3c7e6e32` | The construction is wrong, not just thin. The body of water (x 248–343, y 0–191) is an axis-aligned rectangle with 90° corners and a one-pix |
-| 3 | FAIL | 2/3 | 0.50 |  | 12.147 / 56 | `ce139378b2ec` | Three separate failures, any one of which is disqualifying. *The dirt is stamped on a visible lattice.* Hashing the frame at 16 px shows the |
-| 4 | VOID | 2/3 | 0.50 |  | 0.688 / 36 | `100cb8206eb7` | Three things, any one of which is disqualifying. First, there are no walls. The dirt field, the grey flagstone at left and right, and the wa |
-| 5 | FAIL | 1/3 | 1.00 |  | 0.000 / 0 | `d361e4f08430` | The flagstone floor is a flat fill with a grid drawn on top. The band at (40–340, 230–258) contains 7 unique colours total, and one of them  |
+| 1 | INSTALL-LATEST | 2/4 | 0.67 | **new best** | — | `f5081c3138d9` | Two things a person sees before they see anything else. First, **the barrels are cut in half by the floor.** Both barrels at y≈190–217 termi |
+| 2 | INSTALL-LATEST | 1/4 | 1.00 | **new best** | 0.000 / 0 | `f5081c3138d9` | Four things, any one of which is disqualifying. The mud field is one 48×48px block stamped across the entire 190×288px area. I measured it:  |
+| 3 | VOID | 2/4 | 0.67 |  | 0.855 / 57 | `275a62a30ac1` | The pool at (248–343, 0–192) is a hard-edged rectangle of hex-pattern green with a 1px lighter border and no bank, lip, shadow or wet edge w |
+| 4 | VOID | 2/4 | 0.67 |  | 0.538 / 10 | `44986fe8eaa9` | It is assembled, not made. There is no light source at all — the orc at (220,10) carries nothing and the frame is the same value edge to edg |
+| 5 | VOID | 2/4 | 0.67 |  | 0.000 / 0 | `de040ffd3427` | Nothing in it is made; everything is a stamp. The grey floor tiles (bottom two rows and the left column) are identical 48px squares separate |
 
 ## The flip lists, verbatim
 
 Void rounds do not appear here. §4: the plant was missed, so those findings are not read — they are kept in the verdict under `flip_list_withheld` and are not evidence.
 
-**round 1 (FAIL)**
+**round 1 (INSTALL-LATEST)**
 
-- The figure is rendered at a ~2px hard pixel grid; the environment is soft and resampled with no fixed pixel size. Quantise the environment to the same pixel grid as the sprite so stone edges land on hard pixel boundaries instead of gradients.
-- A diagonal streak/hatch band runs down-left at ~45° across the lit pool around (430,470)–(560,560). A point lamp cannot produce a directional band. Delete the overlay.
-- The incised double-tick "//" marks on the stones right of the figure (roughly x 565–620, y 480–580) recur at identical angle and identical length about fifteen times. Vary angle and length per instance, or cut their count by two thirds.
-- The block at approx (494,520)–(558,550) is flat and untextured, brighter than every stone around it, and further from the lamp than the figure. Give it the same joint and wear treatment as its neighbours and drop it to the value its distance from the lamp implies.
-- Four cracks radiate from a single point at ~(314,600) in a near-symmetric X. Stone does not fracture radially from a point. Break it into two crossing fractures with offset origins, or remove two of the four arms.
-- The wall band at y 385–440 is mottled brown noise with no legible courses. Draw actual stone runs into it with joint lines at the same weight as the floor's.
-- Nothing anywhere in the frame shows a repair. The fiction specifies rope, driven pins, hide and salvaged timber holding this floor together for four hundred years. Add at least two: a timber baulk pinned across a gap in the paving, and a stone lashed back into a course.
+- **Every fire in this frame subtracts light.** I compared identical regions against 2 (global exposure matched within 1 luma across four control patches). Floor left of the firepit: −9.5. Floor right of it: −10.7. Floor below it: −13.8. Floor around the burning stick pile: −15.8. There is a lit flame in a ring of hearthstones at (596, 548) and the stones of its own ring are darker than the bare floor was before the fire was placed there. Make each fire prop a light emitter: warm falloff of 2–3 tiles, brightest on the hearthstones themselves, and remove the darkening halo the placement pass is currently applying.
+- The lantern at (330–360, 535–570) is illegible at play size. Its left edge has a hard outline, its right edge has none — the pixels just stop into the floor. Close the silhouette on all four sides with the same outline weight, and give the top face a distinct value so it reads as an object seen from above rather than a front panel.
+- That lantern and the firepit ring are drawn in near-elevation — you see a front face and a grate — inside a strictly overhead frame. Redraw both to the same camera as the floor.
+- The same two-crossed-sticks motif appears three times inside four tiles: dark brown at (275, 612), saturated red-orange at (405, 612), and as a parallel pair at (530, 618). Cut it to one, and vary the remaining timber by length and angle rather than by hue.
+- The crossed sticks at (405, 612) sample (158, 49, 20) — a saturated red that appears nowhere else in the set, on stone that samples (127, 93, 64). Bring the props onto the environment ramp; they currently read as a different artist's layer dropped on top.
+- None of the five floor props has a contact shadow. They sit on the stone with no anchor. Add a one-to-two-pixel occlusion darkening on the side facing away from the carried light.
 
-**round 2 (FAIL)**
+**round 2 (INSTALL-LATEST)**
 
-- The lamp core is clipped: 12,874 non-UI pixels sit at luminance ≥246 in a contiguous patch at x 285–504, y 457–601, where the floor loses every joint and slab edge into flat cream. Pull the light curve's white point down so no floor pixel exceeds ~232, and let the falloff reach that ceiling asymptotically instead of saturating.
-- The area at x 130–430, y 65–133 is structureless soft blob-noise — no joints, no block edges, no coursing, just 6–10px mottle. Draw masonry there at the same slab logic as the south floor and let the darkness dim it.
-- The corridor floor at x 440–503, y 300–460 is the same failure in the lit zone: mottled tan cloud with no joints, directly adjacent to fully-jointed floor. Cut slabs into it.
-- The plated objects at x 505–570, y 290–400 are outlined in a salmon-pink that appears nowhere else in the frame's palette. Re-key those outlines to the warm brown already used for joints in the adjacent stone.
-- The crack lines (the long curve entering at x 150, y 780 and the one crossing x 430–620, y 520–560) are anti-aliased smooth splines with soft grey edges over hard-pixel art — they are the only lines in the frame without jaggies. Redraw them on the pixel grid using the existing joint colours.
-- The same 3–4 stroke diagonal hatch decal is stamped at identical angle and length on slabs at roughly (350,800), (480,805), (850,795), (920,890). Build three or four hatch variants and vary the rotation, or hand-vary the worst repeats.
-- The dotted stipple fringe along the lower edge of the slabs at y 148–158 runs unbroken across the full width at constant density. Break it up so it appears on some slabs and not others.
-
-**round 3 (FAIL)**
-
-- The lit floor is blown out. Excluding UI and sprite, 12,159 pixels sit above luma 190, against 289 in the comparable frame; the floor around the figure reaches ≈(240,235,215). Pull the peak floor value down until the brightest stone is well clear of the sprite's lightest pixels.
-- Consequence of the above, and the reason it matters: the sprite stops reading. The shield's cream face and the sword blade's interior land at the same value as the floor beside them, so only the dark outline holds the figure together. Fix the exposure and check the read again at 1:1.
-- Restore joints in the blown region. At x 430–700, y 470–560 there is a flat pale block roughly 110×28 px with no interior texture and a dark line on only two of its four edges. Every block in that pool needs its joints back.
-- Unify the detail scale in that same region: adjacent blocks alternate between crisp 1 px diagonal hatch triplets and completely blank gradients. Pick one density and hold it.
-- Remove or attach the free-floating dark bars — roughly 3×20 px verticals at around (505,505) and (525,505) — that sit mid-block, joined to no joint and no timber.
-- The block edges there are soft, anti-aliased gradients roughly 4 px wide while the sprite is hard 1 px. Snap the floor art back to the pixel grid; as it stands the frame carries two rendering resolutions.
-- Strip the mottled cloud-blotch layer off the wall tops at y≈390–455. The dark green-brown blobs cross stone divisions and ignore every joint underneath them — it reads as a grunge texture multiplied over the tiles rather than as stained stone. If the stain stays, cut it to the block boundaries.
-- Give the wall's top surface a value separation from the lit floor. In the lit span they sit close enough that the wall does not read as raised.
-- The grey patch at roughly x 120–200, y 55–133 is an axis-aligned rectangle sitting inside the black unexplored area with hard straight sides. Either texture it or let it go to the same black as its surround.
-
-**round 5 (FAIL)**
-
-- The figure at (385–430, 460–510) carries sword and shield and no light source, while the only light in the frame originates at its feet. Put a hooded lamp in the shield hand or hung at the belt, and move the light origin to the lamp.
-- That sprite is the only object in the frame with an outline — a black inner line plus a cream outer line, visible all around the helmet and boots — and the only one using saturated cyan (~#8FD8D8) and pure orange. Nothing in the environment uses an outline or either hue. Repaint it onto the environment's tan/umber/soot ramp and drop to a single dark outline or none.
-- At (450–530, 380–470) the wall's top surface and the lit corridor floor both sit at L≈190–210 and carry the same speckle; only a 1–2px dark line separates them. Drop the wall top ~25 values and give it a coarser, larger-scale grain than the floor.
-- The wall tops at (390–490, 70–190) and (620–750, 70–190) have no joints at all — they are soft airbrushed cloud. Draw the same block courses used at (430–750, 400–450) and let value, not blur, take them into the dark.
-- The object at (275–380, 640–710) reads as nothing: soft rim on all four sides, an interior of four arbitrary lighter and darker rectangles, no top plane, no side plane, and its left edge lands mid-tile. Resolve it into a named object — hatch, crate, grating — with a hard top edge and one visible side face, or delete it.
-- The crack descending from (330, 600) stops dead at that object's top-left corner and a different crack restarts at its right edge. Run one continuous crack under it, or terminate it into something.
-- 23.4% of the frame sits below L=8 — flat void carrying no information. Raise the ambient floor to L≈14–18 so the unlit rooms at (0–180, 150–640) and (620–750, 150–300) still show block courses in silhouette.
-- The place is described as held by orc-soldiers repairing with rope, pins, hide and salvaged timber. One timber and two pins appear, all in the same wall run at (600–710, 400). Nothing in the other 90% of the frame has been touched by anyone. Carry the repair vocabulary into the floor and the far walls.
+- The middle prop at x≈408, y≈613 is not readable as an object. At native resolution it is a lumpy heart-shaped mass of saturated red-orange with loose yellow pixels along its lower edge — no straight plank edges, no consistent light direction, and it is the highest-chroma element in the entire frame. Redraw it with the same two-plank construction and the same silhouette discipline as the prop at x≈285, or cut it.
+- Those three props sit at y≈612, 613, 613, spaced 125px and 125px apart, and are three different sizes and three different colour temperatures of the same crossed-plank object. Break the row: move at least one off that y, and settle on one plank width and one wood hue across all three.
+- The round object at x≈597, y≈548 contains a lit flame and emits no light. The cobbles of its own ring, 1–2px from the flame, sit at the same value as unlit stones 30px away. Either give it a local falloff that brightens the surrounding four or five flagstones, or take the flame out.
+- That same object's interior is near-pure black with a hard edge; every other dark in the lit floor is a warm brown. Re-key the hole interior to the frame's darkest warm brown.
+- Its ring cobbles read brighter than floor stones that are closer to the player's lamp. Re-light the prop through the same distance falloff as the floor instead of drawing it at fixed value.
+- The flame inside it is four flat colour steps at ~10px tall — an interface-icon rendering. Redraw at the scene's material fidelity or remove.
 
 ## Where to look
 
 Captures and transcripts, per round:
 
-- round 1 — deck `/Users/rafehatfield/.claude/frame-critic/deck-d3a75aa4363e50e7`, transcript `.claude/skills/frame-critic/history/r001-combined-transcript.txt`
-- round 2 — deck `/Users/rafehatfield/.claude/frame-critic/deck-bfc3fb231fce4c52`, transcript `.claude/skills/frame-critic/history/r002-combined-transcript.txt`
-- round 3 — deck `/Users/rafehatfield/.claude/frame-critic/deck-5c9a8cb6b18a6c2e`, transcript `.claude/skills/frame-critic/history/r003-combined-transcript.txt`
-- round 4 — deck `/Users/rafehatfield/.claude/frame-critic/deck-9deedbff73d7e8a6`, transcript `.claude/skills/frame-critic/history/r004-combined-transcript.txt`
-- round 5 — deck `/Users/rafehatfield/.claude/frame-critic/deck-eaf7a092e3e795cb`, transcript `.claude/skills/frame-critic/history/r005-combined-transcript.txt`
+- round 1 — deck `/Users/rafehatfield/.claude/frame-critic/deck-30196a27487ba42b`, transcript `.claude/skills/frame-critic/history/r001-art_autonomy-amendment-transcript.txt`
+- round 2 — deck `/Users/rafehatfield/.claude/frame-critic/deck-7c1ae7154dd3a4bb`, transcript `.claude/skills/frame-critic/history/r002-art_autonomy-amendment-transcript-seat1.txt`
+- round 3 — deck `/Users/rafehatfield/.claude/frame-critic/deck-7b01b7c7c285d280`, transcript `.claude/skills/frame-critic/history/r003-art_autonomy-amendment-transcript-seat1.txt`
+- round 4 — deck `/Users/rafehatfield/.claude/frame-critic/deck-fff24b0496b478af`, transcript `.claude/skills/frame-critic/history/r004-art_autonomy-amendment-transcript-seat1.txt`
+- round 5 — deck `/Users/rafehatfield/.claude/frame-critic/deck-74cc0aead0250283`, transcript `.claude/skills/frame-critic/history/r005-art_autonomy-amendment-transcript-seat1.txt`
 
 ## What is being asked for
 

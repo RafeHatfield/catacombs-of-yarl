@@ -1,0 +1,43 @@
+{
+  "_what": [
+    "SEATS RE-DRAWN, AND WHY. Added, never edited; entries accumulate.",
+    "",
+    "RULED (Rafe, 2026-09-08): \"a seat voided by a mis-tagged plant is re-drawn, not the round;",
+    "a correct plant missed still voids. Record by added artifact.\"",
+    "",
+    "The distinction is whose fault the miss is. A seat that misses a plant CORRECTLY TAGGED for",
+    "the axis it was asked about is soft, and softness voids the round — that is the only control",
+    "the mechanism has and nothing here touches it. A seat handed a plant that could not test the",
+    "question it was set was never judged at all, and re-running two innocent seats over it throws",
+    "away evidence.",
+    "",
+    "This file is the added artifact the ruling requires, on the same principle as PARK-CLEARED:",
+    "a guard is cleared by ADDING evidence, never by deleting it.",
+    "",
+    "It is excluded from build_id BY NAME, beside PARK-CLEARED.json — it describes a round and",
+    "reaches no pixel. Named, never a pattern: an unnamed file at the repo root still moves the",
+    "id, and prove_build_id case 6b holds that line."
+  ],
+  "redraws": [
+    {
+      "when": "2026-09-08",
+      "lane": "polish-abc-install",
+      "round": 4,
+      "seat": 2,
+      "axis_asked": "tonal",
+      "plant_dealt": "replaced-tiles-lane.png",
+      "fault": "deck configuration. The plant was tagged `tonal` for the lever that MADE it (POLISH_LANE_GAIN restored to 1.9) rather than for what Rafe's cull saw, which was material identity — `value`. Re-tagged in MORGUE.json by the same ruling. A value cull cannot control a tonal question, so seat 2's miss was not evidence about seat 2 or about the build.",
+      "plant_redrawn": "blown-highlight.png",
+      "outcome": "CAUGHT (flagged). The seat ranks the build 3 against the reference at 1 and flags it; the panel is 2 of 3 not-below, which is the INSTALL-LATEST bar, and the seat's six items are disposed by citation in the verdict.",
+      "frozen_bytes": "839fb12f6ff445a8f8ccf75dd32efe73324d09773a38d6edf3d7e3476aba8f2f",
+      "bounds_held": [
+        "the frame's sha256 was unchanged — the run refuses a re-draw if it has moved",
+        "nothing was re-captured",
+        "seats 1 and 3 were carried unchanged and were never re-parsed",
+        "the ballot was written to r004-...-transcript-seat2-redraw.txt; no transcript was overwritten",
+        "the existing re-drawn ballot was REUSED, not re-rolled — the no-re-roll check now runs BEFORE the seat is spent"
+      ],
+      "cost_recorded": "seat 2's ORIGINAL transcript was overwritten during an earlier rename in this session and is unrecoverable — it was untracked. A placeholder file records the loss where the file stood. The `-redraw` suffix and the reuse check both exist because of it."
+    }
+  ]
+}

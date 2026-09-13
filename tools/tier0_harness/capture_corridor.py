@@ -21,6 +21,9 @@ import os
 import re
 import subprocess
 import sys
+import os
+sys.path.insert(
+    0, os.path.dirname(os.path.abspath(__file__)))
 
 REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CONFIG = os.path.join(REPO, "tools/tier0_harness/harness_config.yaml")
@@ -238,6 +241,17 @@ def main():
         overrides["falloff"] = args.light_falloff
     if args.light_ambient_level:
         overrides["ambient_level"] = args.light_ambient_level
+
+    # A CAPTURE IS A WRITE. Killed halfway it leaves a truncated PNG that the next round would
+    # judge without knowing (ruled 2026-09-10).
+    try:
+        import headroom as _h
+        _ok, _msg = _h.require("write")
+        if not _ok:
+            print("STOP: " + _msg, file=sys.stderr)
+            sys.exit(3)
+    except ImportError:
+        pass
 
     rc, log, cmd = capture(args.out, args.theme_config, cfg, args.godot,
                            light_overrides=overrides, scene_spec=args.scene_spec,

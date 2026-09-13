@@ -1,0 +1,57 @@
+I read all four. Frames 2, 3 and 4 are the same scene and the same tile art under three different lighting/wall passes — I diffed them to be sure, and 3 vs 4 differ only inside x 259–545, y 379–631. Frame 1 is unrelated construction.
+
+**RANK:** 2 > 4 > 3 > 1
+
+**BEST:** 2
+
+**BEST_WHY:** The lit floor keeps its material under the lamp. At y=517–519, x 330–400 the mortar joint sits at RGB 230,165,106 against a slab face of 243,191,119 — it drops in every channel and browns as it drops, so the recess reads as shadowed stone rather than a line drawn on top. That joint is still legible directly under the brightest part of the light, which is where 3 and 4 both lose it. The wall band at y 393–455 is built as two distinct courses — a mottled upper surface, and below it a face of individually delineated blocks — and it terminates in a hard base line at y=455 that drops to luminance 19 before the floor rises to 64. Wall and floor are never the same value anywhere along that run. The vertical timber pins at x≈300 and x≈395 carry their own value range independent of the floor and have a dark contact line at the base, so they read as driven into the surface rather than painted on it. And the long crack scales multiplicatively with the light — 98 against a 176 floor, 12 against a 45 floor, 7 against a 16 floor — so it belongs to the lighting instead of sitting above it. Slab faces also vary against each other: the slab at (270–300, 460–510) is a clear step lighter than the one right of the timber, for no reason but wear.
+
+**WORST:** 1
+
+**WORST_WHY:** The frame has no light falloff at all — it is at one uniform exposure from corner to corner, which is not a stylistic choice here, it's an absent pass. On top of that the water body at roughly (250,0)–(345,190) is a filled rectangle: it terminates in hard right angles against bare dirt with no bank, no waterline value step, no wet edge. The dirt/flagstone boundary is a straight tile cut — the vertical seam at x≈112 running y=0–215, and the horizontal at y≈215 — with dirt stopping exactly on tile edges and no transition of any kind. The dirt itself repeats on a visible 16px cadence: the same blue-grey pebble and the same dark speckle cluster recur in a grid. Projection is mixed — the two stump forms at (115,190) and (160,190) and the crates at (60,5)/(60,45) show side faces and elliptical tops while the floor is a flat top-down grid. Nothing casts a shadow, including the figure at (225,10). The flagstone floor and the raised stone at left sit at the same value, so nothing reads as elevated. And the room ends in an unresolved black bar across y≈265–288.
+
+**FLAGGED:** 1, 2, 3, 4
+
+*(1 for the rectangle-water and the flat exposure; 3 for the blown-out core; 2 and 4 for the unexplained dark rectangle at (300,645)–(380,715), which is the surrounding floor multiplied darker inside a 2px black keyline with square corners and the same brick divisions running through it. At a glance a player cannot tell whether it's a pit, a hatch, a stain, or a rendering fault.)*
+
+**SHIP:** NONE
+
+---
+
+**FLIP 2:**
+- The dark rectangle at ~(300,645)–(380,715) is a darkened selection with a keyline, not an object or an opening. Commit it one way: as a hole, cut the slab edges so broken stone shows on the rim, put a lighter chipped lip on the lamp-facing (upper-left) side, and drop the interior to near-black with the brick pattern removed. As an object, give it a top surface, a visible near-side face, and a cast shadow.
+- Whatever it becomes, it must cast or receive a shadow consistent with the lamp at ~(405,485). Nothing in the frame currently casts one, and it's the one thing a single-source premise has to deliver.
+- The masonry at y=0–62, x 190–580 is blue-grey and butts the warm brown wall below at a hard horizontal seam at y≈64 with no transition. Re-tint that band to the wall's warm base, or motivate the shift.
+- That top band reads at mean luminance 17.6 while the room floor at y 90–300 — nearer the lamp — reads 6.9. Falloff is non-monotonic. Push the top band below the value of anything closer to the light.
+- At the corridor mouth, x≈490–570 where it meets the wall base at y≈455, the wall's courses are cut flat across the opening with no jamb. Turn two or three stones into the opening on each side so the doorway reads as built rather than erased.
+- Floor slabs below y≈700 carry the same diagonal hatch cluster on a regular cadence. Hand-break the repeat on at least the slabs inside the visible falloff.
+
+**FLIP 3:**
+- The light core at ~(300,460)–(420,540) is clipped: 72.7% of pixels at R≥250 and 22.7% at G≥250. Pull core exposure down until R clips on under ~10%. The tile joints at y≈517 and x≈372 exist in the art and are currently erased by the blowout.
+- Restore joint contrast in the lit zone to roughly what 2 achieves — joint at least 12–15 luminance below the slab face, and browner, not just darker.
+- The diagonal streaking across the lit floor runs continuously across slab faces and mortar lines alike, which is what makes it read as an overlay. Move it beneath the joint layer, or mask it per-slab so it stops crossing joints.
+- The pale hard-edged rectangle at ~(365,510)–(390,535) sits a step lighter than its neighbours with no lighting reason. Match it to the falloff or give it a material that explains it.
+- Wall base at x≈200–460: the wall face brightens continuously into the floor with no value break, so the wall's bottom edge disappears. Reinstate the hard base line that runs across the rest of that wall.
+- Everything in FLIP 2 applies here: the floor rectangle, the corridor jamb, the top-band hue and value.
+
+**FLIP 4:**
+- Red is clipping in the lit core. At the joint, y=517–519, x 330–400, the frame reads RGB 247,177,113 against a slab of 247,192,120 — R is identical between joint and slab, so the shadow can only be rendered in green and comes out pink. Either lower core exposure so R has headroom, or move the lamp colour off near-pure orange so shadow can be carried in all three channels.
+- Same joint: total luminance drop is 6, against 2's 14. Roughly double the joint contrast in the lit area or the floor reads as tile, not cut slab.
+- Wall base at x≈200–460, y≈445–455: the wall face runs up in value into the floor with no break and the bottom edge dissolves. Restore the base line.
+- Everything in FLIP 2: the floor rectangle, the corridor jamb, the top-band hue and value.
+
+**FLIP 1:**
+- Add the light falloff. There is currently none — the frame is at one exposure edge to edge. This is the single change that separates it from a tileset dump.
+- The water at ~(250,0)–(345,190) needs a bank: an edge treatment with wet stone, a value step at the waterline, debris caught along it. Right now it's a filled rectangle with square corners.
+- Break the dirt/flagstone boundary at x≈112 (y=0–215) and y≈215. Scatter dirt over the first row of flagstones, chip the stone edge, vary where the transition falls tile to tile.
+- Author three or four dirt variants and scatter them, or hand-break the repeats. The same pebble and the same speckle cluster currently recur on a 16px grid.
+- Pick one projection. The stumps at (115,190) and (160,190) and the crates at (60,5) and (60,45) show side faces and elliptical tops against a flat top-down floor. Redraw the props to match the floor.
+- Add contact shadows under every prop and under the figure at (225,10).
+- Separate the raised stone at left from the flagstone floor by value — they currently sit at the same tone, so nothing reads as elevated.
+- The white pixel scatter at ~(215,110)–(240,125) isn't readable as anything. Draw it as a specific object or remove it.
+- Bring the water teal and the vegetation green into the frame's saturation range; both currently read as pasted in from a different set.
+- Resolve the bottom of the frame — the room currently ends in a black bar across y≈265–288 with no floor edge, threshold, or wall.
+
+One thing worth naming: the three variants share a floor object that nobody finished, and none of the lighting passes fixed it. The lighting work is where the iteration went; the asset underneath it hasn't moved. If the next pass is another exposure tweak, you'll get a fourth frame with the same rectangle in it.
+
+*Model: Claude Opus 5 (1M context)*

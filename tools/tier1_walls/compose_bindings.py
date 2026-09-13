@@ -99,11 +99,55 @@ def ink(ladder, plane_rung):
 
     So the ink is derived from the plane it lands on. Iron is three rungs under its own plane
     wherever that plane sits, which keeps the ratio - and a ratio is the thing the rig preserves.
+
+    ⚠ AND THE PARAGRAPH ABOVE IS THE ASSERTION THAT THE CLIP DEFEATED — #208, measured.
+
+    "Iron is three rungs under its own plane wherever that plane sits, which keeps the ratio."
+    The ratio was never kept. `at()` clipped at index 0, and on the nine-rung ladder the FACE
+    sat at rung 1, so at(-4), at(-3), at(-2) and at(-1) all resolved to the same value. The
+    manifest said so in plain sight and nobody read it:
+
+        ink.face = {shadow: 48.56, iron: 48.56, rope: 48.56, timber: 48.56, pale: 88.24}
+
+    Measured on the tiles themselves: ALL 15 BINDING TILES, 855 OPAQUE PIXELS, ONE LUMINANCE.
+    Five inks authored, one delivered. And `tops` reads "NO BINDINGS ON TOP PLANES — ruled at
+    the gate, §8.3.1", so the face set is the whole set: there was no unaffected half. Every
+    strap, lash, cramp, pin and patch in the game was a flat silhouette.
+
+    THE FIX IS NOT THE CLIP, AND THAT IS THE FINDING. Flooring `at()` the way the wall and cap
+    families now floor reproduces the collapse exactly, because the face plane sits at 61.789
+    and the family floor at 48.56 — ONE RUNG OF ROOM. Four inks cannot be distinct in one step
+    on any ladder that ends where this one does.
+
+    RULED (Rafe, 2026-09-11): "bindings are objects, not stone — own material inks outside the
+    face band as interim; the palette lock derives their slots."
+
+    So the inks stop being offsets from the plane they land on and become MATERIALS with values
+    of their own, chosen outside the band the face occupies. They are still rungs of the
+    family's ladder — §5.1's palette is PLACEHOLDER and the lock is a door nobody is opening
+    tonight — but they are chosen for what the object IS rather than for where the stone
+    behind it happens to sit.
+
+    Weber against the face plane (61.789), which is what each must separate from:
+
+        shadow  22.11   +0.642      iron  35.34   +0.428
+        timber  48.56   +0.214      rope  75.02   +0.214      pale  88.24   +0.428
+
+    All five clear §13.8's 0.1440, all five are at least a full rung from each other, and rope
+    is the one that goes UP — pale hemp against dark stone is lighter, not darker, and a rope
+    authored below the stone it binds was never going to read as rope.
+
+    ⚠ INTERIM, AND THE WORD IS THE RULING'S. These are values a lock will supersede. What is
+    NOT interim is the shape of the mistake: a material stated as an offset from whatever it
+    happens to sit on is a material with no identity of its own.
     """
     L = list(ladder)
-    def at(off):
-        return L[max(0, min(len(L) - 1, plane_rung + off))]
-    return dict(shadow=at(-4), iron=at(-3), rope=at(-1), timber=at(-2), pale=at(+2))
+    lo = L[0]
+    def rung(v):
+        """The nearest rung to an authored value — derive, never copy (§13.12)."""
+        return L[min(range(len(L)), key=lambda i: abs(L[i] - v))]
+    return dict(shadow=rung(lo * 1.00), iron=rung(lo * 1.60), timber=rung(lo * 2.20),
+                rope=rung(lo * 3.39), pale=rung(lo * 3.99))
 
 
 def _rect(a, x, y, w, h, v):

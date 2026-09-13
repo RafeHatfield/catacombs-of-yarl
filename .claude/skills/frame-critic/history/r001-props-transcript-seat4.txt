@@ -1,0 +1,52 @@
+Read all four at native size and at 3–6× on the regions that matter.
+
+RANK: 1 > 4 > 2 > 3
+
+BEST: 1
+
+BEST_WHY: The floor between y≈455 and y≈720 is genuinely cut, not stamped. The bond breaks — the course at y≈510 runs slabs roughly 40px wide, the course under it at y≈560 runs one slab nearly 90px wide against two short ones, and the vertical joints do not stack into columns anywhere in the field. Joint depth varies along a single run: the slab at (250–360, 470–520) has a 1px hairline on its left side and a 3px dark trench on its right. The crack network is hand-placed — it enters at (390,455), steps down as a chain of 1px jogs, forks at a node around (310,600) and again at (390,610), changes direction at some joints and cuts straight across others. Nothing about it is procedural. And the incised marks — the diagonal hatch groups on the slabs at (460,690) and (410,655), scored into individual stones and not repeated slab-to-slab — do the fiction's work without announcing it: a floor somebody has been keeping a count on. The wall course at y≈425–455 also puts its two driven pins on the plane the lantern actually lights, which is the correct choice and the one 2 gets backwards.
+
+WORST: 3
+
+WORST_WHY: The water body is a bare axis-aligned rectangle, x=248 to x=343, y=0 to y=191. At row 100 the ground goes (65,30,19) to (38,81,66) across a single pixel — no bank, no wet margin, no value shift at the waterline. The bottom edge at y=191 is a straight horizontal cut through flat teal onto flat dirt. There is no edge tile in the set at all. Underneath that, the grey floor is stamped: in the block (0–170, 218–290), 6469 of 11900 pixels are the single value (90,90,90), the joints are one row of (71,71,71), and shifting that region 24px sideways matches itself to within 1.0 mean absolute difference — it is one tile, repeated, with zero variation. Every grey in it is exactly R=G=B, which no light in the scene could produce. The frame is also uniformly lit corner to corner with no source and no falloff, and it holds four camera angles at once: the floor is straight top-down, the crates at (190–290, 0–270) are flat front elevation, the barrels at the bottom show a lid ellipse *and* full side staves, and the torch pole at x≈85 is pure side-on.
+
+FLAGGED: 3, 4, 2
+
+SHIP: NONE
+
+FLIP 1:
+- The wall's top surface, the band at y≈385–425 above the pinned course, carries no cut-stone structure at all — it is a soft mottle, and it's the only surface in the frame with no joints. Draw course lines and varied joint depth into it to match the floor below.
+- The environment is continuous-tone at 1:1 while the character sprite is on a clean 2px pixel unit (sprite block-std jumps 25→38 from 2px to 3px; the floor's does not jump at all). The figure is visibly chunkier than the world he stands on. Quantise the environment to 2px, or redraw the sprite at 1:1. One unit, held everywhere.
+- The square opening at (300–380, 645–710) is a near-black rectangle with hard square corners and no near-side lip. Give it a cut edge: a 2px light chamfer on the lantern-facing side, a shadow that falls *into* it rather than a flat fill, and break one corner so it reads as cut into the floor.
+- The room holds one object. The fiction promises rope, driven pins, hide and salvaged timber; the wall shows two pins and nothing else does anything. Add three or four repairs inside the light's reach — a rope lashing across the pins, a hide patch pinned over a slab, a timber wedged into a joint — drawn at the value the falloff gives them, not at full brightness.
+- Nothing in the frame casts a shadow, including the wall standing directly above the figure. Put a hard cast shadow along the wall base at y≈456.
+
+FLIP 2:
+- The wall is built backwards. The cut-stone course with the driven pins sits at y≈385–420 on the far, unlit side; the near face at y≈420–455 — the surface the lantern actually lights — is an undifferentiated brown smear (local contrast 5.3 against 6.9 for the same band in 1). Swap them. Detail goes on the lit plane.
+- The wall/floor boundary disappears on the left. From x≈150 to x≈180 the smear fades into the floor with no edge line. Run the dark base line the full width.
+- The light pool clips. Floor pixels at (300–470, 455–530) reach (255,255,211), 72 of them exceed 235 luminance, and the tile joints inside the pool wash out entirely. Drop the pool ceiling ~25 values so the brightest slab still shows its joints.
+- Same 1:1 environment against 2px sprite as the rest of this set. Pick one unit.
+- Same structureless wall cap as 1 once the two bands are swapped — draw joints into it.
+
+FLIP 4:
+- The firepit bowl at (578–618, 528–566) is 232 pixels of (3,1,1), effectively pure black, sitting inside a lit floor whose darkest nearby value is (63,41,29). It reads as a hole punched through the image. Raise the interior to the frame's darkest floor value.
+- That fire emits no light. The stones around it, the floor beneath it, the joints beside it are all at ambient dim. Either give it a second falloff — small, warm, rim-lighting the near stones — or put it out and draw cold ash.
+- The stone ring peaks at R=222 where the bare floor in that exact spot peaks at R=120: the prop is twice as bright as the surface it sits on, at a distance the light has already left. It is also cool grey where everything around it is warm brown. Multiply every prop through the same falloff curve the floor uses instead of compositing at full brightness.
+- Three crossed-timber props, three sets of rules: (262,598) is two dark plum planks, (385,600) is a saturated orange-red mass, (510,595) is two thin pale planks at a different width. Redraw all three from one plank — one width, one wood ramp, one edge treatment.
+- The prop at (385–430, 600–635) has no readable silhouette. It peaks at (255,164,108), the most saturated pixel anywhere in that dim region, and the individual timbers cannot be separated. Rebuild it as two planks with a visible gap and a visible overlap, at local ambient saturation.
+- The barrel at (335–360, 530–570) has no contact shadow and no foreshortening — a side-view vessel on a straight-down floor. Add the lid ellipse and a shadow falling away from the lantern.
+- Everything in FLIP 1 applies here too; this frame is pixel-identical to 1 outside the region (183,455)–(750,709).
+
+FLIP 3:
+- Build an edge set for the water. Wet-dirt margin, broken bank, value shift at the waterline — the current transition is one pixel wide on all four sides of a rectangle.
+- Rebuild the grey floor. Vary slab widths, break the bond between courses, vary joint depth along a single run. Right now 54% of the floor block is one flat value and a 24px shift matches itself.
+- Tint the stone. Every value in it is exactly R=G=B; no light in the scene is neutral.
+- Build a light model. The frame is uniformly lit corner to corner with no source, no falloff and no shadow, against a premise of one carried light.
+- Pick the projection the floor is drawn in and rebuild every object to it. The crates show their front faces, the barrels show lid ellipse plus full side staves, the torch pole at x≈85 is side-on, the ground is straight down.
+- Ground everything or nothing. Only the figure at the top has a contact shadow; the barrels, crates and pole all float.
+- The eight loose white pixels at roughly (215,120) don't resolve into an object at any size. Draw it with a silhouette or delete it.
+- The dirt field repeats on a 48px vertical period (mean abs difference drops to 4.76 against a 7.83 baseline at that shift). Break it.
+
+The deck's real story: three of these four are the same room, and the one with the most content in it (4) is the one you'd be most embarrassed by, because the content was composited at full brightness onto a floor the light had already left. Fix the prop pipeline — every object multiplied through the same falloff the floor uses — and 4 becomes the strongest frame here rather than the third.
+
+*Model: Claude Opus 5 (1M context)*

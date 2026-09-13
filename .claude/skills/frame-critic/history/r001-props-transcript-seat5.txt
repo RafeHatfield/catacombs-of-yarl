@@ -1,0 +1,90 @@
+Read all four. Measured rather than eyeballed where I could — pixel statistics, autocorrelation, template matching — because three of these frames share a base and the differences are easy to misread by eye.
+
+**RANK:** 4 > 2 > 1 > 3
+
+**BEST:** 4
+
+**BEST_WHY:** The corridor running north from the room, roughly (500–560, 460–900). The slabs vary tone slab-to-slab — a warm one at the mouth, a pale one at mid-run, a grey-green one above it — and the joints between them are not all one weight: some are a thin dark hairline, some almost closed, some a wide dark gap. The stones read as separately quarried and separately laid. Second: the wall mass west of that corridor carries a single diagonal fracture running from about (445,270) down to (500,430) that crosses several course lines *without restarting at any of them*. That is the one piece of unambiguously hand-authored drawing in this deck — a generated or stamped surface breaks its cracks at tile edges. Third, measurable: a 40×40 px slab of this floor holds 212 unique colours, and the floor shows no horizontal repeat period at any shift from 1 to 90. The surface is authored, not stamped. Fourth: the falloff down the corridor is monotonic along the corridor's axis rather than radial — 192 at the mouth, 147, 141, 112, 104, 100, 76, 55, 37 into black — and it commits to black rather than sitting at a lifted grey.
+
+**WORST:** 3
+
+**WORST_WHY:** It is a tileset laid down, not a picture made. Three measurements, each fatal on its own:
+
+An 18×18 px flagstone interior at (10–28, 30–48) contains **two unique colours** — one flat grey fill and one grid line. Another at (60–80, 240–258) contains three. There is no cut face, no chipped edge, no weathering, no per-stone variation anywhere in the stone. And the greys are exactly neutral: R=G=B, 88.5/88.4/88.2. That is untouched default asset.
+
+The bottom wall band at y≈264–288 is sixteen copies of two alternating tiles whose per-cell row means are identical **to a tenth of a luminance value** across the full 384 px width. Except one. The cell at x=168–192 reads 69.7 at y=272 where every other cell reads 49.5, and it notches the white edge line at y=263 from 129.7 down to 118.8. One mis-set tile, ~20 values brighter than its neighbours, sitting in an otherwise perfectly uniform dark band. A player sees that in the first second.
+
+The two barrels at (113–152, 190–220) and (161–200, 190–220) are the same sprite offset exactly 48 px, mean absolute difference 2.2/255 — a literal copy, unflipped, same row. And both are cut off flat at y≈218 where the dirt meets the flagstone: their bottoms are amputated by a floor seam.
+
+Add to that: the dirt field repeats on an exact 48 px vertical period (autocorrelation 0.288 at shift 48 against 0.056 at 32), the water is an axis-aligned rectangle with a razor edge and no bank, and there is no lighting model at all.
+
+**FLAGGED:** 3, 2, 1, 4
+
+All four. Specifically: **3** — the mis-set brick at x=168–192 and the two amputated identical barrels. **2** — the firepit at (578–618, 528–570) is a fire that casts no light on anything, in a frame whose entire premise is one carried lamp; and the same crossed-plank prop appears twice a metre apart, brown at (262–308, 595–632) and hot orange at (385–435, 595–635). **1** — a ragged near-white plateau of 6,294 pixels above luminance 228 sitting under and around the figure, where frame 4 has 32. **4** — a 9×2 px bar at luminance **223** floating in a luminance-24 black field at (473–481, 178–179), 300 px from the only light source, attached to nothing. It is the brightest thing in the upper half of the frame. It is also present in 1 and 2.
+
+**SHIP:** NONE
+
+---
+
+**FLIP 4:**
+- Delete the 9×2 px bar at (473–481, 178–179). It sits at luminance 223 on a luminance-24 field with nothing in the world to cast it.
+- The wall masses at (180–470, 390–450) and (430–500, 160–430) resolve no masonry whatsoever — they are a soft brown cloud with no course lines and no joints. Cut courses into them: distinct top-surface value per block, and vary joint depth along a single run, the way the corridor floor slabs at (500–560, 620–860) already do.
+- The walls carry no repairs. The corridor floor has driven pins and boards; the walls — the thing the company has been holding for four hundred years — have none. Put rope wraps, driven pins and salvaged timber on the wall face band at y≈428–455, reusing the pin idiom already present at (350,430) and (630,430).
+- The object at (300–380, 645–710) is bounded by a uniform hard-black rectangle with square corners, the only such edge in the frame. Chip the corners, vary the edge value along each side, let the lit floor at x≈390 spill 3–4 px over its left lip.
+- Replace the character sprite. It is front/three-quarter elevation with a 1 px black outline and flat cel fills, standing in an environment that is top-down, outline-free and soft. It is the only cyan in the frame.
+- The figure carries a sword and shield and **no light**. The frame's stated premise is that it carries the only light there is. Put the lamp in its hand.
+- The sprite takes no colour from the pool it stands in: pure #E98A00 and pure cyan at saturation 1.00, where nothing in the environment exceeds 0.85. Tint it into the amber.
+- The round shield's two dark dots over a lower curve read as a face. Break that arrangement.
+
+**FLIP 2:**
+- Everything in FLIP 4 — it is the same base frame, pixel-identical outside (183–709).
+- The firepit at (578–618, 528–570) emits no light: no orange bounce on the ring stones, no pool on the floor, no falloff. Either give it a real light pool — and accept the frame no longer has a single source — or take the flame out and leave a cold pit.
+- That flame is pure red/orange/yellow at saturation 1.00, hues that appear nowhere in the stone. Re-key it to the amber the lamp already uses.
+- Delete the orphan red pixel at roughly (591,548), floating inside the black pit unconnected to the flame body.
+- The firepit's ring stones are all one pale value with a flat dark outline, so the ring reads as a stamped decal. Vary their values and let the far-side stones fall into shadow.
+- The crossed-plank prop appears twice under one lamp: brown at (262–308, 595–632), hot orange at (385–435, 595–635). Re-key the second to the first and rotate or break it so the silhouette differs.
+- 408 of this frame's fully-saturated pixels are pure #E98A00 — the character sprite's costume colour, which the environment never reaches. The props were coloured out of the character's palette. Re-key every one into the stone's range.
+- The object at (325–365, 530–570) is a front-facing box with a glowing mouth and two dark notches above it reading as eyes. Redraw it top-down and remove the face.
+- The planks at (505–560, 600–630) carry an isolated pure-orange pixel run in the middle of the lower board with no source. Remove it.
+- None of the props cast a contact shadow. Ground each one.
+
+**FLIP 1:**
+- Everything in FLIP 4 — same map, same sprite, same stray bar.
+- Remove the brightness lift that clips 6,294 pixels above luminance 228 into a ragged plateau at roughly (320–480, 460–530). The floor two metres from the lamp is more readable than the floor under it. Cap the lit pool where frame 4 caps: max 244, 32 px above 228.
+- That lift is applied **per tile, not as a light field**. The difference map against 4 is a hard-edged staircase of whole rectangles, with tiles inside the pool skipped and tiles outside it raised, so the lit floor shows rectangular value steps at slab boundaries. Replace it with a continuous per-pixel falloff.
+- The lift reaches tiles with no path to the lamp: the wall band at x≈680–750, y≈400–440 is raised while everything between it and the figure is not. Bound the falloff by distance.
+- The wall band at (180–560, 385–460) puts its repair detail — the driven pins, the boards — along the wall's **far** edge, leaving the near edge where it meets the lit floor as featureless mottle. The wall does not read as having a bottom. Move the course line and repair band to the near edge, at the seam around y≈455.
+- The wall face reads at luminance 85–96 while facing away from the lamp; the lit floor beside it starts at 118. Drop the face 25–30 values so it stops competing with the floor.
+
+**FLIP 3:**
+- A flagstone interior at (10–28, 30–48) has two unique colours; (60–80, 240–258) has three. Give every slab a cut face, chipped edges and per-stone value variation.
+- The greys are exactly neutral (R=G=B). Push a hue into them so the stone belongs to this world.
+- The bottom wall band at y≈264–288 is sixteen copies of two alternating tiles, per-cell means identical to 0.1 luminance. Vary them.
+- Fix the mis-set tile at x=168–192: 69.7 at y=272 against 49.5 everywhere else, and it notches the white edge line at y=263 from 129.7 to 118.8.
+- The barrels at (113–152, 190–220) and (161–200, 190–220) are the same sprite offset exactly 48 px, 2.2/255 mean difference. Vary or remove one.
+- Both barrels are cut flat at y≈218 by the dirt/flagstone seam. Seat them fully on one surface.
+- Neither barrel has a contact shadow. Ground them.
+- The dirt at (56–248, 0–250) repeats on an exact 48 px vertical period. Break it with authored variation.
+- That dirt is random speckle — 442 unique colours in a 60×80 patch with no drawn form in any of it. Replace it with drawn ground, not noise.
+- The water at (248–344, 0–190) is an axis-aligned rectangle with a razor edge into the dirt: no bank, no shore, no depth gradient. Give it an irregular edge, a shoreline, and value change with depth.
+- The same algae blob sits on the water at (243,15) and (207,124) **and on dry flagstone** at (21–47, 51–80), (15–30, 210–225) and (355–380, 110–170). Remove it from the dry stone.
+- Those blobs are laid over the flagstones at uniform opacity — the grid lines show straight through them unchanged — with a lighter teal outer glow instead of a silhouette. Draw them as growth on the stone, not as a transparency.
+- The orange strip at (20–28, 122–167) starts inside the brick course, crosses the dirt in five flat colour bands and stops at nothing in mid-dirt. Resolve it into an object or delete it.
+- The dark brick course at (0–42, 122–145) ends in mid-run at x≈42 with a raw vertical cut. Cap it.
+- Dirt meets flagstone along perfectly straight lines at x≈56, x≈344 and y≈250, mid-slab, with no transition. Add edge tiles, rubble or spill.
+- Three projections in one 384 px frame: flagstones straight top-down, barrels 3/4 with visible staves and an elliptical lid, and the figure at (200–240, 0–30) in full front elevation — face, chest and belt all visible. Pick one.
+- That figure stands on an opaque hard-edged brown lozenge at (200–240, 22–30), wider than the figure and set behind its feet. It is an unmasked sprite base. Remove it; draw a real contact shadow.
+- The figure's head is clipped by the top frame edge — green pixels reach row 0 at x=221–226. Move it down.
+- Its sword blade is the only near-white in the picture, so the eye lands on a sword tip instead of the character. Bring it into range.
+- Its left arm ends in a green blob with no hand shape, and the silhouette carries a 1 px notch at the elbow.
+- The blue-grey blob at its right hip is unreadable and shares its hue with the stray dirt specks.
+- 187 blue pixels are scattered across the dirt as small crosses and blobs — (135,6), (124,12), (112,13) and elsewhere — in a hue that exists nowhere else on land. They read as unremoved sheet markers. Remove them.
+- The white scatter at (155–175, 105–120) has no silhouette; at this size it reads as dead pixels, not as bones. Draw it or remove it.
+- There is no lighting model. Every surface is at flat uniform value with no source, no falloff and no committed shadow anywhere in the frame. Add the carried light.
+- Stone, dirt and water all sit at similar luminance so nothing separates in depth. Open the value range.
+
+---
+
+The thing worth watching: 1, 2 and 4 are the same room, and 4 is the base. 1 is 4 with a lighting pass that damages it, and 2 is 4 with props that damage it. Both regressions come from adding a layer on top of work that was already the strongest thing here. Whatever the pipeline is, the base render is ahead of everything being applied to it — the walls being unresolved blur while the floors are properly authored is the gap I would close first, because it is the only defect in 4 that is about drawing rather than cleanup.
+
+*Model: Claude Opus 5 (1M context)*

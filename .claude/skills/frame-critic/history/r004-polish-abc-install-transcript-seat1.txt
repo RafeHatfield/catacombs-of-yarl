@@ -1,0 +1,55 @@
+Read all four at native resolution, then pulled crops and pixel-level scanlines to check what I was seeing.
+
+**RANK:** 4 > 2 > 3 > 1
+
+**BEST:** 4
+
+**BEST_WHY:** The wall's near edge resolves. Along the run at y≈420–455, x≈180–500, the block course carries joints and driven vertical pins right down to a hard, single-pixel-clean dark line at y≈455 where it meets the floor — the wall has a silhouette, which is the one thing a top-down wall must have. In 2 and 3 the equivalent run puts the crisp course higher (y≈383–417) and leaves ~40px of undifferentiated brown smear between it and the floor, so the wall's near edge dissolves. 4 is also the only frame where the sprite is tinted into the scene light: the shield reads warm grey-brown and the face orange, so the figure sits in its own torchlight rather than on top of it. In 2 and 3 the brightest pixel in the entire non-UI frame is on the sprite (lum 240 at row 471, col 413 — the hood highlight), brighter than the floor at its feet (188 in 2, 222 in 3). The light source is losing to the thing carrying it. The hatch at x≈310–378, y≈645–712 is also a cleaner build in 4 — its left edge lands on x≈310 with cross-brace boards visible, where 2 runs the same object a tile wider into a flat unpainted brown block at x≈280–310.
+
+**WORST:** 1
+
+**WORST_WHY:** Three separate failures, all at boundaries. (a) The pool is a perfect axis-aligned rectangle, x≈248–344, y≈0–192, with no shoreline anywhere. On its right edge at row 120 the pixels run (38,81,66) water → one pixel of (107,101,95) → (90,90,90) stone. Water abuts a stone floor across a two-pixel step. (b) The dirt→flagstone seam at y=215 is the same story across the full frame width: dirt (92,68,29) at y=215, one row of (147,143,134)/(124,124,124) at y=216, then flat stone from y=217. No lip, no spill, no debris — the dirt just stops. That single light row reads as a rendering artifact, not a threshold. (c) The flagstone itself is not textured. In a 40×40 sample at x 200–240, y 240–280, 815 of 1600 pixels are exactly (90,90,90), 345 are (44,44,44) (the grid lines) and 181 are (50,50,50) — 84% of the floor is three flat neutral greys with a stamped black grid and a scatter of single cream pixels. It is greybox. Compounding it: the greys are dead neutral (R=G=B) in a frame otherwise built from warm browns and a teal pool, which is exactly why the floor reads as placeholder.
+
+**FLAGGED:** 1, 2, 3
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- Draw water-edge tiles for all four sides of the pool at x≈248–344, y≈0–192: a darker submerged lip 2–3px inside the water boundary, and 1–2px of wet, value-dropped dirt/stone outside it. Right now the boundary is a two-pixel step from (38,81,66) to (90,90,90).
+- Break the pool's rectangle. Its four edges are pixel-straight and axis-aligned on both x and y; step the outline in and out by 1–3px per tile run so it reads as standing water in a depression, not a fill tool.
+- Replace the y=216 seam row. Delete the (147,143,134)/(124,124,124) highlight line and author a dirt→stone threshold: dirt spilling 2–5px onto the first course of flagstones, irregular per tile, with the stone's leading edge visible under it.
+- Texture the flagstone. 84% of a sample patch is (90,90,90) — add per-stone value variation of at least ±8 across the field so adjacent stones differ, then vary the joint depth along a single run instead of drawing one uniform (44,44,44) grid.
+- Warm the stone off neutral. R=G=B at (90,90,90) and (44,44,44) is why it reads as untouched default grey next to the browns.
+- Give the pool interior something other than the uniform cellular noise pattern currently filling x 248–344 — sediment, a submerged step, floor structure continuing under the water. Right now it's one repeated cell pattern edge to edge.
+- Vary the two barrels at x≈112–146 and x≈158–190, y≈193–217. They are not byte-identical, but they share the same rim highlight, same lid ellipse and same lighting angle, and read as one asset placed twice. Same for the two crates at x≈62–97, y 0–20 and y 46–69.
+- Add a light source. The frame is at flat global illumination with no falloff and no directionality; nothing in it is lit by anything.
+
+**FLIP 2:**
+- Rebuild the wall base at y≈417–455, x≈180–500. Between the timber course ending at y≈417 and the floor edge at y≈456 there is ~40px of soft blotchy brown with no block edges, no joints and no silhouette. Bring a stone course down to the floor line and terminate it on a hard edge, as 4 does.
+- Tint the character sprite by the local light. The shield currently peaks at lum 240 — the brightest non-UI pixel in the frame — while the floor at its feet is 188. Multiply the sprite by the same warm falloff the floor receives so the shield lands below the lit floor, not above it.
+- Remove the pseudo-writing on the floor blocks at x≈205–320, y≈458–475. Those dark marks resolve into letter-like closed forms (S-, 2-, N-shapes) that are neither carved script nor tool scratches. At the centre of the lit pool this is the single clearest "generated" tell in the frame.
+- Add cast shadow from the wall. The wall mass north of the floor sits directly between the light and nothing — the floor immediately south of y=456 is uniformly bright with no occlusion at all.
+- Add a contact shadow under the figure's boots at x≈395–425, y≈500–508. The floor beneath it is uniform; the figure floats.
+- Fix the hatch at x≈280–378, y≈645–712. Its left third (x 280–310) is a flat dark brown block with none of the plank detail the rest of the object carries, separated by a hard vertical seam at x≈310. Either extend the boards across it or pull the object's edge back to x=310.
+- Give the long curve running from roughly (250,780) up to (560,565) thickness and contact. It is a smooth continuous single-value stroke crossing four stone courses without interacting with any of them — no shadow, no fibre, no sag. If it's rope, build it; if it's a crack, break it at the joints.
+- De-duplicate the diagonal scratch stamp. The same 3–4 stroke cluster at the same angle and spacing appears on separate blocks around x 480–600, y 605–790.
+
+**FLIP 3:**
+- Pull the light gain down. The floor at the figure's feet reads 222 against joints at 146; the mortar grid within ~60px of the figure is washed out entirely and the near field reads as a flat cream sheet. Bring it to roughly 2's exposure (188) so the joint structure survives inside the pool.
+- Consequence of the above: at 222 the underlying half-resolution texture's flat value patches become visible as rectangular pale splotches — notably around x≈370–390/y≈455–470, x≈390–420/y≈530–545 and x≈420–465/y≈595–620. Either lower the gain or author real detail into those blocks.
+- Everything in FLIP 2 also applies here — the wall base smear at y≈417–455, the untinted sprite peaking at lum 240, the glyph-like marks at x≈205–320/y≈458–475, the absent wall and figure shadows, the wide hatch at x≈280–310, and the contactless curve — since 3 shares 2's base art and differs only in the light pool.
+
+**FLIP 4:**
+- Remove the pseudo-writing at x≈205–320, y≈458–475. It sits in the second-brightest zone of the frame, directly left of the figure, and resolves into letter-like closed forms. This is the frame's most damaging artifact.
+- Add cast shadows. The wall run ending at y=455 casts nothing onto the floor below it, and the figure at x≈395–425 has no contact shadow under its boots. In a frame whose entire premise is one carried light, zero occlusion anywhere is the largest single omission.
+- Recover value separation in the sprite. The tint that correctly integrates the figure has flattened the sword blade, the shield face and the boot leather to nearly one value — the blade at x≈388–396 no longer reads as metal, and the shield boss at x≈408–420 has lost its rim. Re-introduce a specular step on the blade and a darker boss ring after tinting, rather than tinting uniformly.
+- Give the curve from roughly (250,780) to (560,565) thickness, sag and contact shadow. It crosses multiple stone courses as an unbroken smooth stroke of constant width and interacts with none of them.
+- De-duplicate the diagonal scratch stamp repeating on separate blocks around x 480–600, y 605–790 — same stroke count, same angle, same spacing.
+- Break the hard rectangular edge of the unlit region at x≈630, y≈130–390 (and its counterpart top-left). Its left and top edges are pixel-straight and cut through continuing stone texture mid-block; if these are unlit rooms, terminate them on wall geometry rather than on an axis-aligned mask boundary.
+- Resolve the soft mottled field at y≈370–420 above the timber course. It is the wall's top surface and currently has no block structure at all — soft brown blobs only. Give it courses and joints, even shallow ones, so the wall reads as built rather than blurred.
+
+The through-line: 2, 3 and 4 are three treatments of one base, and that base is genuinely good in places — the timber-and-pin repairs driven through the stone at y≈420–455 are the most convincing thing in the deck and read exactly like four hundred years of not caring how it looks. What's undermining it is that no light in the frame casts a shadow, and that the texture contains generated glyph noise sitting in the brightest area of the picture. Fix those two and 4 becomes a real candidate; nothing here ships as it stands.
+
+*Model: Opus 5 (1M context)*

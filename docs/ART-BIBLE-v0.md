@@ -149,7 +149,7 @@ been declared finalised does not reopen because a later tier raised the standard
 
 ---
 
-## 3. Projection and grid — PROVISIONAL, riding into tier one
+## 3. Projection and grid — **RATIFIED 2026-09-09**
 
 - **Orthogonal square grid. Portrait orientation. Not isometric.**
 - **Volume lives in what stands up, not in the ground plane.** Objects and walls present
@@ -166,7 +166,33 @@ The two-plane rule survives from the retired Oryx track unchanged. It was never 
 it was a way to draw volume without paying isometry's tax, and it is re-adopted on its own
 merits.
 
-**STATUS (2026-08-26): PROVISIONAL — UNDER ACTIVE TEST BY THE SIGHTED ROUND.**
+**STATUS (2026-09-09): ✅ RATIFIED AT THE DEVICE GATE. PROVISIONAL CLEARED.**
+
+Rafe, walking build `9022b179` on the SE, on real floors and real walls:
+
+> **"actually looks a lot better… pretty good; the floor largely works."**
+> **"§3 RATIFIED — two-plane, no side face: walls read as mass, sides exist, the grammar holds
+> at the gate on real assets."**
+
+**THE RULED CONDITION IS DISCHARGED.** §3 rode provisional under *"depth arriving ratifies §3;
+depth failing reopens it, with evidence"* (2026-08-26), and it has ridden that way through the
+composition spike's eight noes, the 2026-08-27 device FAIL, the Q3 control, the sighted round,
+the tier-one surface and four polish rounds. **Depth arrived.** Two-plane construction with no
+side face is now law rather than a hypothesis under test, and the clause it was tested against —
+*every seat asking for a side face* — was answered by the Q3 control finding that **the commercial
+bar carries the same missing plane and does not suffer for it**.
+
+⚠ **WHAT RATIFICATION DOES AND DOES NOT SETTLE.** It settles the PROJECTION: orthogonal square
+grid, portrait, two visible planes, flat floor. It does not settle how well any particular family
+executes it — the walk that ratified the clause routed two wall items in the same breath (the
+top-to-face turn reading as two objects, and a repeating vertical at tile pitch), and both are
+polish debt against a ratified grammar rather than evidence against it. **A ratified clause can
+still be badly served by an asset; that is a build problem, not a law problem.**
+
+**The status trail below is kept in full.** It is the record of a clause that was nearly struck
+twice and was right both times, and the reasoning that held it — particularly the Q3 control —
+is the reason it survived to be ratified rather than abandoned on the eight-round evidence.
+
 
 The composition spike's condition fired: two-plane construction with invented numbers, judged
 absolutely, in an all-top adversarial scene, did not deliver depth — eight rounds, eight noes,
@@ -2107,6 +2133,51 @@ Every clause in this section is a stated design purpose awaiting a derived value
   every creature is the institution helping you, and the institution does not help you.
   Threshold: PLACEHOLDER.
 - **Survives a busy screen** (§4.1). Every rule above is tested with neighbours present.
+
+### 12.2 Props are authored at READABILITY SCALE, not at true scale — RULED (Rafe, 2026-09-10)
+
+**Occasioned by the props walk, which FAILED on identifiability:** *"small, unrecognizable except
+the fire; colouring quite good."* That is this section's own first clause — **names itself at 1×**
+— failing at the human gate, on assets that passed every instrument and a five-seat panel. The
+panel ranked the frame first of four; not one of its six flips said *I cannot tell what that is*.
+A seat asked to rank craft will rank craft. **Nobody had asked the naming question.**
+
+**The law.** A prop's size relative to the tile and to the character is **exaggerated until its
+identifying feature reads at device 1×**. Real proportions are preserved: never squashed, never
+stretched, never given a cartoon outline — **the shape stays honest**. What changes is how much
+of the frame the honest shape is allowed to occupy.
+
+- **A prop fills most of its cell.** The prop family that failed this gate carried content as
+  small as **10 × 15 px in a 32 px tile** — a fifth of the cell, 20 device pixels across.
+- **Large objects may span 1 × 2 or 2 × 2 cells where the fiction allows.** A standing stone
+  **taller than Sasha** is correct. A barricade is **chest-high and wide**.
+- **Each prop's defining feature must occupy a legible fraction of the sprite** — the marker's
+  dressed face under its lashings, the barricade's over-built timber, the fire's fuel and ring.
+  A prop whose identity lives in a detail is already failing this section's second clause.
+
+**Register derivation — §12, and the standard is named rather than invented.** This is the
+Warcraft / Diablo-2 convention: a top-down world reads because its objects are drawn at the size
+at which they can be recognised, not at the size they would be if you measured them against the
+floor. §12's second clause already says *silhouette carries the read, interior detail not at all*
+— and a silhouette twenty device pixels across has no read to carry. Scale is the only lever that
+reaches it, because every other lever (value, chroma, joint, grain) operates **inside** a
+silhouette that is already too small to name.
+
+⚠ **THIS IS A PERMISSION, NOT A LICENCE TO DISTORT.** *"Real proportions preserved"* is the
+binding half. A barricade may be built larger than life and must still be built like a barricade;
+the moment the shape itself is bent to fit the cell, §12.2 has been used to break §7.1. Growing
+the object is legal; changing what the object is, is not.
+
+**Colouring is APPROVED AND FROZEN IN KIND** at this gate (Rafe, same walk): *"colouring quite
+good."* A re-author under this clause changes scale and keeps the colour treatment it has. That
+also settles what #204 may and may not do.
+
+**The instrument this clause gets, and it is eye-side.** §12's naming clause has always been
+carried at the human gate (§13.2) and the audit's own instrument row says so. It now also has a
+blind-seat form: **the cold-naming test** — a seat is shown the prop in scene, unprompted, and
+must say what it is. **A miss is a FAIL on §12, not a style note.** It is a naming question put
+before any ranking question, because the walk proved that ranking does not ask it. Promoted under
+§13.5 with its demonstrated failure on the record.
 
 ### 12.1a The void is dark by OCCLUSION, not by a ring — RULED (Rafe, 2026-09-03)
 

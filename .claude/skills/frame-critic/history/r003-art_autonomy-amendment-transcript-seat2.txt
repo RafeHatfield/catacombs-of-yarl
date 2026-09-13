@@ -1,0 +1,43 @@
+RANK: 4 > 1 > 2 > 3
+
+BEST: 4
+BEST_WHY: The wall construction in 4 is the most convincingly built thing in the deck. Along the top wall of the room (x≈185–500, y≈395–440) the wall reads as two distinct surfaces: a mottled, uneven top and a separate dark course of cut blocks for the face, with driven vertical pins at irregular spacing (x≈245, 300, 365, 430) that sit on the face and not on the top — that is the orc-repair fiction rendered as geometry rather than as decoration. Floor slabs vary in width and value along a single course (row at y≈530–560: a wide pale slab at x≈390–470 next to narrow ones at x≈480–560), and the long dark crack from (x≈250, y≈500) to (x≈475, y≈430) crosses slab boundaries without breaking, so it reads as damage to a floor rather than a stamp on a tile. The one-tile freestanding pillar at (310–380, 645–700) has a top and a face at consistent scale with the room wall. Light falloff is smooth across the whole floor with no visible ring steps.
+
+WORST: 3
+WORST_WHY: The tile assembly is broken. The top wall's face course is present on the right half (x≈537–750, y≈395–440) and absent on the left half (x≈185–537), where the wall top runs straight into floor with a stray single face fragment at x≈440–470. The freestanding pillar at (310–380, 645–700) is a jumble: wall-face bricks spilling outside the tile footprint and a bright pale floor square (x≈290–310, y≈640–660) poked into its top-left corner. The bottom-left wall face (x≈55–150, y≈647–680) sits detached above its wall with floor showing beneath it. On top of that the light is over-driven: the floor at (430,520) samples (255,230,145) — clipped — and the run of slabs at x≈500–560, y≈440–500 renders as flat white rectangles with black outlines.
+
+FLAGGED: 1, 3, 4
+
+SHIP: NONE
+
+FLIP 1:
+- Remove or redraw the peach slab at (270–295, 540–625): it is a flat, untextured rectangle at (182,125,83) with a single darker side strip and no relation to the floor's brick texture or the torch's direction — it reads as a placeholder block. If it is a standing stone, give it the same mottled surface and pin/rope treatment as the walls and a shadow cast away from the figure.
+- The brazier at (580–625, 530–580) is drawn burning but emits no light: floor at (600,595) samples (88,66,50), the same as unlit floor. Either it casts its own warm falloff or it is cold and unlit. A lit fire that lights nothing contradicts "the only light there is."
+- The tied timber bundle at (400–480, 590–630) samples (244,142,63) — more saturated than anything in the frame including the lit floor around it. Desaturate and pull its value under the floor's so it sits on the floor instead of floating over it.
+- The log pile at (200–280, 460–510) is a uniform dark brown with no lit top faces despite being ~200px from the light; give the top-facing log surfaces the same warm key the floor gets.
+- All items in FLIP 4 apply here as well (corridor band, clipped centre, noise hatching, teal cast).
+
+FLIP 3:
+- Rebuild the top wall so the face course runs continuously from x≈185 to x≈750 at y≈420–440; currently it exists only right of x≈537.
+- Rebuild the pillar tile at (310–380, 645–700) so its top and face stay within the tile footprint; remove the bright floor square at (290–310, 640–660).
+- Reattach the bottom-left wall face at (55–150, 647–680) to the wall top above it; there is floor showing between them.
+- Lower the light intensity so no floor pixel clips: (430,520) is at (255,230,145). Target the same peak as 4, roughly (239,171,111).
+- The right-side slabs at (500–560, 440–500) render as white rectangles with black outlines because the highlight clips their texture away; restoring the peak fixes this.
+- All items in FLIP 4 apply here as well.
+
+FLIP 4:
+- The corridor floor at x≈505–560 stays a pale, cool band all the way to y≈200: (530,250) samples (55,50,40) while the wall top beside it at (620,250) is (17,15,13), and the light source is at y≈490. Either the corridor obeys the same falloff as the room or it is intentionally a "remembered tiles" layer — in which case it needs to be visibly desaturated and flat, not a lighter strip in the dark.
+- The corridor's brick pattern (small pink-outlined bricks, x≈510–560, y≈280–400) is at a different scale and palette from the room floor; unify the floor tileset.
+- Floor texture inside the light (x≈350–480, y≈460–560) is dark diagonal scribble hatching over near-white slabs; it reads as a noise filter, not stone. Replace with the same chisel/joint detail the darker slabs at x≈600–700 carry.
+- The floor at lower-left (x≈200–280, y≈600–680) carries a teal cast — (230,640) samples (82,71,52) and the surrounding slabs go grey-green — in a scene whose only light is warm. Neutralise the shadow tint to the same cool-grey the right side uses.
+- The pale slab run at (500–560, 440–500) still reads as stark white rectangles with black outlines; pull the highlight on those slabs down so their surface texture survives.
+
+FLIP 2:
+- The pool (x≈250–345, y≈0–190) meets the dirt in a razor-straight rectangular edge with no bank, lip, or wet-earth transition; add an edge course so the water sits in a basin rather than on top of the floor.
+- The dirt floor is a visibly repeating tile: the red crack-and-fleck motif at (150,100) recurs at ~48px period across the room. Add at least two variant tiles and rotate them.
+- Barrels at (110–190, 195–215) and chests at (60–100, 5–70) are drawn with a visible front face while the view is straight-down; either draw them top-down or give every object in the frame the same slight forward tilt.
+- The grey floor/wall-top tiles (x≈0–55 and the bottom band y≈215–265) are a flat (90,90,90) grid with faint mold blobs — no joint depth, no value variation between tiles; add per-tile value variation and a real joint line so they read as stone rather than a placeholder grid.
+- No light falloff anywhere: every tile is at full key regardless of distance from the figure at (220,15). Add a falloff, even a mild one, so the frame has a source.
+- The scattered white fragments at (210–240, 115–125) are two-colour specks with no ground contact shadow; give them a shadow pixel row so they sit on the dirt.
+
+Model: Claude Opus 5 (1M context)

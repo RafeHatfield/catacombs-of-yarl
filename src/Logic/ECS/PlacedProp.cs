@@ -15,5 +15,17 @@ public sealed record PlacedProp(
     int? OverlayTileId = null,              // Second tile rendered on top at same cell (e.g. brazier flame)
     IReadOnlyList<int>? TileLayout = null,  // For multi-tile props: flat row-major list of tile IDs
                                             // (FootprintW * FootprintH entries). Null = use TileId only.
-    bool FlipH = false    // Mirror the sprite horizontally. Applied to 1x1 props only (flippable tag).
+    bool FlipH = false,   // Mirror the sprite horizontally. Applied to 1x1 props only (flippable tag).
+
+    // ── #167: THIS PROP STANDS ON A WALL TOP, NOT ON THE FLOOR ───────────────────────────────
+    // "The prop/overlay pass gives wall tops world-placed OBJECTS standing on them — a brazier,
+    // a bundle, a driven post, salvage — which are objects rather than tile incident, so §8.3.1
+    // does not reach them."
+    //
+    // It changes two things and nothing else. The cell is WALL rather than floor, so the scene
+    // builder's floor test inverts; and the sprite must sort ABOVE the wall and its cap, because
+    // from directly overhead a thing standing on a wall top is nearer the camera than the top is.
+    // A floor prop keeps sorting BELOW the wall in front of it, which is why this is a per-prop
+    // fact and not a global z bump.
+    bool OnWallTop = false
 );

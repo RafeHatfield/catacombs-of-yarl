@@ -192,6 +192,100 @@ def lane_of(v):
 PARK = os.path.join(REPO, "PARK-CLEARED.json")
 JUDGE_GUARD = "broken-judge"
 
+# ── AND THE ONE THING THAT *CAN* CLEAR A BROKEN JUDGE, BECAUSE IT PROVES THE JUDGE WORKS ──────
+#
+# The law above stands exactly as written: a PARK can never clear `broken-judge`, because a
+# ruling about a LANE cannot make an unreadable verdict readable. What that law is protecting
+# against is a builder parking their way past a judge that is actually blind.
+#
+# It does not reach the case that actually arose. RULED (Rafe, 2026-09-11):
+#
+#     "STOP cleared by ruling (added artifact, this quoted): the judge is proven working on two
+#      tonal plants at 100%; crushed-midband is retired as a device-gate cull that seats are
+#      §13.2-blind to — not a plant. Dark-side tonal coverage is an open gap, not a blocker."
+#
+# The VOIDs were not a blind judge. They were a bad CONTROL: one plant that no seat caught in a
+# deck, and that three fresh seats ranked FIRST OF FOUR when it was put in the build slot. The
+# judging layer caught every correctly-formed plant it was dealt, 3 of 3.
+#
+# ⚠ SO THIS CLEARANCE IS NOT TRUSTED, IT IS CHECKED. `JUDGE-CLEARED.json` names the rounds and
+# carries Rafe's words, and `judge_cleared()` below RECOMPUTES the evidence from the history
+# before honouring it: every plant dealt in those rounds must either have been caught by every
+# seat that drew it, or be retired in the morgue. A clearance whose own rounds contain a live
+# plant that a seat missed clears nothing. That keeps the 2026-09-06 law's protection intact —
+# a genuinely blind judge cannot be laundered by this file either, because the file's premise is
+# re-derived rather than asserted.
+JUDGE_CLEAR = os.path.join(REPO, "JUDGE-CLEARED.json")
+
+
+def judge_cleared(lane, tail, morgue=None):
+    """Rounds a RULING has excused from `broken-judge`, having re-proved the judge on them.
+
+    Returns the set of round numbers to exclude. Empty unless the marker exists, names this
+    lane, and the history agrees with it.
+    """
+    if not os.path.exists(JUDGE_CLEAR):
+        return set()
+    try:
+        m = json.load(open(JUDGE_CLEAR))
+    except Exception:
+        return set()                      # a malformed marker clears nothing, by accident or not
+
+    retired = set()
+    if morgue:
+        for e in morgue.get("entries", []):
+            if e.get("retired_as_control"):
+                retired.add(e["file"])
+
+    out = set()
+    for entry in (m if isinstance(m, list) else [m]):
+        if not isinstance(entry, dict) or entry.get("lane") != lane:
+            continue
+        if not (entry.get("ruling") or "").strip():
+            continue                      # no quoted ruling, no clearance
+        covered = {r for r in (entry.get("rounds_covered") or []) if isinstance(r, int)}
+        if not covered:
+            continue
+        # RE-DERIVE THE PREMISE. Every seat in every covered round either caught its plant, or
+        # the plant it drew is retired in the morgue. One live miss and this clears nothing —
+        # unless the marker invokes the transitional clause below.
+        #
+        # ── THE TRANSITIONAL CLAUSE — RULED (Rafe, 2026-09-11) ────────────────────────────────
+        #
+        # The seat-level re-scope supersedes "a correct plant missed still voids [the round]"
+        # (2026-09-08). Rounds already on disk were voided under the OLD rule, and some of them
+        # were voided for something that is no longer a round-level fault at all: ONE seat
+        # missing ONE live plant. Under the new rule that discards a BALLOT and re-draws the
+        # SLOT.
+        #
+        # So a marker carrying `supersedes` may excuse such a round — but only the exact shape
+        # the new rule would have handled: EXACTLY ONE live miss. Two or more is broken-judge
+        # under both the old rule and the new one, and no marker excuses it. The re-draw's own
+        # outcome then decides: if it misses, the seat-level term raises broken-judge on the
+        # spot, which is the check this clause hands the decision to rather than pre-empting.
+        supersedes = (entry.get("supersedes") or "").strip()
+        ok = True
+        for v in tail:
+            if v.get("round") not in covered:
+                continue
+            live = 0
+            redrawn_ok = {r.get("slot") for r in (v.get("panel") or {}).get("seat_redraws") or []
+                          if r.get("redraw_caught")}
+            for i, seat in enumerate((v.get("panel") or {}).get("per_seat") or [], 1):
+                if seat.get("caught") or i in redrawn_ok:
+                    continue
+                if (seat.get("plant") or "") in retired:
+                    continue
+                live += 1
+            if live == 0:
+                continue
+            if live == 1 and supersedes:
+                continue            # the transitional clause: one live miss, re-draw pending
+            ok = False
+        if ok:
+            out |= covered
+    return out
+
 # ================================ the human gate's own verdict =================================
 #
 # RULED (Rafe, 2026-09-07). §13.2 and LOOP-PROCESS §4.3 already put the human gate above the
@@ -221,6 +315,29 @@ def ruling_for(lane, rnd, path=None):
         if r.get("lane") == lane and r.get("round") == rnd:
             return r
     return None
+
+
+def _plant_retired(plant_file, morgue):
+    """Is this plant retired as a control? A retired plant's miss is a deck fault, not a seat's.
+
+    The distinction is the whole of the 2026-09-11 re-scope. A LIVE plant missed discards that
+    seat's ballot and re-draws the slot; a RETIRED plant missed says nothing about the judge at
+    all, because the morgue has already recorded that no seat catches it.
+    """
+    if not plant_file or not morgue:
+        return False
+    for e in morgue.get("entries", []):
+        if e.get("file") == plant_file:
+            return bool(e.get("retired_as_control"))
+    return False
+
+
+def _morgue_for_clear():
+    """The morgue, for the retirement check. Unreadable -> no retirements, so nothing clears."""
+    try:
+        return json.load(open(os.path.join(MORGUE, "MORGUE.json")))
+    except Exception:
+        return {"entries": []}
 
 
 def park_clears(lane, guard, path=None):
@@ -384,6 +501,32 @@ def two_strikes_advisory(lane_hist):
     return dict(rounds=[a.get("round"), b.get("round")], items=list(pair))
 
 
+# WHICH VERDICTS CLOSE AN ITEM — the ruling's word "PASS" meant the gate-opening states, and
+# INSTALL-LATEST is one of them.
+#
+#     "Progress-guard scope = the item under work, not the lane." — Rafe, 2026-09-08
+#     "A PASS state CLOSES an item. Rounds after it are a NEW item's rounds."
+#
+# The test was `verdict.startswith("PASS")`, written when every gate-opening state began with
+# that word. INSTALL-LATEST — ruled into existence the same day, and the state polish rounds
+# actually reach — does not, so a lane that PASSED its item still carried that item's rounds
+# into the next one's guards. Caught on `polish-198-halo`: the item closed at INSTALL-LATEST on
+# 3 of 3 seats not below the reference, and `no-change` was still reasoning about the rounds
+# before it.
+#
+# ⚠ THIS IS A LIST OF GATE-OPENING STATES, NOT A LIST OF STATES I WOULD LIKE TO PASS. FAIL and
+# VOID are absent and must stay absent: the guard exists to catch a lane repeating a failure,
+# and a lane that has not opened a gate has not closed anything. `prove_stall_ceiling` holds
+# both directions — C7 a closing verdict cuts, C8 a lane of FAILs still fires.
+CLOSING_VERDICTS = ("PASS", "PASS-INSTALL", "PASS-WITH-ROUTED-ITEMS", "INSTALL-LATEST")
+
+
+def closes_item(verdict):
+    """Does this verdict close the item under work, so later rounds start a new series?"""
+    v = str(verdict or "")
+    return v.startswith("PASS") or v in CLOSING_VERDICTS
+
+
 def guards(hist, lane, park=None, gate_path=None):
     """Which guard, if any, has fired. Returns (name, explanation) or (None, None).
 
@@ -420,7 +563,7 @@ def guards(hist, lane, park=None, gate_path=None):
     # Nothing is deleted, which is the law this mechanism runs on (SKILL.md §5).
     cut = 0
     for i, v in enumerate(lane_hist):
-        if str(v.get("verdict", "")).startswith("PASS"):
+        if closes_item(v.get("verdict")):
             cut = i + 1
     lane_hist = lane_hist[cut:]
     read = readable(lane_hist)
@@ -432,7 +575,10 @@ def guards(hist, lane, park=None, gate_path=None):
         return [v for v in seq if v.get("round") not in ex] if ex else seq
 
     # ── broken judge ──────────────────────────────────────────────────────────────────────────
-    tail = lane_hist[-JUDGE_MISSES:]
+    # A ruling may excuse specific rounds, but only by re-proving the judge on them — see
+    # `judge_cleared`. The rounds themselves stay on disk and in the diff; nothing is deleted.
+    excused = judge_cleared(lane, lane_hist, morgue=_morgue_for_clear())
+    tail = [v for v in lane_hist if v.get("round") not in excused][-JUDGE_MISSES:]
     if len(tail) >= JUDGE_MISSES and all(v.get("verdict") == "VOID" for v in tail):
         return ("broken-judge",
                 "the picture-plant was missed %d rounds running. The judging layer is broken; "
@@ -694,8 +840,19 @@ def pick_plant(surface, morgue, exclude=(), axis=None):
         sf = e["surface"]
         return surface == sf if isinstance(sf, str) else surface in sf
 
+    # ── A RETIRED CONTROL IS NEVER DEALT, AND AN EMPTY `axis` DOES NOT RETIRE ONE ─────────────
+    #
+    # `crushed-midband.png` was seeded on 2026-09-11 and retired the same day, by measurement:
+    # both seats that drew it MISSED it, and put in the BUILD slot it was ranked 1st, 1st and
+    # 2nd of four by three fresh seats, above the approved reference, flagged by nobody. It is
+    # not a weak plant — it is a frame blind seats PREFER. It is the 2026-08-27 DEVICE gate
+    # FAIL, and what the phone catches is by construction what a seat does not (§13.2).
+    #
+    # The first attempt at retiring it set `axis: []`, which does the OPPOSITE: the rule below
+    # reads a missing axis as "answers any question", so an entry with no axis is dealt to every
+    # round rather than none. An entry is retired by saying so, in a field whose name means it.
     entries = [e for e in morgue["entries"]
-               if serves(e) and e["file"] not in exclude]
+               if serves(e) and e["file"] not in exclude and not e.get("retired_as_control")]
     if axis:
         on_axis = [e for e in entries if axis in (e.get("axis") or [axis])]
         if on_axis:
@@ -732,6 +889,34 @@ def verify_morgue(morgue):
 
 
 # ================================ the seat ====================================================
+# ── THE MEMORY PRECHECK — RULED (Rafe, 2026-09-10) ───────────────────────────────────────────
+#
+#     "before seating a panel or starting any recompose/capture, check free memory against a
+#      floor ... if below, STOP cleanly ... never start a write that an OOM kill can leave
+#      corrupt."
+#
+# Three five-seat rounds on the props build were killed by the system mid-panel, and each one
+# looked from the outside exactly like a lane that would not converge. The floors are measured
+# (tools/tier0_harness/headroom.py): a seat peaks at 351MB and takes 16 points off the system's
+# free percentage for seven and a half minutes; a capture peaks at 507MB for four seconds.
+def _headroom(kind):
+    import importlib.util
+    hp = os.path.join(REPO, "tools", "tier0_harness", "headroom.py")
+    if not os.path.exists(hp):
+        return True, "headroom module absent; proceeding"
+    spec = importlib.util.spec_from_file_location("headroom", hp)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m.require(kind)
+
+
+def _no_lingering_seats():
+    """RULED: free each seat fully before the next starts, and CONFIRM it."""
+    import subprocess as sp
+    out = sp.run(["pgrep", "-f", "claude -p"], capture_output=True, text=True)
+    return [x for x in out.stdout.split() if x.strip()]
+
+
 def run_seat(work, prompt, timeout):
     p = subprocess.run(["claude", "-p", prompt, "--allowedTools", "Read"],
                        cwd=work, capture_output=True, text=True,
@@ -879,25 +1064,97 @@ def _slots(body, n_slots):
 #
 # EVERY seat must catch its plant. §4 voids a round on one missed plant and a panel does not get
 # to dilute that into an average: a soft seat's ballot is exactly what §4 refuses to read.
+REF_SLACK = 1
+# ⚠ THE DECK FORBIDS TIES, SO ONE PLACE BELOW STANDS IN FOR ONE. The seat is told "no ties", so
+# a seat can never say the build and the reference are equal — the only two things it can say are
+# "above" and "below", and one of those has to carry the meaning of "level with". This is the
+# same device §1.2.1 already uses for the asset bar, where one place below the bar stands in for
+# the tie the deck forbids, and it is used here for the same reason and with the same slack.
+
+
 def panel_tally(seats):
     """(n_above, n_flagged, n_shipped, all_caught, majority_above) over independent seats."""
     n = len(seats)
     n_above = sum(1 for x in seats if x.get("above_approved"))
+    n_not_below = sum(1 for x in seats if x.get("not_below"))
     n_flagged = sum(1 for x in seats if x.get("build_flagged"))
     n_shipped = sum(1 for x in seats if x.get("shipped"))
     all_caught = bool(seats) and all(x.get("caught") for x in seats)
-    return n_above, n_flagged, n_shipped, all_caught, (n_above * 2 > n)
+    n_below = n - n_not_below
+    # ── THE STRONG-MAJORITY REGRESSION BLOCK — RULED (Rafe, 2026-09-09) ───────────────────────
+    #
+    #     "five seats; block only on strong-majority regression (>=4 of 5 rank below the
+    #      reference); else install if exit met and plant caught."
+    #
+    # Written as a RATIO so it does not silently mean something else on a panel of another size:
+    # four of five is four fifths, so the test is `below * 5 >= n * 4`. At n=5 that is >=4, which
+    # is the ruling's own arithmetic; at n=3 it is >=3, unanimous, which is the same standard and
+    # not a quietly different one.
+    strong_regression = (n_below * 5 >= n * 4) if n else False
+    return dict(n=n, above=n_above, not_below=n_not_below, below=n_below, flagged=n_flagged,
+                shipped=n_shipped, all_caught=all_caught,
+                strong_regression=strong_regression,
+                majority_above=(n_above * 2 > n), majority_not_below=(n_not_below * 2 > n))
 
 
-def panel_verdict(seats, approved_in_deck, beats_approved, near_bar):
-    """The verdict the panel yields. Same three states, decided by vote rather than by sample."""
-    n_above, n_flagged, n_shipped, all_caught, majority_above = panel_tally(seats)
-    if not all_caught:
+def panel_verdict(seats, approved_in_deck, beats_approved, near_bar, exit_met=False):
+    """The verdict the panel yields, decided by vote rather than by sample.
+
+    ── INSTALL-LATEST — RULED (Rafe, 2026-09-08). NON-REGRESSION, NOT VICTORY. ──────────────────
+
+        "PASS-INSTALL for polish rounds = non-regression, not victory. INSTALL-LATEST = majority
+         of seats do not rank the build below the seeded reference (above or tied), AND the item's
+         own measured exit is met, AND no unrouted flags. Beating the reference is not required to
+         install; seeding a new reference is Rafe's walk only — seats never move approved_capture."
+
+    THE CONTRADICTION IT RESOLVES, measured on this lane. Requiring the build to BEAT its reference
+    made the gate un-passable for incremental polish: r002 and r003 judged IDENTICAL BYTES and gave
+    3-of-3 above and then 1-of-3, because rank carries a measured 40% flip rate (§13.13). A change
+    worth shipping — a lane-gain step, a half-cell placement fix, a hero cap — is small next to
+    seat-to-seat noise on the same scene, so "better than the frame it came from" was a coin toss
+    dressed as a threshold.
+
+    Non-regression is the honest bar for a polish round: the build must not be WORSE than the frame
+    already ratified as installable, and it must have DONE THE THING IT SET OUT TO DO — which is
+    what the item's measured exit carries, and what stops "not worse" from meaning "not different".
+
+    ── AMENDED (Rafe, 2026-09-09). THE MAJORITY WAS ITSELF THE NOISE. ───────────────────────────
+
+        "five seats; block only on strong-majority regression (>=4 of 5 rank below the
+         reference); else install if exit met and plant caught. Rank-in-deck cannot resolve
+         polish-sized deltas at a 40% flip rate."
+
+    THE MEASUREMENT THAT MOVED IT, and it is the second time the same frame taught the same
+    lesson. Lane `polish-198-halo` ran two panels of three ON BYTE-IDENTICAL BYTES — the round's
+    own line reads *picture moved mean 0.000 / worst 0 luminance levels* — and returned:
+
+        r002    NOT BELOW the reference in 3 of 3        install bar met
+        r003    NOT BELOW the reference in 1 of 3        no majority, refused
+
+    Six seats, one picture, the majority in both directions. A three-seat majority of a statistic
+    with a 40% per-seat flip rate is still, in effect, a single noisy sample: at the seat-level
+    rate this frame actually shows (not below in 4 of 6, q_below = 0.333) the OLD rule refuses a
+    perfectly good build **25.9% of the time**. The new rule refuses it **4.5%** of the time.
+
+    THE COST IS PAID IN CATCH POWER AND IS NOT HIDDEN. Against a build that six seats in ten
+    would rank below, the old rule fired 82% of the time and the new one fires 34%. The trade is
+    deliberate: a gate that refuses one good build in four is not measuring the build, and the
+    item's own measured exit — which no seat votes on — is what carries "did this do the thing".
+    The full false-refuse / true-catch table is published beside `docs/RANK-NOISE-FLOOR.json`.
+
+    ⚠ WHAT DID NOT MOVE. Every plant must still be caught; the exit must still be met and
+    measured; and a flag from any seat still blocks the install until it carries a lawful
+    disposition — that term simply moved to where it was always enforced, `critic_gate`, instead
+    of forcing the round-time verdict to FAIL and then be amended back. `panel.verdict_at_round`
+    records what this function returned, so any later divergence is visible as an amendment.
+    """
+    t = panel_tally(seats)
+    if not t["all_caught"]:
         return "VOID"
-    if n_shipped * 2 > len(seats) and n_flagged == 0 and beats_approved and near_bar:
+    if t["shipped"] * 2 > t["n"] and t["flagged"] == 0 and beats_approved and near_bar:
         return "PASS"
-    if approved_in_deck and majority_above and n_flagged == 0:
-        return "PASS-INSTALL"
+    if approved_in_deck and not t["strong_regression"] and exit_met:
+        return "INSTALL-LATEST"
     return "FAIL"
 
 
@@ -940,6 +1197,10 @@ def plant_caught(r, plant_slot, build_slot):
 
 # ================================ the round ===================================================
 def capture(cfg, echo=True):
+    ok, msg = _headroom("write")
+    if not ok:
+        print("\n*** STOP — %s" % msg)
+        raise SystemExit(3)
     """Run the configured capture and hand back the frame it produced.
 
     The command lives in docs/FRAME-CRITIC.json rather than here so this skill stays
@@ -997,6 +1258,11 @@ def main():
     ap.add_argument("--build-frame", help="override the build frame. Used by the plant "
                                           "self-test, which puts a morgue capture in the "
                                           "build's slot and requires the seat to flag it.")
+    ap.add_argument("--redraw-seat", type=int, default=None,
+                    help="re-draw ONE seat of the lane's last round on the SAME frozen frame, "
+                         "because its plant was mis-tagged. RULED (Rafe, 2026-09-08): a seat "
+                         "voided by a mis-tagged plant is re-drawn, not the round; a correct "
+                         "plant missed still voids.")
     ap.add_argument("--seats", type=int, default=1,
                     help="how many INDEPENDENT blind seats judge this round. Ruled at 3 for a "
                          "PASS-INSTALL vote (Rafe, 2026-09-08); higher values measure the "
@@ -1064,7 +1330,10 @@ def main():
         fsha = hashlib.sha256(open(frame, "rb").read()).hexdigest()
         print("== BUILD FRAME OVERRIDDEN: %s  sha256 %s" % (a.build_frame, fsha[:16]))
         print("   This round is a SELF-TEST of the judge, not a verdict on a build.")
-    elif a.no_capture:
+    elif a.no_capture or a.redraw_seat is not None:
+        # A RE-DRAW NEVER RE-CAPTURES. Its whole premise is the SAME FROZEN BYTES — the seats that
+        # are carried judged this exact frame, and a fresh capture would make their ballots
+        # describe a picture they never saw. The sha is checked against the prior round below.
         frame = os.path.join(REPO, cfg["capture"]["frame"])
         fsha = hashlib.sha256(open(frame, "rb").read()).hexdigest()
         print("== capture skipped; judging %s as it sits (sha256 %s)"
@@ -1111,16 +1380,49 @@ def main():
     # can infer it is one of a panel, and the whole signal depends on it judging the picture
     # rather than the apparatus.
     #
-    # ⚠ ONE SEAT, ONE PLANT, AND THE MORGUE IS THIN. `pick_plant` returns the entries matching
-    # this surface AND this axis, and for `combined`/`tonal` that set has exactly ONE member. So
-    # three seats draw the same picture-plant and their catches are CORRELATED — the panel
-    # multiplies the rank samples but not the plant's evidence. That is a real limit of this
-    # implementation and it is reported per round rather than hidden.
-    def seat_round(seat_idx):
-        """One independent seat: its own deck, its own shuffle, its own plant. Returns a dict."""
-        salt = "%s|%d|%s|seat%d" % (lane, rnd, bid, seat_idx)
+    # THE MORGUE'S TONAL SET IS THREE NOW, AND THE VOID OF 2026-09-10 IS WHY.
+    # `combined`/`tonal` held exactly ONE entry, so five seats drew one picture five times, one
+    # seat missed it, and the round voided on a judge that four seats had passed. There was
+    # nothing to see the miss AGAINST. RULED (Rafe, 2026-09-11): seed two more from his culls —
+    # `lamp-clip-figure` (bright: the lamp destroying its subject) and `crushed-midband` (dark:
+    # the 2026-08-27 device FAIL, and the morgue's first dark-side plant, since every tonal
+    # entry before it failed bright). Dealt without replacement below, three plants across five
+    # seats exercises all three every round.
+    # ── PLANTS ARE DEALT WITHOUT REPLACEMENT — the ruled property, delivered ─────────────────
+    #
+    # RULED (Rafe, 2026-09-08): "each seat its own axis-matched plant."
+    #
+    # The first implementation had each seat draw INDEPENDENTLY, which delivers that only
+    # probabilistically. Measured over 900 simulated rounds with a two-member set and three
+    # seats: **all three seats draw the SAME plant in 24.8% of rounds** (chance is exactly 25%,
+    # so the draw was sound — the DESIGN was what fell short). A quarter of rounds therefore had
+    # fully correlated plant evidence, which is the thing the second plant was seeded to end.
+    #
+    # It cost a VOID immediately: r002 on this lane hit that case, all three seats drew the
+    # weaker plant, one missed it, and the round was void on a judge that two seats had passed.
+    #
+    # Dealing without replacement — shuffle the candidates once per round, then seat i takes
+    # i mod n — guarantees that with two plants and three seats BOTH are exercised every round.
+    # A seat missing one is then visible against another seat catching the other, which is the
+    # discrimination a panel is for. With one candidate it is identical to the old behaviour.
+    seat_redraws = []
+    seat_plant_stop = None
+    deal = list(candidates)
+    random.Random(hashlib.sha256(("%s|%d|%s|deal" % (lane, rnd, bid)).encode())
+                  .hexdigest()).shuffle(deal)
+
+    def seat_round(seat_idx, redraw=False):
+        """One independent seat: its own deck, its own shuffle, its own plant. Returns a dict.
+
+        `redraw` re-seats a slot whose ballot was discarded for missing a live plant (ruled
+        2026-09-11). It salts differently, so the fresh seat cannot land in the discarded one's
+        working directory or inherit its shuffle, and it STEPS the plant, so wherever the morgue
+        holds more than one candidate the re-draw is a different picture. Re-running the same
+        seat against the same plant would not be a re-draw, it would be a retry.
+        """
+        salt = "%s|%d|%s|seat%d%s" % (lane, rnd, bid, seat_idx, "|redraw" if redraw else "")
         srng = random.Random(hashlib.sha256(salt.encode()).hexdigest())
-        seat_plant = srng.choice(candidates)
+        seat_plant = deal[(seat_idx + (1 if redraw else 0)) % len(deal)]
         work = os.path.join(os.path.expanduser(cfg.get("work_dir", "~/.claude/frame-critic")),
                             "deck-" + hashlib.sha256(salt.encode()).hexdigest()[:16])
         if os.path.commonpath([os.path.realpath(work), os.path.realpath(REPO)]) \
@@ -1162,11 +1464,36 @@ def main():
             "the numbered PNG files in this directory",
             "the files %s in this directory" % ", ".join("%d.png" % i
                                                          for i in range(1, len(deck) + 1)))
-        print("   running (fresh claude -p, no repo access)...")
-        text = run_seat(work, prompt, a.timeout)
         tp = os.path.join(HISTORY, "r%03d-%s-transcript%s.txt"
                           % (rnd, lane.replace("/", "_"),
-                             "" if a.seats == 1 else "-seat%d" % (seat_idx + 1)))
+                             "" if (a.seats == 1 and a.redraw_seat is None)
+                             else ("-seat%d-redraw" % (seat_idx + 1)
+                                   if a.redraw_seat is not None
+                                   else "-seat%d" % (seat_idx + 1))))
+        # ⚠ A RE-DRAW WRITES ITS OWN FILE AND NEVER THE ORIGINAL'S. Naming it for the seat alone
+        # cost r004's original seat-2 ballot when I renamed files by hand — untracked, gone. A
+        # re-drawn ballot is a SECOND ballot on the same bytes, not a replacement for the first.
+
+        # ── A RE-DRAW NEVER RE-ROLLS, AND THIS CHECK RUNS BEFORE THE SEAT IS SPENT ──────────
+        #
+        # If this seat has already been re-drawn on these frozen bytes, ITS BALLOT STANDS. The
+        # first re-draw of seat 2 flagged the build and ranked it below; re-running until a
+        # kinder seat turns up is exactly what a plant exists to prevent, arriving through the
+        # door marked "the reporting code crashed". A crash in my own summary is not grounds to
+        # re-open a verdict already cast.
+        #
+        # ⚠ IT WAS FIRST WRITTEN AFTER `run_seat` AND SO GUARDED NOTHING — the seat was already
+        # spent by the time it was consulted, and a live run had to be killed mid-flight. A
+        # no-re-roll guard downstream of the roll is a comment, not a guard.
+        if a.redraw_seat is not None and os.path.exists(tp):
+            print("   seat %d's re-drawn ballot is already on disk — REUSED, not re-rolled (%s)"
+                  % (seat_idx + 1, os.path.relpath(tp, REPO)))
+            return dict(seat=seat_idx + 1, work_dir=work, slots=slots, mapping=mapping,
+                        plant=seat_plant, text=open(tp).read(),
+                        transcript=os.path.relpath(tp, REPO), reused=True)
+
+        print("   running (fresh claude -p, no repo access)...")
+        text = run_seat(work, prompt, a.timeout)
         os.makedirs(HISTORY, exist_ok=True)
         with open(tp, "w") as f:
             f.write(text)
@@ -1174,18 +1501,206 @@ def main():
                     plant=seat_plant, text=text, transcript=os.path.relpath(tp, REPO))
 
     crop = cfg.get("crop")          # the deck's crop, used again for the round's perceptual hash
-    seats = [seat_round(i) for i in range(a.seats)]
+
+    # ── A MIS-TAGGED PLANT VOIDS A SEAT, NOT A ROUND — RULED (Rafe, 2026-09-08) ──────────────
+    #
+    #     "a seat voided by a mis-tagged plant is re-drawn, not the round; a correct plant missed
+    #      still voids."
+    #
+    # The distinction is between a fault in the DECK'S CONFIGURATION and a fault in the JUDGE. A
+    # seat handed a plant whose axis does not match the round's question was never asked a
+    # answerable question — §1.2.1: a plant controls on the axis its cull was made on, and the
+    # right image for the wrong question is not a control at all. Throwing away two seats that
+    # judged correctly, plus a capture, to repair one mis-configured deck is a cost with no
+    # evidentiary return.
+    #
+    # ⚠ AND THE OTHER HALF IS WHAT KEEPS IT HONEST: a seat that misses a CORRECTLY tagged plant
+    # still voids the whole round, exactly as §4 says. This re-draw is available only where the
+    # tag was wrong, it names the mis-tagged plant, and it is recorded as an added artifact — so
+    # it can never become "re-run the seat that disagreed with me".
+    if a.redraw_seat is not None:
+        prior_path = os.path.join(HISTORY, "r%03d-%s.json" % (rnd - 1, lane.replace("/", "_")))
+        if not os.path.exists(prior_path):
+            raise SystemExit("REFUSING: --redraw-seat needs the lane's last round on disk; "
+                             "%s is not there." % os.path.relpath(prior_path, REPO))
+        prior = json.load(open(prior_path))
+        pf = (prior.get("build_frame") or {}).get("sha256")
+        now = hashlib.sha256(open(frame, "rb").read()).hexdigest()
+        if pf != now:
+            raise SystemExit("REFUSING: the frame has moved since that round (%s -> %s). A "
+                             "re-draw is only lawful on the SAME FROZEN BYTES." % (pf[:16], now[:16]))
+        rnd = prior["round"]
+        seats = []
+        for old_seat in prior["panel"]["per_seat"]:
+            i = old_seat["seat"] - 1
+            if old_seat["seat"] == a.redraw_seat:
+                print("\n== RE-DRAWING seat %d — its plant (%s) was mis-tagged for axis '%s'"
+                      % (old_seat["seat"], old_seat["plant"], cfg.get("axis")))
+                seats.append(seat_round(i))
+            else:
+                tp = os.path.join(REPO, old_seat["transcript"])
+                sd = dict(seat=old_seat["seat"], work_dir=old_seat["work_dir"],
+                          slots=dict(plant=None, build=None, bar=None, approved=None),
+                          mapping={}, plant={"file": old_seat["plant"], "verbatim": "(carried)"},
+                          text=open(tp).read(), transcript=old_seat["transcript"],
+                          carried=True)
+                seats.append(sd)
+                print("   seat %d carried unchanged from that round (%s, caught=%s)"
+                      % (old_seat["seat"], old_seat["plant"], old_seat["caught"]))
+        _prior_plant = prior["panel"]["per_seat"][a.redraw_seat - 1].get("plant")
+        _prior_retired = _plant_retired(_prior_plant, morgue)
+        redraw_note = dict(round=rnd, seat=a.redraw_seat,
+                           discarded_plant=_prior_plant,
+                           discarded_plant_retired=_prior_retired,
+                           frame_sha256=now,
+                           # ⚠ TWO RULINGS REACH THIS PATH AND THEY GIVE DIFFERENT REASONS.
+                           # It was built for 2026-09-08's mis-tagged case and would stamp
+                           # "mis-tagged" on a plant that was correctly tagged, which is a false
+                           # record of why a ballot was discarded. The reason is now derived from
+                           # the morgue: a RETIRED plant is the deck-config fault the older
+                           # ruling describes; a LIVE one is the seat-level miss ruled on
+                           # 2026-09-11, which discards the ballot and re-draws the slot.
+                           ruling=(
+                               ("a seat voided by a mis-tagged plant is re-drawn, not the round. "
+                                "— Rafe, 2026-09-08")
+                               if _prior_retired else
+                               ("a live-plant miss voids the seat, not the round. The ballot is "
+                                "discarded; the slot is re-drawn once (fresh seat, fresh plant); "
+                                "the round is valid when it holds five caught ballots. — Rafe, "
+                                "2026-09-11, superseding 'a correct plant missed still voids "
+                                "[the round]'")))
+    else:
+        redraw_note = None
+        ok, msg = _headroom("seat")
+        if not ok:
+            print("\n*** STOP — %s" % msg)
+            raise SystemExit(3)
+        seats = []
+        for i in range(a.seats):
+            seats.append(seat_round(i))
+            stray = _no_lingering_seats()
+            if stray:
+                print("   ⚠ %d seat process(es) still alive after seat %d: %s"
+                      % (len(stray), i + 1, ", ".join(stray)))
+            ok, msg = _headroom("seat")
+            if not ok and i + 1 < a.seats:
+                print("\n*** STOP after seat %d — %s" % (i + 1, msg))
+                raise SystemExit(3)
+
+        # ── A LIVE-PLANT MISS VOIDS THE SEAT, NOT THE ROUND ──────────────────────────────────
+        #
+        # RULED (Rafe, 2026-09-11), superseding "a correct plant missed still voids [the round]"
+        # (2026-09-08):
+        #
+        #     "a live-plant miss voids the seat, not the round. The blind seat's ballot is
+        #      discarded; the slot is re-drawn once (fresh seat, fresh plant); the round is valid
+        #      when it holds five caught ballots. Unanimity is preserved where it matters: every
+        #      counted ballot caught its plant. Broken-judge = a slot whose re-draw also misses,
+        #      or two slots missing in one round."
+        #
+        # THE ARITHMETIC IS THE REASON, and it is recorded here because the old rule was not
+        # wrong in principle — it was wrong at five seats. Measured per-seat catch rate on LIVE
+        # plants across this lane: 17 of 19 = 89.5%. Under a unanimous round-level rule:
+        #
+        #     seats  P(all catch)  rounds VOID
+        #       1       89.5%         10.5%
+        #       5       57.3%         42.7%      <- the panel ruled for the regression term
+        #
+        # More seats made a VOID MORE likely, not less: five seats was ruled to cut RANK noise,
+        # and the plant gate being unanimous meant the same change multiplied the chance of
+        # tripping it. The two ruled terms pulled in opposite directions.
+        #
+        # ⚠ AND THE RE-SCOPE'S OWN FIGURE IS RECORDED AS MEASURED RATHER THAN AS QUOTED. The
+        # ruling cites ~5% VOID. As ruled — BOTH trip conditions live — it is 12.5%:
+        #
+        #     k=0 misses                        57.3%  valid
+        #     k=1, the re-draw catches          30.2%  valid
+        #     k=1, the re-draw also misses       3.6%  broken-judge
+        #     k>=2 slots miss                    8.9%  broken-judge
+        #                                       -----
+        #                              VOID     12.5%
+        #
+        # 5.4% is what the rule gives if the ONLY trip is a failed re-draw. The difference is the
+        # two-slot tripwire, which is explicit in the ruling and is carried as written — two
+        # independent misses in one round IS evidence about the judge, and dropping it to hit a
+        # number would be fitting the law to the arithmetic instead of the other way round.
+        # Either way the line moves: 42.7% -> 12.5% is a 3.4x reduction.
+        live_misses = [i for i, sd in enumerate(seats)
+                       if not sd.get("caught") and not _plant_retired(sd.get("plant"), morgue)]
+
+        if len(live_misses) >= 2:
+            seat_plant_stop = ("%d slots missed a live plant in one round (seats %s). That is "
+                               "not one seat having a bad day." % (
+                                   len(live_misses),
+                                   ", ".join(str(i + 1) for i in live_misses)))
+        elif len(live_misses) == 1:
+            slot = live_misses[0]
+            print("\n== seat %d missed a LIVE plant — the BALLOT is discarded and the SLOT is "
+                  "re-drawn once" % (slot + 1))
+            print("   ruled 2026-09-11: a live-plant miss voids the seat, not the round.")
+            ok, msg = _headroom("seat")
+            if not ok:
+                print("\n*** STOP — %s" % msg)
+                raise SystemExit(3)
+            # A FRESH SEAT AND A FRESH PLANT. The salt carries `redraw` so the new seat cannot
+            # land in the discarded one's working directory or draw its deck order, and the
+            # plant is stepped so it is a different picture wherever the morgue allows one.
+            fresh = seat_round(slot, redraw=True)
+            discarded = seats[slot]
+            discarded["discarded"] = True
+            discarded["discarded_why"] = "missed a live plant; ballot not counted (ruled 2026-09-11)"
+            seat_redraws.append(dict(slot=slot + 1,
+                                     discarded_plant=discarded.get("plant"),
+                                     redraw_plant=fresh.get("plant"),
+                                     redraw_caught=bool(fresh.get("caught"))))
+            if not fresh.get("caught"):
+                seat_plant_stop = ("slot %d missed a live plant and its RE-DRAW missed too "
+                                   "(%s, then %s). A slot that misses twice is the judge, not "
+                                   "the draw." % (slot + 1, discarded.get("plant"),
+                                                  fresh.get("plant")))
+            else:
+                print("   re-draw CAUGHT %s — the round holds %d caught ballots."
+                      % (fresh.get("plant"), a.seats))
+                seats[slot] = fresh
     # The first seat's deck is the one the verdict's top-level fields describe, so a single-seat
     # round records exactly what it always did.
-    work, mapping = seats[0]["work_dir"], seats[0]["mapping"]
-    plant = seats[0]["plant"]
-    plant_slot, build_slot = seats[0]["slots"]["plant"], seats[0]["slots"]["build"]
-    bar_slot, approved_slot = seats[0]["slots"]["bar"], seats[0]["slots"]["approved"]
+    # THE ROUND'S TOP-LEVEL DESCRIPTORS COME FROM A SEAT THAT ACTUALLY RAN. On a re-draw the
+    # first seat may be CARRIED, and a carried seat has no deck of its own — its ballot was cast
+    # in the earlier round and only its numbers are kept. Describing the round from it produced
+    # "rank ? of 0" and "NO APPROVED FRAME IN THE DECK" on a round whose deck plainly had one.
+    desc = next((sd for sd in seats if not sd.get("carried")), seats[0])
+    work, mapping = desc["work_dir"], desc["mapping"]
+    plant = desc["plant"]
+    plant_slot, build_slot = desc["slots"]["plant"], desc["slots"]["build"]
+    bar_slot, approved_slot = desc["slots"]["bar"], desc["slots"]["approved"]
     deck = [x for x in (1, 2, 3, 4) if str(x) in mapping]
-    text, tpath = seats[0]["text"], os.path.join(REPO, seats[0]["transcript"])
+    text, tpath = desc["text"], os.path.join(REPO, desc["transcript"])
 
     # ── EVERY SEAT PARSED AND SCORED SEPARATELY, THEN THE VOTE ────────────────────────────────
+    prior_by_seat = {}
+    if a.redraw_seat is not None:
+        prior_by_seat = {p["seat"]: p for p in prior["panel"]["per_seat"]}
     for sd in seats:
+        if sd.get("carried"):
+            # A CARRIED SEAT IS NOT RE-JUDGED. Its ballot stands exactly as recorded; re-parsing
+            # it would risk a different reading of the same words, which is not what "carried"
+            # means. Its numbers are taken from the round it was cast in.
+            p0 = prior_by_seat[sd["seat"]]
+            sd.update(rank=p0["rank"], approved_rank=p0["reference_rank"],
+                      above_approved=p0["above_reference"],
+                      not_below=p0.get("not_below",
+                                       p0["rank"] <= p0["reference_rank"] + REF_SLACK),
+                      build_flagged=p0["build_flagged"], shipped=p0["shipped"],
+                      caught=p0["caught"],
+                      how=dict(ranked_last=None, named_worst=None, flagged=p0["build_flagged"],
+                               shipped=p0["shipped"], outranked_build=None,
+                               every_frame_flagged=None, carried=True),
+                      r={"_rank": [], "_flagged": [], "_ship": [],
+                                                      "RANK": "", "SHIP": "", "FLAGGED": "",
+                                                      "WORST": "", "WORST_WHY": "", "BEST": "",
+                                                      "BEST_WHY": "", "_flip_blocks": {},
+                                                      "_worst": None})
+            continue
         try:
             sd["r"] = parse(sd["text"], len(sd["mapping"]))
         except ValueError as e:
@@ -1198,11 +1713,23 @@ def main():
                                if sl["approved"] and sl["approved"] in rr["_rank"] else None)
         sd["above_approved"] = (sd["approved_rank"] is not None and sd["rank"] is not None
                                 and sd["rank"] < sd["approved_rank"])
+        # NOT BELOW = above, or one place under (the tie the deck forbids). RULED 2026-09-08.
+        sd["not_below"] = (sd["approved_rank"] is not None and sd["rank"] is not None
+                           and sd["rank"] <= sd["approved_rank"] + REF_SLACK)
         sd["build_flagged"] = sl["build"] in rr["_flagged"]
         sd["shipped"] = sl["build"] in rr["_ship"]
         sd["caught"], sd["how"] = plant_caught(rr, sl["plant"], sl["build"])
 
-    n_above, n_flagged, n_shipped, all_caught, majority_above = panel_tally(seats)
+    _t = panel_tally(seats)
+    n_above, n_flagged, n_shipped = _t["above"], _t["flagged"], _t["shipped"]
+    all_caught, majority_above = _t["all_caught"], _t["majority_above"]
+    n_not_below, majority_not_below = _t["not_below"], _t["majority_not_below"]
+
+    # THE ITEM'S OWN MEASURED EXIT — declared in docs/FRAME-CRITIC.json, recorded here, re-checked
+    # at the gate. It is what stops "not worse than the reference" from meaning "not different":
+    # a build installs because it DID THE THING, and the rank test only says it cost nothing.
+    item_exit = cfg.get("item_exit") or {}
+    exit_met = bool(item_exit.get("met")) and bool(str(item_exit.get("measured") or "").strip())
 
     if len(seats) > 1:
         print("\n== the panel (%d independent seats)" % len(seats))
@@ -1214,17 +1741,28 @@ def main():
                      "YES" if sd["above_approved"] else "no",
                      "yes" if sd["build_flagged"] else "no",
                      "CAUGHT" if sd["caught"] else "MISSED"))
-        print("   ---> above the reference in %d of %d seats; %s"
-              % (n_above, len(seats),
-                 "MAJORITY" if majority_above else "NO MAJORITY"))
+        print("   ---> above the reference in %d of %d seats; NOT BELOW it in %d of %d — %s"
+              % (n_above, len(seats), n_not_below, len(seats),
+                 "MAJORITY (install bar)" if majority_not_below else "NO MAJORITY"))
         # THE COMPARATOR'S OWN ERROR BAR, on this round's bytes. A binding term without one is a
         # single sample wearing a threshold (LAW, Rafe 2026-09-08).
         print("   rank's noise floor on THESE bytes: %d/%d seats disagree with the majority"
               % (min(n_above, len(seats) - n_above), len(seats)))
-        if len(set(id(sd["plant"]) for sd in seats)) == 1:
-            print("   ⚠ every seat drew the SAME plant (the axis-matched set has one member),")
-            print("     so the plant catches are CORRELATED — the panel multiplies rank samples,")
-            print("     not the plant's evidence.")
+        distinct = len({sd["plant"]["file"] for sd in seats})
+        if distinct == 1:
+            # ⚠ SAY WHICH IT IS. This line used to assert the CAUSE — "the axis-matched set has
+            # one member" — without checking it, and was printed on a round where the set had
+            # two. A note that states an unchecked cause is the same defect as an instrument
+            # that does (§13.10): report what was observed, and the count that explains it.
+            print("   ⚠ every seat drew the SAME plant (%s), so the plant catches are CORRELATED"
+                  % seats[0]["plant"]["file"])
+            print("     — the panel multiplies rank samples, not the plant's evidence.")
+            print("     axis-matched candidates available: %d%s"
+                  % (len(candidates),
+                     " — seed another cull on this axis" if len(candidates) == 1 else ""))
+        else:
+            print("   plants dealt without replacement: %d distinct across %d seats"
+                  % (distinct, len(seats)))
 
     try:
         r = parse(text, len(deck))
@@ -1233,7 +1771,7 @@ def main():
         print("transcript: %s" % os.path.relpath(tpath, REPO))
         return 4
 
-    caught, how = seats[0]["caught"], seats[0]["how"]
+    caught, how = desc["caught"], desc["how"]
     flips = r["_flip_blocks"].get(build_slot, [])
 
     # ── WHERE THE BUILD PLACED, which is this round's contribution to the progress signal ──────
@@ -1302,7 +1840,19 @@ def main():
     approved_in_deck = app_pos is not None
     unflagged_all = n_flagged == 0
 
-    verdict = panel_verdict(seats, approved_in_deck, beats_approved, near_bar)
+    verdict = panel_verdict(seats, approved_in_deck, beats_approved, near_bar, exit_met)
+
+    # ── A SEAT-LEVEL PLANT STOP IS BROKEN-JUDGE AT ONCE, NOT AFTER A SECOND ROUND ────────────
+    #
+    # The legacy guard fires on two consecutive VOIDs, which was right while a VOID meant "one
+    # seat missed" — a thing that happens to a working judge 43% of the time at five seats. Under
+    # the 2026-09-11 re-scope a VOID means something much stronger and much rarer: a slot missed
+    # a live plant TWICE with a fresh seat and a fresh plant, or two independent slots missed in
+    # the same round. Either is the judging layer, not the draw, so waiting for a second round to
+    # agree would be collecting evidence nobody needs.
+    if seat_plant_stop:
+        verdict = "VOID"
+
 
     print("\n== the seat said")
     print("   RANK    %s" % (r["RANK"] or "(unparsed)")[:120])
@@ -1430,23 +1980,41 @@ def main():
         # the verdict the PR carries, and it is in the stall report.
         panel=dict(
             seats=len(seats),
-            ruling=("majority of three independent blind seats rank the build above "
-                    "approved_capture, no unrouted flags from any; each seat its own "
-                    "axis-matched plant. — Rafe, 2026-09-08"),
+            ruling=("five seats; block only on strong-majority regression (>=4 of 5 rank below "
+                    "the reference); else install if exit met and plant caught. Rank-in-deck "
+                    "cannot resolve polish-sized deltas at a 40% flip rate. — Rafe, 2026-09-09"),
             law=("a gate's binding term must have a measured noise floor and must never be a "
                  "single sample. — Rafe, 2026-09-08"),
-            above_reference=n_above, flagged_by=n_flagged, shipped_by=n_shipped,
-            majority_above=majority_above, all_caught=all_caught,
+            # WHAT THE PANEL ITSELF RETURNED, before any human or builder touched the file. A
+            # verdict that later differs from this is an AMENDMENT and the gate demands the
+            # record — which is how "the enforcement is visibility" is made checkable rather
+            # than trusted.
+            verdict_at_round=verdict,
+            above_reference=n_above, not_below_reference=n_not_below,
+            below_reference=len(seats) - n_not_below,
+            strong_regression=((len(seats) - n_not_below) * 5 >= len(seats) * 4),
+            ref_slack=REF_SLACK, flagged_by=n_flagged, shipped_by=n_shipped,
+            majority_above=majority_above, majority_not_below=majority_not_below,
+            all_caught=all_caught,
+            # THE SEAT-LEVEL PLANT TERM'S TRAIL (ruled 2026-09-11). A discarded ballot is not
+            # counted and not hidden: the slot, the plant it missed, the plant its re-draw drew
+            # and whether that caught are all on the record, so "five caught ballots" can be
+            # checked rather than taken on trust.
+            seat_redraws=seat_redraws,
+            seat_plant_stop=seat_plant_stop,
             dissent=min(n_above, len(seats) - n_above),
             plants_distinct=len({sd["plant"]["file"] for sd in seats}),
             per_seat=[dict(seat=sd["seat"], rank=sd["rank"],
                            reference_rank=sd["approved_rank"],
                            above_reference=sd["above_approved"],
+                           not_below=sd["not_below"],
                            build_flagged=sd["build_flagged"], shipped=sd["shipped"],
                            plant=sd["plant"]["file"], caught=sd["caught"],
                            transcript=sd["transcript"], work_dir=sd["work_dir"])
                       for sd in seats],
         ),
+        seat_redraw=redraw_note,
+        item_exit=item_exit,
         progress=dict(
             rank_position=pos, deck_size=n, rank_score=score,
             bar_position=bar_pos, approved_position=app_pos,
@@ -1498,6 +2066,23 @@ def main():
         print("\nwritten: %s" % os.path.relpath(hpath, REPO))
         print("         (a self-test writes no CRITIC-VERDICT.json — it judges the judge)")
 
+    # ── A SEAT-LEVEL PLANT STOP IS RAISED HERE, AFTER THE RECORD IS ON DISK ────────────────
+    #
+    # The verdict and the history file are written above, deliberately: a STOP whose evidence was
+    # never saved is a STOP nobody can rule on. Under the 2026-09-11 re-scope this does NOT wait
+    # for a second round the way the legacy two-VOID guard does — a slot that missed a live plant
+    # twice, with a fresh seat and a fresh plant, or two independent slots missing in one round,
+    # is the judging layer rather than the draw, and a second round would add nothing.
+    if seat_plant_stop:
+        why = ("the seat-level plant term tripped: %s\nRuled 2026-09-11: a live-plant miss voids "
+               "the SEAT and the slot is re-drawn once. This is the case that outruns the "
+               "re-draw." % seat_plant_stop)
+        p = write_stall("broken-judge", why, history(a.history), lane, cfg, a.stall_out)
+        print("\n*** STOP — broken-judge ***\n%s\n\nwritten: %s"
+              % (why, os.path.relpath(p, REPO)))
+        print("LOOP-PROCESS §1.1.4 ruling trigger. Ending the turn for Rafe.")
+        return 3
+
     # And check the guards again with this round folded in, so a STOP is written the moment it is
     # earned rather than one round later.
     name, why = guards(history(a.history), lane, a.park, a.gate_ruling)
@@ -1510,7 +2095,8 @@ def main():
 
     # PASS-INSTALL exits 0 with PASS: both open the install gate, and a caller that
     # distinguished them would be a second gate with its own opinion (SKILL.md §6).
-    return {"PASS": 0, "PASS-INSTALL": 0, "FAIL": 1, "VOID": 2}[verdict]
+    return {"PASS": 0, "PASS-INSTALL": 0, "INSTALL-LATEST": 0,
+            "FAIL": 1, "VOID": 2}[verdict]
 
 
 if __name__ == "__main__":

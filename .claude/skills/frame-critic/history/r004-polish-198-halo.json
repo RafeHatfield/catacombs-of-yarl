@@ -1,0 +1,324 @@
+{
+  "schema": "frame-critic/1",
+  "verdict": "INSTALL-LATEST",
+  "lane": "polish-198-halo",
+  "round": 4,
+  "surface": "combined",
+  "axis": "tonal",
+  "commit": "640208841e0a576c411e2421985a8a83286b3f3a",
+  "dirty": true,
+  "build_id": "4be3b68e2d05b5ba3ae83dd53c80d8de59de68f21e525f78e6308fb6963914e2",
+  "timestamp": "2026-09-09T13:21:55",
+  "build_frame": {
+    "path": "tools/tier1_floors/evidence/combined.png",
+    "sha256": "42f6941bc10d00235a58a727dd79d5635f4ca2adcaa667e98e5c1ef9f25def54",
+    "log": "tools/tier1_floors/evidence/combined.log",
+    "flags": "/Applications/Godot_mono.app/Contents/MacOS/Godot --path /Users/rafehatfield/development/c-yarl/.claude/worktrees/autonomy --resolution 750x1334 --art-scene-capture --capture-out tools/tier1_floors/evidence/combined.png --capture-width 750 --capture-height 1334 --corridor-scene res://src/Presentation/assets/tier0_harness/scenes/tier1_combined_review.json --tile-theme-config res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml --tile-size 32 --tile-scale 2.0 --light-ambient 1a1a22 --light-color ffb066 --light-energy 1.6 --light-radius-tiles 6.0 --light-falloff 1.0 --light-ambient-level 1.5 --floor-overlays res://src/Presentation/assets/tier1_floors/MANIFEST.json --ashlar-floor res://src/Presentation/assets/tier1_ashlar/MANIFEST.json --boundary-wall res://src/Presentation/assets/tier1_walls/MANIFEST.json --void-ring 1 --wall-bindings res://src/Presentation/assets/tier1_bindings/MANIFEST.json --wall-cap res://src/Presentation/assets/tier1_cap/MANIFEST.json"
+  },
+  "deck": {
+    "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-0b0a6e7a369f0b29",
+    "slots": {
+      "1": {
+        "what": "bar",
+        "source": "/Users/rafehatfield/development/assets/oryx/oryx_ultimate_fantasy_1.2/uf_examples/uf_example_1.png",
+        "sha256": "ce29a33e0fd6e6e3ea9f278c28918f9d5f0210e1cbd701e894446ded9a050c49",
+        "crop": [
+          304,
+          192,
+          688,
+          480
+        ],
+        "delivered": [
+          384,
+          288
+        ]
+      },
+      "2": {
+        "what": "build",
+        "source": "tools/tier1_floors/evidence/combined.png",
+        "sha256": "42f6941bc10d00235a58a727dd79d5635f4ca2adcaa667e98e5c1ef9f25def54",
+        "crop": [
+          0,
+          90,
+          750,
+          1001
+        ],
+        "delivered": [
+          750,
+          911
+        ]
+      },
+      "3": {
+        "what": "plant",
+        "source": ".claude/skills/frame-critic/morgue/blown-highlight.png",
+        "sha256": "753f9c3f9584dcc69a919036ef6e16d7f227dd20a8b7e8e93ec0aded2fdb2ccc",
+        "crop": [
+          0,
+          90,
+          750,
+          1001
+        ],
+        "delivered": [
+          750,
+          911
+        ]
+      },
+      "4": {
+        "what": "approved",
+        "source": ".claude/skills/frame-critic/approved/combined-2026-09-07.png",
+        "sha256": "8745c556dd1bef108a15f9f490a229ab9f40765d2a6ececb7197dc3d415fba68",
+        "crop": [
+          0,
+          90,
+          750,
+          1001
+        ],
+        "delivered": [
+          750,
+          911
+        ]
+      }
+    },
+    "build": "tools/tier1_floors/evidence/combined.png"
+  },
+  "plant": {
+    "slot": 3,
+    "file": "blown-highlight.png",
+    "sha256": "753f9c3f9584dcc69a919036ef6e16d7f227dd20a8b7e8e93ec0aded2fdb2ccc",
+    "culled_by": "TWO INDEPENDENT EYES. Rafe, device walk, 2026-09-06; and round 30's blind seat, 2026-09-06.",
+    "verbatim": "flat pale block, no interior texture (seat) / too shiny on worn areas, character washed out (Rafe)",
+    "caught": true,
+    "how": {
+      "ranked_last": false,
+      "named_worst": false,
+      "flagged": true,
+      "shipped": false,
+      "outranked_build": false,
+      "every_frame_flagged": true
+    }
+  },
+  "seat": {
+    "BEST_WHY": "Three specific things are built rather than blurred.\n\n1. There is a real contact shadow at the wall/floor junction. Sampling the column at x=400 downward through y≈425–475: the wall face runs 123, 108, then drops to 41, 52, 64, 50, then the floor comes up 139, 193. That dark row runs the full width of the corridor at y≈448–462. It gives the wall thickness — it reads as a mass standing on the floor, not a brown band painted onto it. Neither 3 nor 4 has it: at the same column they run 133, 116, 117, 126 straight into 209 with no break.\n\n2. The timber posts at x≈296 and x≈388 sit *in* the wall course, bottom ends terminating on the wall face inside the block run at y≈393–440. They read as pins driven through masonry from this side. In 3 and 4 the same two posts have migrated to x≈266 and x≈358 and now stick up out of the top of the wall into the black, where their upper halves are cut off by the darkness — the same asset, worse placed.\n\n3. The dark box on the floor at (310,645)–(378,712) has a complete hard rim on all four sides — top edge unbroken across y≈645, left edge unbroken down x≈310. It reads as an object. In 3 and 4 (byte-identical to each other in that region) the top and left edges have dissolved: the top edge only begins around x≈332 and the left third of the body bleeds into the floor value with no boundary at all. Same box, and in 3/4 it has become a stain.\n\nAlso: the paving joints stay legible from the figure's feet out to the black. Nothing is blown.",
+    "WORST_WHY": "- **There is no light in it.** The stated premise is a picture that darkens away from a carried light. This frame is flat corner to corner. Flagstone at (10,240) is RGB (71,71,71); flagstone at (350,240) is RGB (71,71,71) — identical. Dirt at (200,30) is (88,56,20); dirt at (200,180) is (90,57,22). Zero falloff anywhere on the image. And the only figure, the green one at (213,0)–(237,25), is jammed against the top edge and holds a sword, not a light.\n- **Region seams are raw rectangle cuts with no transition tiles.** The water is a pure axis-aligned rectangle with its corner at (249,192): teal meets dirt across a single-pixel boundary, no shoreline, no wet-dirt darkening, no bank, no edge treatment on any of the three exposed sides. Same for the dirt/flagstone seams — a razor-straight vertical cut at x≈56, another at x≈343, a straight horizontal cut at y≈216. These are fill regions, not a built floor.\n- **The wall stub ends in mid-air.** The dark brick strip at (0,125)–(56,145) stops dead at x=56 with a flat vertical cut — no end cap, no corner piece, no return. It is a three-tile fragment of wall floating in dirt.\n- **The orange column at (26,125)–(35,167)** is a vertical orange-to-brown gradient bar drawn over the brick and continuing about three tiles down onto the dirt, terminating in a flat horizontal cut at y≈167. It has no top, no base, no flame silhouette. If it's a torch it emits nothing and casts nothing. If it's a post it stands on nothing.\n- **Straight asset duplication, unvaried.** The two chests at (63,0) and (63,48) are the same sprite: I differenced them and got a total absolute error of 378 across 2,625 channel values — that's background dirt bleed at the edges, nothing else. Same lid, same four corner studs, same diamond lock plate, same diagonal tick. The two barrels at (112,190) and (160,190) are likewise the same sprite at the same offset, 48px apart, not flipped, not re-shaded, not rotated. And the top chest is flush-cut by the frame edge at y=0.\n- **The white scatter at (207,110)–(237,128)** has no silhouette — it is loose white pixels. It doesn't resolve into bone, rubble or debris at any distance.",
+    "FLAGGED": "1, 2, 3, 4\n\nPer image, the glance-level fault:\n\n- **1** — the water rectangle and the flat corner-to-corner lighting. Both visible in under a second.\n- **2** — the character does not live in the picture. The sprite is hard-outlined pixel art in saturated orange and cyan at 1:1 pixel scale; the floor under it is soft, blurred, desaturated brown with a 3–4px blur radius and no hard edges anywhere. Zoomed to the sprite at (388,462), the outline is a crisp dark-brown 1px line and the floor beside it has no edge sharper than four pixels. It reads as pasted in. Same fault in 3 and 4.\n- **3** — the light core is blown. Mean floor value beside the figure is 225 versus 193 in 4. The paving joints are *erased* in the band running from the figure down-left through roughly x 300–470 / y 460–560; where 4 shows countable courses with regular mortar lines, 3 shows undifferentiated cream with diagonal streaks running lower-left to upper-right that cross paving stones and joints without regard to either. That is the signature of a pass run over the top of the art rather than drawn into it.\n- **4** — same sprite/ground mismatch as 2, plus the missing wall-base shadow and the dissolved box edges described above.",
+    "RANK": "2 > 4 > 3 > 1",
+    "BEST": "2",
+    "WORST": "1",
+    "SHIP": "NONE\n\n---"
+  },
+  "flip_list": [
+    "Redraw the floor and wall texture at the sprite's edge hardness. Every stone edge, joint and chip should be a hard pixel transition, not a 3–4px blur. As it stands the environment and the character are two different media in one frame.",
+    "Bring the environment palette and the sprite palette into one ramp. The sprite's cyan and saturated orange appear nowhere else in the image; either seed those hues into the environment (rope, rust, cloth) or desaturate the sprite into the brown/tan ramp.",
+    "The wandering 1px black cracks — the run from (250,530) through (300,620) to (420,760), and the arc from (555,620) to (750,700) — are uniform width, pass over the box at (310,645) instead of behind it, and cross paving joints without deviating. Vary their width, terminate them at joints, and put them behind objects.",
+    "The figure carries a sword and a round shield and no light. The light pool has no source in the picture. Put a torch or lantern in the sprite's hand and centre the falloff on it.",
+    "Nothing in the frame casts a shadow except the wall base. Give the box at (310,645) and the pin at (358,600) directional contact shadows pointing away from the figure."
+  ],
+  "flip_list_withheld": null,
+  "withheld_because": null,
+  "panel": {
+    "seats": 5,
+    "ruling": "five seats; block only on strong-majority regression (>=4 of 5 rank below the reference); else install if exit met and plant caught. Rank-in-deck cannot resolve polish-sized deltas at a 40% flip rate. — Rafe, 2026-09-09",
+    "law": "a gate's binding term must have a measured noise floor and must never be a single sample. — Rafe, 2026-09-08",
+    "verdict_at_round": "INSTALL-LATEST",
+    "above_reference": 2,
+    "not_below_reference": 5,
+    "below_reference": 0,
+    "strong_regression": false,
+    "ref_slack": 1,
+    "flagged_by": 5,
+    "shipped_by": 0,
+    "majority_above": false,
+    "majority_not_below": true,
+    "all_caught": true,
+    "dissent": 2,
+    "plants_distinct": 1,
+    "per_seat": [
+      {
+        "seat": 1,
+        "rank": 1,
+        "reference_rank": 2,
+        "above_reference": true,
+        "not_below": true,
+        "build_flagged": true,
+        "shipped": false,
+        "plant": "blown-highlight.png",
+        "caught": true,
+        "transcript": ".claude/skills/frame-critic/history/r004-polish-198-halo-transcript-seat1.txt",
+        "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-0b0a6e7a369f0b29"
+      },
+      {
+        "seat": 2,
+        "rank": 2,
+        "reference_rank": 1,
+        "above_reference": false,
+        "not_below": true,
+        "build_flagged": true,
+        "shipped": false,
+        "plant": "blown-highlight.png",
+        "caught": true,
+        "transcript": ".claude/skills/frame-critic/history/r004-polish-198-halo-transcript-seat2.txt",
+        "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-5ebb273d438d10bd"
+      },
+      {
+        "seat": 3,
+        "rank": 2,
+        "reference_rank": 1,
+        "above_reference": false,
+        "not_below": true,
+        "build_flagged": true,
+        "shipped": false,
+        "plant": "blown-highlight.png",
+        "caught": true,
+        "transcript": ".claude/skills/frame-critic/history/r004-polish-198-halo-transcript-seat3.txt",
+        "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-060ff8bab287747a"
+      },
+      {
+        "seat": 4,
+        "rank": 1,
+        "reference_rank": 2,
+        "above_reference": true,
+        "not_below": true,
+        "build_flagged": true,
+        "shipped": false,
+        "plant": "blown-highlight.png",
+        "caught": true,
+        "transcript": ".claude/skills/frame-critic/history/r004-polish-198-halo-transcript-seat4.txt",
+        "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-1f071df5b7b038b4"
+      },
+      {
+        "seat": 5,
+        "rank": 3,
+        "reference_rank": 2,
+        "above_reference": false,
+        "not_below": true,
+        "build_flagged": true,
+        "shipped": false,
+        "plant": "blown-highlight.png",
+        "caught": true,
+        "transcript": ".claude/skills/frame-critic/history/r004-polish-198-halo-transcript-seat5.txt",
+        "work_dir": "/Users/rafehatfield/.claude/frame-critic/deck-cb6c83822ce88657"
+      }
+    ]
+  },
+  "seat_redraw": null,
+  "item_exit": {
+    "_what": [
+      "THE ITEM'S OWN MEASURED EXIT — required by INSTALL-LATEST (Rafe, 2026-09-08).",
+      "",
+      "A build installs because it DID THE THING IT SET OUT TO DO. The rank test only says",
+      "the doing cost nothing against the seeded reference; this says what was done. Without",
+      "it, 'not worse than the reference' would mean 'not different from it', and a round",
+      "that changed nothing would install as readily as one that fixed something.",
+      "",
+      "Declared here per item, recorded into the verdict, re-checked at the gate. The gate",
+      "refuses a `met` with no measurement behind it."
+    ],
+    "item": "#198 the lamp-core halo, and #183's cap RE-DERIVED after the human gate overturned it (Rafe, 2026-09-09)",
+    "claim": "the halo is the floor losing RELATIVE contrast where the light is strongest, both responsible terms are named by null control and the larger one now carries the stone's own value; and the hero READS LIT — his peak clears the ground he lights while his blown top end is rolled off instead of clipped",
+    "measured": "#198, by null control, as mean|grad| / mean luminance over floor cells, core (0.5-1.2 tiles) against mid-field (2.0-2.8): as shipped 0.677, shoulder nulled 0.819, specular nulled 0.858. The signatures differ and that is the identification — the shoulder lifts variation and mean together (7.72 -> 11.03, 156 -> 173); the specular barely moves variation while dropping the mean a fifth (7.72 -> 8.63, 156 -> 124), light without texture. FIXED on the larger term: the specular scales with the fragment's own value over the family's median albedo, so it multiplies rather than adds. Core relative contrast 0.0572 -> 0.0651 (+13.8%), halo ratio 0.677 -> 0.722, at 0.8% of mean delivered floor value; spec_shade 0.0 reproduces the previous build BYTE-FOR-BYTE (sha256 839fb12f6ff4). #183 RE-DERIVED under the 2026-09-09 ruling, on the hero's own 820 pixels isolated against the null arm, against lit floor either side of him (p50 179.91 / p95 202.50 / max 206.50): the old pair put his peak at 198.70, BELOW the ground, and his body 42 levels under it. The defect it was built for was never that he was bright — it was that 72 of his 820 pixels (8.8%) sat within two levels of his max at 251.82, a flat top the ENGINE CLAMP created because `max(lit) * alpha` exceeds 1.0 before clamping. At knee 0.80 / ceiling 0.88 that plateau falls to 16 pixels, his peak is 246.47 — clear of the ground's peak by 39.97 and its p95 by 43.97 — and his median 183.41 sits 23.09 BELOW the ground's peak, so he reads as a figure standing in his own light rather than a lantern-shaped blob. Separation measured both ways, as the ruling requires. His body's median is under the knee (193 against 204), so the shoulder touches only the top end that was clipping.",
+    "instrument": "null-control arms on the shipped scene; relative local contrast by radial ring, floor cells only; the hero's own pixels isolated against the hero_knee=10.0 null arm, plateau counted as pixels within 2 levels of his max",
+    "met": true
+  },
+  "progress": {
+    "rank_position": 1,
+    "deck_size": 4,
+    "rank_score": 1.0,
+    "bar_position": 4,
+    "approved_position": 2,
+    "approved_frame_in_deck": true,
+    "beats_approved": true,
+    "near_bar": true,
+    "near_bar_slack": 1,
+    "new_best": true,
+    "best_before": 0.6666666666666666,
+    "capture_signature": "02020202020e0f0f12120e131315100e0f121010121012121212110e0d112c2302020202020c100f10100e1313120f0c0e11100f101212111112100e0d10412f02020202020d0f100c0b0e0d0c0c0d0b0d0b0c0d0b0d12110d0d0c0c0d0b0a0a02020202020d0f0f0f101110101112100d0c0d0e0c0c100f0d0e110f0f0e0e0d02020202020b0c0d0c0c0d0c0c0d0d0a0a0a0c101b0d110f0d0e0f0c0a0a0a080202020202020202020202020203030303030815160f14100d0f0d020202020202020202020202020202030303030303040408181e1118130e0f0d02020202020202020202020203030303030405050405050b222217231c15140d0202020202020202020202020303040505050606060707112f2b2329221b190e03020202020202020202030304040405060708080909081036382f332d2318150303020202020202020303040405060708080a090a0a0b1943433745392422190403020202020202020303040506070709090b0b0c0c0b1b404142624a221f1704030302020202020303040405070809090b0c0c0d0d0f1f4f4c4a7462362b1c050303020202020203030c0e11101414181c1d1c1f24253162545b85693f31270e0e0b080602020303041e222c25302f413f3f525350685b59656488543c3330251e1a140f02020203041f222826292b3139354052414a3840495c804e242b211d1c11100c02020304041e292943445b646677a5a29d7f9aa2989287715c4d3f35291c13120202020304222f2a44687d929cbacac5a88abdbd9e80776e6252423e3221131a0405050607212a263e4e576888a2bdbec4bfae92a29089775f53433a31211a1a0b1010112b2f1e1f2d306785adb3b6aeb5bb94878177776a5c5042392e201918050707080818182138446e8c9d96a6a7a2a488796856555353493f342b211915020202020312141f374f616f7c7e8e6b6666655f6e4e454e4c41392d231a1310060506050613181c31414a5460574d414e53565e624e4a46413930241d1510100e100e0d0c0f12151f2f3a4241242c2c4c6162584a42423e362e29211b1210150d0e0a080a09090c18222d31341a2020485753533c423d382c28211d181412150f0f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e12100e100e12141214131620252728292e2f2d2b242424211d1a1714120f121211120d100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d10100c0f0e101211110f0f111614151515151517151513101211100f100e0f0d11100e0c0c0d0b0b11100f0f121112111110111313101213100f0e0d0d0e0f0f221e130f1110100e1010121314131111110f1214121212121011100d0f0f0e0f141d0e0c0c0f100d0f11111213121010120f10120f13121111100f0d100f1110",
+    "moved": {
+      "mad": 0.044921875,
+      "max_cell": 19
+    },
+    "two_strikes_advisory": null,
+    "series": [
+      {
+        "round": 1,
+        "verdict": "FAIL",
+        "rank_position": 2,
+        "deck_size": 4,
+        "rank_score": 0.6666666666666666,
+        "capture_signature": "02020202020e0f0f12120e131315100e0f121010121012121212110e0d112c2302020202020c100f10100e1313120f0c0e11100f101212111112100e0d10412f02020202020d0f100c0b0e0d0c0c0d0b0d0b0c0d0b0d12110d0d0c0c0d0b0a0a02020202020d0f0f0f101110101112100d0c0d0e0c0c100f0d0e110f0f0e0e0d02020202020b0c0d0c0c0d0c0c0d0d0a0a0a0c101b0d110f0d0e0f0c0a0a0a080202020202020202020202020203030303030815160f14100d0f0d020202020202020202020202020202030303030303040408181e1118130e0f0d02020202020202020202020203030303030405050405050b222217231c15140d0202020202020202020202020303040505050606060707112f2b2329221b190e03020202020202020202030304040405060708080909081036382f332d2318150303020202020202020303040405060708080a090a0a0b1943433745392422190403020202020202020303040506070709090b0b0c0c0b1b404142624a221f1704030302020202020303040405070809090b0c0c0d0d0f1f4f4c4a7462362b1c050303020202020203030c0e11101414181c1d1c1f24253162545b85693f31270e0e0b080602020303041e222c25302f413f3f525350685b59656488543c3330251e1a140f02020203041f222826292b3139354052414a3840495c804e242b211d1c11100c02020304041e292943445b646677a5a29a7299a2989287715c4d3f35291c13120202020304222f2a44687d929cbacac5a478babd9e80776e6252423e3221131a0405050607212a263e4e576888a2bdbec4bfae92a29089775f53433a31211a1a0b1010112b2f1e1f2d306785adb3b6aeb5bb94878177776a5c5042392e201918050707080818182138446e8c9d96a6a7a2a488796856555353493f342b211915020202020312141f374f616f7c7e8e6b6666655f6e4e454e4c41392d231a1310060506050613181c31414a5460574d414e53565e624e4a46413930241d1510100e100e0d0c0f12151f2f3a4241242c2c4c6162584a42423e362e29211b1210150d0e0a080a09090c18222d31341a2020485753533c423d382c28211d181412150f0f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e12100e100e12141214131620252728292e2f2d2b242424211d1a1714120f121211120d100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d10100c0f0e101211110f0f111614151515151517151513101211100f100e0f0d11100e0c0c0d0b0b11100f0f121112111110111313101213100f0e0d0d0e0f0f221e130f1110100e1010121314131111110f1214121212121011100d0f0f0e0f141d0e0c0c0f100d0f11111213121010120f10120f13121111100f0d100f1110"
+      },
+      {
+        "round": 2,
+        "verdict": "INSTALL-LATEST",
+        "rank_position": 2,
+        "deck_size": 4,
+        "rank_score": 0.6666666666666666,
+        "capture_signature": "02020202020e0f0f12120e131315100e0f121010121012121212110e0d112c2302020202020c100f10100e1313120f0c0e11100f101212111112100e0d10412f02020202020d0f100c0b0e0d0c0c0d0b0d0b0c0d0b0d12110d0d0c0c0d0b0a0a02020202020d0f0f0f101110101112100d0c0d0e0c0c100f0d0e110f0f0e0e0d02020202020b0c0d0c0c0d0c0c0d0d0a0a0a0c101b0d110f0d0e0f0c0a0a0a080202020202020202020202020203030303030815160f14100d0f0d020202020202020202020202020202030303030303040408181e1118130e0f0d02020202020202020202020203030303030405050405050b222217231c15140d0202020202020202020202020303040505050606060707112f2b2329221b190e03020202020202020202030304040405060708080909081036382f332d2318150303020202020202020303040405060708080a090a0a0b1943433745392422190403020202020202020303040506070709090b0b0c0c0b1b404142624a221f1704030302020202020303040405070809090b0c0c0d0d0f1f4f4c4a7462362b1c050303020202020203030c0e11101414181c1d1c1f24253162545b85693f31270e0e0b080602020303041e222c25302f413f3f525350685b59656488543c3330251e1a140f02020203041f222826292b3139354052414a3840495c804e242b211d1c11100c02020304041e292943445b646677a5a2997199a2989287715c4d3f35291c13120202020304222f2a44687d929cbacac5a477b9bd9e80776e6252423e3221131a0405050607212a263e4e576888a2bdbec4bfae92a29089775f53433a31211a1a0b1010112b2f1e1f2d306785adb3b6aeb5bb94878177776a5c5042392e201918050707080818182138446e8c9d96a6a7a2a488796856555353493f342b211915020202020312141f374f616f7c7e8e6b6666655f6e4e454e4c41392d231a1310060506050613181c31414a5460574d414e53565e624e4a46413930241d1510100e100e0d0c0f12151f2f3a4241242c2c4c6162584a42423e362e29211b1210150d0e0a080a09090c18222d31341a2020485753533c423d382c28211d181412150f0f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e12100e100e12141214131620252728292e2f2d2b242424211d1a1714120f121211120d100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d10100c0f0e101211110f0f111614151515151517151513101211100f100e0f0d11100e0c0c0d0b0b11100f0f121112111110111313101213100f0e0d0d0e0f0f221e130f1110100e1010121314131111110f1214121212121011100d0f0f0e0f141d0e0c0c0f100d0f11111213121010120f10120f13121111100f0d100f1110"
+      },
+      {
+        "round": 3,
+        "verdict": "FAIL",
+        "rank_position": 3,
+        "deck_size": 4,
+        "rank_score": 0.3333333333333333,
+        "capture_signature": "02020202020e0f0f12120e131315100e0f121010121012121212110e0d112c2302020202020c100f10100e1313120f0c0e11100f101212111112100e0d10412f02020202020d0f100c0b0e0d0c0c0d0b0d0b0c0d0b0d12110d0d0c0c0d0b0a0a02020202020d0f0f0f101110101112100d0c0d0e0c0c100f0d0e110f0f0e0e0d02020202020b0c0d0c0c0d0c0c0d0d0a0a0a0c101b0d110f0d0e0f0c0a0a0a080202020202020202020202020203030303030815160f14100d0f0d020202020202020202020202020202030303030303040408181e1118130e0f0d02020202020202020202020203030303030405050405050b222217231c15140d0202020202020202020202020303040505050606060707112f2b2329221b190e03020202020202020202030304040405060708080909081036382f332d2318150303020202020202020303040405060708080a090a0a0b1943433745392422190403020202020202020303040506070709090b0b0c0c0b1b404142624a221f1704030302020202020303040405070809090b0c0c0d0d0f1f4f4c4a7462362b1c050303020202020203030c0e11101414181c1d1c1f24253162545b85693f31270e0e0b080602020303041e222c25302f413f3f525350685b59656488543c3330251e1a140f02020203041f222826292b3139354052414a3840495c804e242b211d1c11100c02020304041e292943445b646677a5a2997199a2989287715c4d3f35291c13120202020304222f2a44687d929cbacac5a477b9bd9e80776e6252423e3221131a0405050607212a263e4e576888a2bdbec4bfae92a29089775f53433a31211a1a0b1010112b2f1e1f2d306785adb3b6aeb5bb94878177776a5c5042392e201918050707080818182138446e8c9d96a6a7a2a488796856555353493f342b211915020202020312141f374f616f7c7e8e6b6666655f6e4e454e4c41392d231a1310060506050613181c31414a5460574d414e53565e624e4a46413930241d1510100e100e0d0c0f12151f2f3a4241242c2c4c6162584a42423e362e29211b1210150d0e0a080a09090c18222d31341a2020485753533c423d382c28211d181412150f0f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e12100e100e12141214131620252728292e2f2d2b242424211d1a1714120f121211120d100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d10100c0f0e101211110f0f111614151515151517151513101211100f100e0f0d11100e0c0c0d0b0b11100f0f121112111110111313101213100f0e0d0d0e0f0f221e130f1110100e1010121314131111110f1214121212121011100d0f0f0e0f141d0e0c0c0f100d0f11111213121010120f10120f13121111100f0d100f1110"
+      },
+      {
+        "round": 4,
+        "verdict": "INSTALL-LATEST",
+        "rank_position": 1,
+        "deck_size": 4,
+        "rank_score": 1.0,
+        "capture_signature": "02020202020e0f0f12120e131315100e0f121010121012121212110e0d112c2302020202020c100f10100e1313120f0c0e11100f101212111112100e0d10412f02020202020d0f100c0b0e0d0c0c0d0b0d0b0c0d0b0d12110d0d0c0c0d0b0a0a02020202020d0f0f0f101110101112100d0c0d0e0c0c100f0d0e110f0f0e0e0d02020202020b0c0d0c0c0d0c0c0d0d0a0a0a0c101b0d110f0d0e0f0c0a0a0a080202020202020202020202020203030303030815160f14100d0f0d020202020202020202020202020202030303030303040408181e1118130e0f0d02020202020202020202020203030303030405050405050b222217231c15140d0202020202020202020202020303040505050606060707112f2b2329221b190e03020202020202020202030304040405060708080909081036382f332d2318150303020202020202020303040405060708080a090a0a0b1943433745392422190403020202020202020303040506070709090b0b0c0c0b1b404142624a221f1704030302020202020303040405070809090b0c0c0d0d0f1f4f4c4a7462362b1c050303020202020203030c0e11101414181c1d1c1f24253162545b85693f31270e0e0b080602020303041e222c25302f413f3f525350685b59656488543c3330251e1a140f02020203041f222826292b3139354052414a3840495c804e242b211d1c11100c02020304041e292943445b646677a5a29d7f9aa2989287715c4d3f35291c13120202020304222f2a44687d929cbacac5a88abdbd9e80776e6252423e3221131a0405050607212a263e4e576888a2bdbec4bfae92a29089775f53433a31211a1a0b1010112b2f1e1f2d306785adb3b6aeb5bb94878177776a5c5042392e201918050707080818182138446e8c9d96a6a7a2a488796856555353493f342b211915020202020312141f374f616f7c7e8e6b6666655f6e4e454e4c41392d231a1310060506050613181c31414a5460574d414e53565e624e4a46413930241d1510100e100e0d0c0f12151f2f3a4241242c2c4c6162584a42423e362e29211b1210150d0e0a080a09090c18222d31341a2020485753533c423d382c28211d181412150f0f0a0c0d0d10141b1e20242c292c2c2d3033362a342f2b251f1b181412140e12100e100e12141214131620252728292e2f2d2b242424211d1a1714120f121211120d100e101210121213151e1a1e1e1f1d1c1e1c1a181416161212120f0f0d10100c0f0e101211110f0f111614151515151517151513101211100f100e0f0d11100e0c0c0d0b0b11100f0f121112111110111313101213100f0e0d0d0e0f0f221e130f1110100e1010121314131111110f1214121212121011100d0f0f0e0f141d0e0c0c0f100d0f11111213121010120f10120f13121111100f0d100f1110"
+      }
+    ],
+    "guards": {
+      "stall_rounds": 3,
+      "round_ceiling": 15,
+      "no_change_mad": 0.25,
+      "no_change_max": 4,
+      "sig_grid": 32,
+      "judge_misses": 2,
+      "flip_same": 0.6
+    }
+  },
+  "transcript": ".claude/skills/frame-critic/history/r004-polish-198-halo-transcript-seat1.txt",
+  "law": "LOOP-PROCESS: an art round is judged by eyes on delivered frames. The plant must land worst-or-flagged; a passed plant voids the round and its findings are not read. The guards measure progress — rank in the deck — never rounds elapsed.",
+  "dispositions": [
+    {
+      "state": "ROUTED-ALREADY",
+      "lane": "wall",
+      "item": "Redraw the floor and wall texture at the sprite's edge hardness. Every stone edge, joint and chip should be a hard pixel transition, not a 3-4px blur. As it stands the environment and the character are two different media in one frame.",
+      "cites": "#194",
+      "measured": "#194's item 5, in its own words: 'Sprite/background edge-hardness mismatch ... The sprite's own edges against the floor's pixel resolution. This is source art, not a light response, so it is outside what #183's shader term can reach.' Same observation, from a seat that had not seen the issue."
+    },
+    {
+      "state": "ROUTED-ALREADY",
+      "lane": "palette",
+      "item": "Bring the environment palette and the sprite palette into one ramp. The sprite's cyan and saturated orange appear nowhere else in the image; either seed those hues into the environment or desaturate the sprite into the brown/tan range.",
+      "cites": "S5.1",
+      "measured": "§5.1 rules exactly this - ONE palette governs the whole game, every opaque pixel an exact bible hex - and its VALUES are still marked PLACEHOLDER, with the derivation not landed. CLAUDE.md: a PLACEHOLDER is not law and is not usable as a gate; a number you need that is marked PLACEHOLDER is a finding to report, not a gap to fill with a guess. So the sprite and the environment are on different regimes BY CONSTRUCTION until §5.1 derives - the environment on the family's measured value ladder, the sprite on its own source art - and no build can close that gap without the derivation. The seat has independently re-reported the clause's own open state."
+    },
+    {
+      "state": "ROUTED-ALREADY",
+      "lane": "floor",
+      "item": "The wandering 1px black cracks - the run from (250,530) through (300,620) to (420,760), and the arc from (555,620) to (750,700) - are uniform width, pass over the box at (310,645) instead of behind it, and cross paving joints without deviating.",
+      "cites": "#194",
+      "measured": "#194's item 2 is this: 'Floor cracks: light them and break them at the joints' - and it records that the first half is already done while 'the live half is break them at the joints, and that is §8.3.1 territory'. The seat has found the live half unaided. The 'box at (310,645)' it passes over is #193's patch, which is not a box: #193 measured a single connected crack component running x 240->429 straight through a run of pale spanning ashlar stones."
+    },
+    {
+      "state": "ROUTED-ALREADY",
+      "lane": "hero",
+      "item": "The figure carries a sword and a round shield and no light. The light pool has no source in the picture. Put a torch or lantern in the sprite's hand and centre the falloff on it.",
+      "cites": "S13.4.1",
+      "ruling": "hooded lamp + ambient floor -> refused §13.4.1. - Rafe, 2026-09-07. §6.2 rules the player IS the lamp; a seat is a proxy for the gate, not a vote against it.",
+      "measured": "THE SAME REQUEST, ALREADY RULED, now from a second independent seat a round apart. r005-combined carried it verbatim - 'Put a hooded lamp in the shield hand or hung at the belt, and move the light origin to the lamp' - and it was refused with the ruling quoted above. Recorded rather than re-argued: two seats reaching the same request independently is evidence the picture invites it, and it is still not a vote against §6.2."
+    },
+    {
+      "state": "ROUTED-ALREADY",
+      "lane": "floor",
+      "item": "Nothing in the frame casts a shadow except the wall base. Give the box at (310,645) and the pin at (358,600) directional contact shadows pointing away from the figure.",
+      "cites": "#193",
+      "measured": "The 'box at (310,645)' is #193's patch to the pixel, and this is the SIXTH independent seat to name it - as a box here, as an alcove in r002, as a shadowless block in r004 of the previous lane, each describing it differently, which is #193's own finding: it reads 'as one unresolved mass'. There is no box to shadow. #193 measured it as a run of pale spanning ashlar stones, byte-identical across #185's face-placement fix, and its exit is that the run reads AS MASONRY - explicitly not by giving it a top face or a contact shadow, which would make it the object it is being mistaken for."
+    }
+  ]
+}
