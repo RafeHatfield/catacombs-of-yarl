@@ -180,7 +180,12 @@ public sealed class ReviewLighting
     private float _flickerT;
     private string _occluderMode = "none";
 
-    public const float MinSoftness = 0f, MaxSoftness = 8f, SoftnessStep = 0.5f;
+    // SOFTNESS — RAISED AT THE SHADOW WALK (Rafe, 2026-09-13): "8.0 is the knob's ceiling and
+    // shadow edges are still traceable lines ... a lantern doesn't throw searchlights (§1:
+    // nothing is staged)." 8 was a builder's guess at the travel; Godot's shadow_filter_smooth
+    // runs to 64, PCF13 is already the widest kernel. The ceiling is the engine's, the step is
+    // coarser so the ladder is walkable, and the default moves to Rafe's mark.
+    public const float MinSoftness = 0f, MaxSoftness = 64f, SoftnessStep = 2f;
     public const float MinDarkness = 0f, MaxDarkness = 1f, DarknessStep = 0.1f;
 
     private static OccluderPolygon2D.CullModeEnum ParseCull(string mode) => mode switch
@@ -379,8 +384,17 @@ public sealed class ReviewLighting
     {
         foreach (var l in _lights)
         {
+            // THE LEAK IS THE AMBIENT'S HUE, NOT NEUTRAL GREY — flip 2 of the shadow walk (Rafe,
+            // 2026-09-13): "dropping darkness below 0.8 fills shadows with grey lamp-leak, not
+            // dark. Tint the leak toward the ruled ambient hue (§6.2), so lowering darkness lets
+            // the ambient dark through; shadow = ambient." rgb is what leaks (measured), so the
+            // leak carries the ambient's chroma at the ambient's own channel ratios, scaled to
+            // the leak amount: a shadow that fills in fills in with the room's dark.
             float leak = 1f - _shadowDarkness;
-            l.ShadowColor = new Color(leak, leak, leak, 1f);   // see ShadowDarkness: rgb leaks, alpha inert
+            var amb = _p.Ambient;
+            float peak = Mathf.Max(amb.R, Mathf.Max(amb.G, amb.B));
+            var hue = peak > 0f ? new Color(amb.R / peak, amb.G / peak, amb.B / peak) : new Color(1, 1, 1);
+            l.ShadowColor = new Color(leak * hue.R, leak * hue.G, leak * hue.B, 1f);   // alpha inert
             if (_shadowSoftness <= 0f)
             {
                 l.ShadowFilter = Light2D.ShadowFilterEnum.None;
@@ -425,7 +439,7 @@ public sealed class ReviewLighting
         set { _shadowsEnabled = value; foreach (var l in _lights) l.ShadowEnabled = value; }
     }
 
-    /// <summary>§9.2 vs the tended exception: present, default OFF, Rafe rules at the gate.</summary>
+    /// <summary>§9.2 vs the tended exception — RULED ON (Rafe, shadow walk, 2026-09-13).</summary>
     public bool FireFlicker
     {
         get => _fireFlicker;
@@ -438,6 +452,20 @@ public sealed class ReviewLighting
     }
 
     public int FireLightCount => _fireLights.Count;
+
+    /// <summary>The fire's energy, live — flip 3 of the shadow walk (#205): "it needs real radius
+    /// and energy so the barricade beside it throws a shadow away from it." Scales every fire
+    /// light's base; the flicker rides on top. Rafe's to set; PLACEHOLDER until he does.</summary>
+    public const float MinFire = 0f, MaxFire = 4f, FireStep = 0.1f;
+    public float FireEnergy
+    {
+        get => _fireLights.Count > 0 ? (float)_fireLights[0].GetMeta("base_energy") : 0f;
+        set
+        {
+            float v = Mathf.Clamp(value, MinFire, MaxFire);
+            foreach (var l in _fireLights) { l.SetMeta("base_energy", v); if (!_fireFlicker) l.Energy = v; }
+        }
+    }
 
     /// <summary>Per frame. A minimal, low-frequency intensity variance — two slow sines, ±8%.</summary>
     public void Tick(double delta)
@@ -634,5 +662,5 @@ public sealed class ReviewLighting
            $"energy={_p.Energy:0.###} " +
            $"shadows={(_shadowsEnabled ? "on" : "off")}({_occluderMode}) softness={_shadowSoftness:0.#} " +
            $"darkness={_shadowDarkness:0.#} " +
-           $"fire_lights={_fireLights.Count} flicker={(_fireFlicker ? "on" : "off")}";
+           $"fire_lights={_fireLights.Count} fire_energy={FireEnergy:0.##} flicker={(_fireFlicker ? "on" : "off")}";
 }

@@ -272,18 +272,19 @@ fi
 # line. Omit them and the build has NO occluders (the marker's default), which is every build
 # before the round; a shadow build must say so, and the engine echoes what it got.
 if [ -n "${TIER1_OCCLUDERS:-}" ]; then
-  python3 - "$MARKER" "$TIER1_OCCLUDERS" "${TIER1_SHADOW_SOFTNESS:-1.0}" "${TIER1_FIRE_FLICKER:-0}" <<'PY'
+  python3 - "$MARKER" "$TIER1_OCCLUDERS" "${TIER1_SHADOW_SOFTNESS:-8.0}" "${TIER1_FIRE_FLICKER:-1}" "${TIER1_SHADOW_DARKNESS:-0.8}" <<'PY'
 import json, sys
-path, occ, soft, flick = sys.argv[1:5]
+path, occ, soft, flick, dark = sys.argv[1:6]
 with open(path) as f:
     d = json.load(f)
 d["occluders"] = occ
 d["shadowSoftness"] = float(soft)
+d["shadowDarkness"] = float(dark)
 d["fireFlicker"] = flick == "1"
 with open(path, "w") as f:
     json.dump(d, f, indent=2)
 PY
-  echo "== cast shadows: occluders=$TIER1_OCCLUDERS softness=${TIER1_SHADOW_SOFTNESS:-1.0} flicker=${TIER1_FIRE_FLICKER:-0}"
+  echo "== cast shadows: occluders=$TIER1_OCCLUDERS softness=${TIER1_SHADOW_SOFTNESS:-8.0} darkness=${TIER1_SHADOW_DARKNESS:-0.8} flicker=${TIER1_FIRE_FLICKER:-1}"
 fi
 
 # STAMP THE BUILD'S OWN IDENTITY INTO THE MARKER.

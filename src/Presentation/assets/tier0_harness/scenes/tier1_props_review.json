@@ -89,10 +89,10 @@
    "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound."
   },
   {
-   "x": 11,
-   "y": 14,
+   "x": 3,
+   "y": 18,
    "expect": "dark",
-   "why": "past the lamp's reach; the room must have an outside",
+   "why": "past BOTH lights' reach; the room must have an outside. ⚠ MOVED from (11,14) at the shadow walk's flip 3 (Rafe, 2026-09-13: the fire needs real radius and energy), bound UNTOUCHED: (11,14) is 2.2 tiles from the orc fire at (9,13), and a fire with reach lights it — 0.2016 delivered. A 'dark' point written for a one-lamp room measures the second lamp once there is one. (3,18) is 6.7 tiles from the carried lamp and 7.8 from the fire, and inside the view (12,19 was not).",
    "bound_lum": 0.08367,
    "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound."
   },
@@ -157,9 +157,9 @@
    "shape": "round",
    "light": {
     "color": "ff8a3c",
-    "energy": 0.9,
-    "radiusTiles": 2.5,
-    "_what": "B-PROP-003: the sprite receives, the ENGINE emits (#205). Warm, static, its own shadows. Values PLACEHOLDER until Rafe's walk; flicker is a rig-panel toggle, default OFF (§9.2)."
+    "energy": 1.6,
+    "radiusTiles": 4.0,
+    "_what": "B-PROP-003: the sprite receives, the ENGINE emits (#205). Warm, static, its own shadows. RAISED at the shadow walk (Rafe, 2026-09-13): 'the fire glows but doesn't light its surroundings or cast; it needs real radius and energy so the barricade beside it throws a shadow away from it' — 0.9 / 2.5 tiles -> 1.6 / 4.0 tiles, and the rig panel's `fire` row sets energy live. Values PLACEHOLDER until Rafe marks them; flicker is a panel toggle, default OFF (§9.2), unruled."
    }
   }
  ]

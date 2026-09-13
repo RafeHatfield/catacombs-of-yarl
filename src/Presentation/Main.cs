@@ -2871,19 +2871,24 @@ public partial class Main : Node
                 softArg != null && float.TryParse(softArg, System.Globalization.NumberStyles.Float,
                                                   System.Globalization.CultureInfo.InvariantCulture,
                                                   out float sf) ? sf
-                : marker?.ShadowSoftness ?? 1.0f;   // the measured middle: 0 is hard, 2 already ~10 native px
+                : marker?.ShadowSoftness ?? 8.0f;   // Rafe's shadow-walk mark (2026-09-13), on a ladder that now runs to 64
             string? dkArg = ReadStringArg("--shadow-darkness");
             if (dkArg != null && float.TryParse(dkArg, System.Globalization.NumberStyles.Float,
                                                 System.Globalization.CultureInfo.InvariantCulture,
                                                 out float dk))
                 _reviewLighting.ShadowDarkness = dk;
+            else
+                _reviewLighting.ShadowDarkness = marker?.ShadowDarkness ?? 0.8f;   // Rafe's mark
             string? flArg = ReadStringArg("--fire-flicker");
-            _reviewLighting.FireFlicker = flArg != null ? flArg == "1" : (marker?.FireFlicker ?? false);
+            // RULED ON (Rafe, shadow walk, 2026-09-13): the tended exception over §9.2 — the orc fire
+            // is the one thing in the world that moves. Default on; the panel row can still show
+            // the still state for comparison.
+            _reviewLighting.FireFlicker = flArg != null ? flArg == "1" : (marker?.FireFlicker ?? true);
             Report($"[Tier1] shadows: mode={occl} wall_occluders={_reviewLighting.OccluderCount} " +
                    $"prop_occluders={_reviewLighting.PropOccluderCount} fire_lights={fires} " +
                    $"softness={_reviewLighting.ShadowSoftness:0.#} " +
                    $"flicker={(_reviewLighting.FireFlicker ? "on" : "off")} " +
-                   "(§12.1a occlusion; §3.2 footprints; #205 the fire emits; flicker default OFF — §9.2, Rafe rules)");
+                   "(§12.1a occlusion; §3.2 footprints; #205 the fire emits; flicker RULED ON — Rafe, 2026-09-13)");
             _rigPanel?.AddShadowRows();
         }
         else

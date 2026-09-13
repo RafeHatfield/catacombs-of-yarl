@@ -2299,6 +2299,23 @@ is closed), **unexcavated 27.35 → 12.50** — the same rock at ambient, where 
 darker *material*. The interim fallback below is therefore retired for every capture this round
 and after; it stays in the record as the ruling it was.
 
+**THE SHADOW WALK (Rafe, on the handset, 2026-09-13): *"Props sit on the floor, the room has an
+outside — the round's two questions are answered yes."*** Marks: darkness 0.8, softness 8.0 (the
+knob's ceiling), void 1/3; **flicker RULED ON** — the tended exception over §9.2, the orc fire
+is the one thing in the world that moves. Provisional reference seeded from the walked frame,
+re-marked after the flips. Three flips, all engine, and each is the §13.4-shaped kind — the
+instrument was fine, the travel was a builder's guess:
+
+1. *"8.0 is the knob's ceiling and shadow edges are still traceable lines ... a lantern doesn't
+   throw searchlights (§1: nothing is staged)."* The ladder now runs to the engine's 64
+   (PCF13 was already the widest kernel); 24 is soft, 48 melts the edge.
+2. *"Dropping darkness below 0.8 fills shadows with grey lamp-leak, not dark. Tint the leak
+   toward the ruled ambient hue (§6.2)."* The leak now carries the ambient's channel ratios:
+   at darkness 0.5 the shadowed floor reads rgb 72/72/93, not grey.
+3. *"The fire glows but doesn't light its surroundings or cast; it needs real radius and
+   energy."* 0.9 / 2.5 tiles → 1.6 / 4.0 tiles, a `fire` row on the panel, values PLACEHOLDER
+   until marked. A "dark" probe 2.2 tiles from the fire had to move — a real fire lights it.
+
 **How, since the obvious mechanism was measured and did not survive.** A 2D occluder cannot
 say *light this cell's own surface and stop behind it*: a per-cell quad whose light-facing edges
 cast shadows its own face (r29), and with those edges culled the cells of a wall row shadow each
