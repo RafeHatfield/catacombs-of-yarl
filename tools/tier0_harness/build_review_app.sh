@@ -251,6 +251,22 @@ with open(path, "w") as f:
 PY
   echo "== void candidate (STARTING POSITION ONLY, the panel switches it): $TIER1_VOID"
 fi
+# TIER1_VOID_RING — the void ring the handset runs. The template carries the 2026-09-05 interim
+# fallback (1); a shadow build runs 0, because the void is dark by occlusion now (§12.1a) and a
+# ring under it would be the outline the clause forbids, laid twice.
+if [ -n "${TIER1_VOID_RING:-}" ]; then
+  python3 - "$MARKER" "$TIER1_VOID_RING" <<'PY'
+import json, sys
+path, ring = sys.argv[1], sys.argv[2]
+with open(path) as f:
+    d = json.load(f)
+d["voidRing"] = int(ring)
+with open(path, "w") as f:
+    json.dump(d, f, indent=2)
+PY
+  echo "== void ring: $TIER1_VOID_RING (marker; the manifest's ruled 0 is what a shadow build runs)"
+fi
+
 # TIER1_OCCLUDERS / TIER1_SHADOW_SOFTNESS / TIER1_FIRE_FLICKER — the cast-shadows round's knobs,
 # mirroring --occluders / --shadow-softness / --fire-flicker for a handset that has no command
 # line. Omit them and the build has NO occluders (the marker's default), which is every build

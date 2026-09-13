@@ -2714,6 +2714,31 @@ Not law, and not banked speculation either: each line below was paid for by a ru
 to the audit that paid. They are here rather than in the tooling notes because each one closes a
 question a future session would otherwise re-open with generations.
 
+- **A 2D occluder cannot light its own surface and stop behind it.** Measured (cast-shadows
+  round, 2026-09-12): a per-cell quad whose light-facing edges cast shadows its own face
+  (r29, 37.90 → 5.51); with those edges culled, cells in a wall row shadow each other obliquely
+  through their far edges (face 40.16 → 28.47 / 37.19, cap 52.92 → 30.05 / 38.00), and a far
+  edge cannot darken a thick mass whose far side is rock. **The mechanism that survives: the
+  first surface the lamp meets is exempt by light mask (ring-1 wall cells, every prop sprite),
+  everything behind it receives, every edge casts.** Face 40.16 → 39.61, cap unchanged,
+  unexcavated 27.35 → 12.50, sprites Δ 0.00. This replaces the "occluder behind the reveal"
+  §12.1a first imagined. `ReviewLighting`, `Tier1BoundaryWall`.
+- **`Light2D.ShadowColor`: RGB is the fraction of the lamp that leaks into shadow; alpha is
+  inert.** 0.0 / 0.5 / 1.0 alpha delivered the identical shadowed value; the ambient-hue RGB
+  leaked 15% and read as a wash. So "the shadow is the ambient" is black RGB (the lamp
+  contributes nothing; the `CanvasModulate` hue remains), and a darkness knob is `rgb = 1 − d`.
+  A fill light is not a darkness knob — additive, it lifted the lit floor too (62.9 → 69.7).
+  An emitter inside its own occluder polygon shadows the whole room from itself: emitters get
+  no occluder.
+- **The SE holds 60 fps with 216 wall occluders, 3 prop occluders and two shadow-casting
+  lights** — every steady 240-frame window 16.67 ms mean / p95 / max, identical to the build
+  without occluders (`tools/cast_shadows/evidence/perf_*_boot.log`). Vsync-locked: the frame is
+  *met*; headroom is unmeasured and a GPU-time probe would be needed to say how much.
+- **A control lit differently from the build measures exposure, not craft.** Round 1 of
+  `art/cast-shadows`: three of five seats ranked unshadowed culls above a shadowed room. RULED
+  (Rafe, 2026-09-12): not a broken judge — a seat-blind axis (§13.2); **plants and reference
+  are captured under the deck's lighting regime — scene, rig, and shadow state.** The judge
+  refuses an off-regime plant or reference (`frame_critic.pick_plant`, `regime`).
 - **Generation cannot be told a projection.** Pro, given a projection template as a labelled
   reference AND the projection in the prompt, returned its own ¾ view receding right on
   **16/16** chests against a left template, and **16/16** straight-on barrels. img2img holds an

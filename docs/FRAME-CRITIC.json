@@ -125,7 +125,8 @@
       "verdict": "SERVICEABLE — \"still pretty good\"",
       "build": "144b0234 (round 5, PASS-WITH-ROUTED-ITEMS, review=GATED)",
       "why": "Rafe-walked replacement, and five blind seats put the new frame above it (1 of 4 against the old reference at 2, zero seats ranking the new one below)."
-    }
+    },
+    "regime": "unshadowed"
   },
   "_approved_capture_note": [
     "STILL NULL, AND NOW FOR A SECOND REASON ON TOP OF THE FIRST.",
@@ -208,5 +209,9 @@
   ],
   "_capture_note_shadows": [
     "CAST-SHADOWS ROUND: --occluders all, softness 1.0 (the measured middle), and VOID RING 0 — the void is dark by occlusion now (§12.1a), so the flat-dark fallback the interim ruling licensed is not run. Every earlier combined capture ran ring 1; this is the round that retires it."
+  ],
+  "regime": "shadowed",
+  "_regime": [
+    "The deck's LIGHTING REGIME (LAW, Rafe, 2026-09-12): the build, the plants and the reference are all captured under it — the props scene, the ratified rig, occluders `all`, void ring 0. `shadowed` names that state. Until the morgue holds shadowed plants and Rafe's walk has seeded a shadowed reference, this deck refuses to run — by design; the shadows gate is his walk (§1.2.2a)."
   ]
 }

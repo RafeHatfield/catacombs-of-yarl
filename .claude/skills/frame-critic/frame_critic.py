@@ -232,10 +232,13 @@ def judge_cleared(lane, tail, morgue=None):
         return set()                      # a malformed marker clears nothing, by accident or not
 
     retired = set()
+    regimes = {}
     if morgue:
         for e in morgue.get("entries", []):
             if e.get("retired_as_control"):
                 retired.add(e["file"])
+            if e.get("regime"):
+                regimes[e["file"]] = e["regime"]
 
     out = set()
     for entry in (m if isinstance(m, list) else [m]):
@@ -264,6 +267,19 @@ def judge_cleared(lane, tail, morgue=None):
         # outcome then decides: if it misses, the seat-level term raises broken-judge on the
         # spot, which is the check this clause hands the decision to rather than pre-empting.
         supersedes = (entry.get("supersedes") or "").strip()
+        # ── A SEAT-BLIND AXIS IS NOT A BROKEN JUDGE — RULED (Rafe, 2026-09-12) ─────────────
+        #
+        #     "not a broken judge — a seat-blind axis (§13.2). Seats compared a shadowed build
+        #      to unshadowed plants and reference and measured exposure, not craft. ... New law:
+        #      plants and reference are captured under the deck's lighting regime — scene, rig,
+        #      AND shadow state."
+        #
+        # A marker naming `deck_regime` excuses a missed plant whose MORGUE TAG carries a
+        # different regime: the control was captured under other light, so the seat was never
+        # asked the question. Re-derived from the morgue, not asserted — a marker cannot excuse
+        # a plant that is tagged for the deck's own regime, and an untagged plant is never
+        # excused this way.
+        deck_regime = (entry.get("deck_regime") or "").strip()
         ok = True
         for v in tail:
             if v.get("round") not in covered:
@@ -274,8 +290,11 @@ def judge_cleared(lane, tail, morgue=None):
             for i, seat in enumerate((v.get("panel") or {}).get("per_seat") or [], 1):
                 if seat.get("caught") or i in redrawn_ok:
                     continue
-                if (seat.get("plant") or "") in retired:
+                pf = seat.get("plant") or ""
+                if pf in retired:
                     continue
+                if deck_regime and regimes.get(pf) and regimes[pf] != deck_regime:
+                    continue            # off-regime control: a deck fault, not a seat's
                 live += 1
             if live == 0:
                 continue
@@ -808,7 +827,7 @@ def crop_to(path, box, dest):
     return im.size
 
 
-def pick_plant(surface, morgue, exclude=(), axis=None, subject=None):
+def pick_plant(surface, morgue, exclude=(), axis=None, subject=None, regime=None):
     """Candidates for this round's plant, narrowed to the AXIS and the SUBJECT the deck asks about.
 
     LAW (Rafe, 2026-09-12): *"a plant matches the deck's axis AND subject (wall plants for wall
@@ -861,6 +880,19 @@ def pick_plant(surface, morgue, exclude=(), axis=None, subject=None):
     # round rather than none. An entry is retired by saying so, in a field whose name means it.
     entries = [e for e in morgue["entries"]
                if serves(e) and e["file"] not in exclude and not e.get("retired_as_control")]
+    if regime:
+        # LAW (Rafe, 2026-09-12): plants are captured under the deck's lighting regime — scene,
+        # rig, AND shadow state. A plant captured under other light is not a control for this
+        # deck; the round refuses rather than dealing it, until the morgue holds one.
+        same = [e for e in entries if (e.get("regime") or "") == regime]
+        if not same:
+            raise SystemExit(
+                "REFUSING: no plant in the morgue is captured under the deck's lighting regime "
+                "%r (surface %r). LAW (Rafe, 2026-09-12): plants and reference are captured "
+                "under the deck's regime — scene, rig, AND shadow state. Re-capture the "
+                "object/wall plants under it before any round runs on this lane.\n  %s"
+                % (regime, surface, os.path.join(MORGUE, "MORGUE.json")))
+        entries = same
     if subject:
         # a string or a list: a deck that judges walls AND objects in one room draws from both
         wanted = [subject] if isinstance(subject, str) else list(subject)
@@ -1418,7 +1450,16 @@ def main():
     # the seat would be shown the same picture twice and the control would be judging itself.
     exclude = (os.path.basename(a.build_frame),) if a.build_frame else ()
     candidates = pick_plant(cfg["surface"], morgue, exclude=exclude, axis=cfg.get("axis"),
-                            subject=cfg.get("subject"))
+                            subject=cfg.get("subject"), regime=cfg.get("regime"))
+    # THE REFERENCE TOO (same law): a reference captured under other light measures exposure,
+    # not craft, and the deck refuses rather than compares.
+    _ap = cfg.get("approved_capture") or {}
+    if cfg.get("regime") and _ap and (_ap.get("regime") or "") != cfg["regime"]:
+        raise SystemExit(
+            "REFUSING: the approved reference (%s) is captured under regime %r and this deck's "
+            "regime is %r. LAW (Rafe, 2026-09-12): the reference is captured under the deck's "
+            "lighting regime. Rafe's walk seeds the regime's reference; there is no round before it."
+            % (_ap.get("path"), _ap.get("regime") or "untagged", cfg["regime"]))
 
     # ══════════════════════════════════════════════════════════════════════════════════════════
     # MORE THAN ONE SEAT — RULED (Rafe, 2026-09-08).

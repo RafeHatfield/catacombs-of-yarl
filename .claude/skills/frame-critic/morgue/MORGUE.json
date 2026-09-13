@@ -54,7 +54,8 @@
       "subject": [
         "floor"
       ],
-      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words"
+      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words",
+      "regime": "unshadowed"
     },
     {
       "file": "washed-slab-lane.png",
@@ -72,7 +73,8 @@
       "subject": [
         "floor"
       ],
-      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words"
+      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words",
+      "regime": "unshadowed"
     },
     {
       "file": "tile-quantized-wear.png",
@@ -90,7 +92,8 @@
       "subject": [
         "floor"
       ],
-      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words"
+      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words",
+      "regime": "unshadowed"
     },
     {
       "file": "grey-walls.png",
@@ -111,7 +114,8 @@
       "subject": [
         "walls"
       ],
-      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words"
+      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words",
+      "regime": "unshadowed"
     },
     {
       "file": "cement-cap.png",
@@ -132,7 +136,8 @@
       "subject": [
         "walls"
       ],
-      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words"
+      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words",
+      "regime": "unshadowed"
     },
     {
       "file": "blown-highlight.png",
@@ -169,7 +174,8 @@
         "room",
         "figure"
       ],
-      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words"
+      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words",
+      "regime": "unshadowed"
     },
     {
       "file": "replaced-tiles-lane.png",
@@ -203,7 +209,8 @@
       "subject": [
         "floor"
       ],
-      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words"
+      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words",
+      "regime": "unshadowed"
     },
     {
       "file": "lamp-clip-figure.png",
@@ -255,7 +262,8 @@
         "room",
         "figure"
       ],
-      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words"
+      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words",
+      "regime": "unshadowed"
     },
     {
       "file": "crushed-midband.png",
@@ -316,7 +324,8 @@
         "walls",
         "room"
       ],
-      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words"
+      "_subject_note": "tagged 2026-09-12 under the axis-AND-subject law; the subject is what the cull was ABOUT, read from Rafe's words",
+      "regime": "unshadowed"
     },
     {
       "file": "props-unrecognizable.png",
@@ -335,7 +344,8 @@
       "verbatim": "small, unrecognizable except the fire; colouring quite good",
       "defect": "THE OBJECTS CANNOT BE NAMED. Marker content 10x15 px in a 32 px cell — a fifth of the cell, twenty device pixels across; three cold seats offered 'a bottle or vial', 'a lantern or candle', 'an orange chest or crate' for the marker and 'sticks' for the barricade. Craft is not the defect (the colouring was approved in kind); SIZE is, and a seat that would ship it is soft on the one clause §12 has — names itself at 1x. This is the OBJECT construction plant: it is deliberately fine on value and chroma so a round judged on object craft cannot pass by fixing colour.",
       "provenance": "bible §12.2 (RULED 2026-09-10); cold_naming.py --prove calibrates against this frame and must MISS the marker and barricade on it.",
-      "seeded": "Rafe, ruling 2026-09-12: 'Seed two object plants from Rafe's culls'"
+      "seeded": "Rafe, ruling 2026-09-12: 'Seed two object plants from Rafe's culls'",
+      "regime": "unshadowed"
     },
     {
       "file": "objects-isometric.png",
@@ -354,7 +364,11 @@
       "verbatim": "iso is clearly not a fit",
       "defect": "THE OBJECTS ARE AT THE WRONG PROJECTION FOR THE FLOOR. Five archetypes drawn three-plane/dimetric on an orthogonal ground: they read as objects but do not sit on the floor; the diamond top fights the square grid the room is built on (§3). Materials and lighting are competent — the frame is wrong about how things stand in space, which is the object-construction question exactly, and a seat that would ship it over a §3.2-conformant build is soft on that question.",
       "provenance": "docs/OBJECT-PROJECTION-RULING.md round one and Rafe's round-one verdict; the ruled projection is §3.2 (cabinet oblique, right, ½).",
-      "seeded": "Rafe, ruling 2026-09-12: 'Seed two object plants from Rafe's culls'"
+      "seeded": "Rafe, ruling 2026-09-12: 'Seed two object plants from Rafe's culls'",
+      "regime": "unshadowed"
     }
+  ],
+  "_regime": [
+    "LAW (Rafe, 2026-09-12): a plant is captured under the deck's LIGHTING REGIME — scene, rig, AND shadow state. Every entry here was captured before the cast-shadows round: `unshadowed`. A shadowed deck refuses them and needs plants re-captured with occluders live. A control lit differently from the build measures exposure, not craft (round 1 of art/cast-shadows: three seats ranked unshadowed culls above a shadowed room)."
   ]
 }
