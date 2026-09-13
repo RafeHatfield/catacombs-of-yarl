@@ -1,0 +1,48 @@
+RANK: 3 > 4 > 2 > 1
+
+BEST: 3
+BEST_WHY: The flagstone floor is the one piece of real craft in the set. Stones vary in width and height along a single course (the run directly below the figure, x≈190–560, y≈500–560, has stones roughly 30, 60, 45, 90 px wide with joints that step, not align), so it reads as laid rather than stamped. The wall base band (y≈425–445, spanning the whole room width) has short dark vertical marks at uneven spacing — they read as driven pins or lashing posts, which is the fiction's "rope and pins" repair without being announced. Light falloff is one continuous gradient from the figure out to the room corners with no banding, and the wall tops in the dark region at the top of the frame still carry faint texture rather than dropping to flat black. With nothing placed on the floor, nothing in the frame is at the wrong resolution or the wrong brightness.
+
+WORST: 1
+WORST_WHY: The pool in the top-right (x≈249–376, y≈0–190) is a rectangle of flat hexagonal fill butting directly against the dirt floor along a perfectly vertical seam at x=249 and a perfectly horizontal one at y=190. No bank, no edge tile, no darkening at the margin. That is a placeholder water fill. The dirt floor is a single tile repeated with its faint 16-px cell seams visible everywhere and the same red splotch cluster reappearing on a fixed cadence. The two crates (x≈60–96, y≈10–45 and y≈50–85) and the two barrels (x≈115–145 and x≈160–190, y≈195–215) are pixel-identical stamps including their shadows. The dirt-to-grey-stone boundary at x≈50 and y≈190 is also a hard straight line. There is no light source and no falloff at all; every surface sits at the same value across the whole frame.
+
+FLAGGED: 1, 2, 4
+
+SHIP: NONE
+
+FLIP 1:
+- Give the pool an edge: a 1–2 px darker bank tile along x=249 and y=190 with irregular indents into the dirt; break the vertical and horizontal seams so no run is straight for more than ~24 px.
+- Replace the single dirt tile with at least four variants and randomise placement; remove the visible 16-px cell seams in the dirt texture.
+- Break the two crates and two barrels apart: flip one, offset one by 2–3 px, alter the shadow on at least one so no two props are identical stamps.
+- Add an edge tile between dirt and grey flagstone at x≈50 and y≈190; the current hard straight line reads as two unrelated layers.
+- Introduce light falloff from the figure; the grey floor at bottom-left is the same value as the grey floor at top-right 300 px away.
+- The lily pads (x≈300–340, y≈95–125) are flat hard-edged blobs with a star glyph; give them a darker rim and a partial-submersion edge or remove them.
+- The little blue flecks scattered on the dirt (e.g. x≈120, y≈40; x≈180, y≈155) read as noise, not as anything in the fiction; remove or make them legible objects.
+
+FLIP 2:
+- The three red-orange crossed-stick props (x≈265–295, y≈600–625; x≈390–425, y≈595–635; x≈515–550, y≈600–625) are at a finer pixel scale than the figure and are fully saturated regardless of distance from the light; redraw at the figure's pixel scale and run them through the same falloff as the floor.
+- The small orange object beside the figure (x≈335–355, y≈535–565) is a soft-edged blob with no readable silhouette; either make it a lantern with a glow radius on the floor or a crate with hard pixel edges.
+- The tile ring under the figure (x≈330–450, y≈455–520) is blown out to near-white cream and the joints vanish; clamp the hotspot so joint lines survive at the brightest point.
+- The long crack running from (≈250,470) down through (≈330,560) to (≈400,620) and back up to (≈470,510) crosses roughly eight stones and every joint as one unbroken stroke; break it at joints or have it follow a mortar line for part of its length.
+- The dark square at (x≈315–380, y≈645–710) is soft-edged and blurry against crisp stones and has no readable identity; sharpen it to the floor's pixel grid and make it a grate, hatch or hole with a lip.
+- The light "hatch-mark" glyph on stones (e.g. x≈200–240, y≈480–500 and x≈560–640, y≈640–700) is the same stamp on multiple stones; vary or remove.
+- The brazier (x≈580–620, y≈530–570) casts no light on the floor around it; either add a small warm falloff or make it unlit embers.
+
+FLIP 3:
+- The tile ring under the figure (x≈330–450, y≈455–520) is blown out to near-white cream and the joints vanish; clamp the hotspot so joint lines survive at the brightest point.
+- The long crack running from (≈250,470) down through (≈330,560) to (≈400,620) and back up to (≈470,510) crosses roughly eight stones and every joint as one unbroken stroke; break it at joints or have it follow a mortar line for part of its length.
+- The dark square at (x≈315–380, y≈645–710) is soft-edged and blurry against crisp stones and has no readable identity; sharpen it to the floor's pixel grid and make it a grate, hatch or hole with a lip.
+- The light "hatch-mark" glyph on stones (e.g. x≈200–240, y≈480–500 and x≈560–640, y≈640–700) is the same stamp on multiple stones; vary or remove.
+- The figure is crisp 2× pixel art while the floor has sub-pixel soft gradients and smeared stone edges (e.g. the stones at x≈450–560, y≈520–560 have blurred bottom edges); snap floor shading to the same pixel grid as the figure or the two layers keep reading as different sources.
+- The solid black wall interiors (x≈120–440, y≈135–390 and x≈630–750, y≈135–390) meet the textured wall-top with a razor edge; add a 1–2 px darkened rim on the wall-top side so the black reads as depth rather than an unrendered area.
+
+FLIP 4:
+- The pale vertical slab at (x≈260–300, y≈535–640) is a flat cream fill with no texture, no shadow on the floor and is brighter than any lit floor stone despite sitting outside the hotspot; give it stone texture, a contact shadow and run it through the same falloff as the floor.
+- The orange crate at (x≈195–300, y≈475–515) is drawn as a side-on box with a visible front face on a straight-top-down floor; either redraw it top-down or match the figure's convention and add a contact shadow beneath.
+- The tile ring under the figure (x≈330–450, y≈455–520) is blown out to near-white cream and the joints vanish; clamp the hotspot so joint lines survive at the brightest point.
+- The long crack running from (≈250,470) down through (≈330,560) to (≈400,620) and back up to (≈470,510) crosses roughly eight stones and every joint as one unbroken stroke; break it at joints or have it follow a mortar line for part of its length.
+- The dark square at (x≈315–380, y≈645–710) is soft-edged and blurry against crisp stones and has no readable identity; sharpen it to the floor's pixel grid and make it a grate, hatch or hole with a lip.
+- The brazier (x≈580–620, y≈530–570) casts no light on the floor around it; either add a small warm falloff or make it unlit embers.
+- The lashed-timber bundle (x≈380–500, y≈590–640) is the best-drawn prop in the set — keep it, but give it a contact shadow; at present it floats on the floor.
+
+Model: Claude Opus 5 (1M context).

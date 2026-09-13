@@ -128,6 +128,20 @@ def wrap_noise(size, cells, rng):
     return out / max(out.std(), 1e-6)
 
 
+# THE CAP'S OWN PLANE, AS A RATIO — #209. See the note at its use in main().
+#
+# DERIVED, not chosen: the shipped cap carries top_value 88.243, which the gate has walked and
+# approved, and 88.243 / 101.16 (the floor's anchor, §5.7) = 0.8723. Stating it this way
+# reproduces the shipped family exactly on the eleven-rung ladder and keeps reproducing it on a
+# twelve-rung one.
+#
+# It is worth noticing that this is BELOW the wall top plane's 1.11. The cap is the darker
+# surface, and #202's arris had to be derived against THIS value rather than against the wall's
+# top rung — a face tile's top band is cut away by alpha, so the wall's own top plane is never
+# drawn beside the cap.
+CAP_TOP_RATIO = 0.8723
+
+
 def field_cracks(size, rng, n, step_rungs, ladder_step):
     """Cracks that run for SEVERAL TILES, seeded in field coordinates and wrapping.
 
@@ -151,7 +165,7 @@ def field_cracks(size, rng, n, step_rungs, ladder_step):
     return out
 
 
-def field_slabs(size, rng, step, spacing=104, offset_rungs=0.55, fracture_rungs=2.2,
+def field_slabs(size, rng, step, spacing=104, offset_rungs=1.30, fracture_rungs=2.2,
                 tooling_rungs=0.42, gradient_rungs=0.34):
     """SLAB / FRACTURE ARCHITECTURE at multi-tile scale — RULED (Rafe, 2026-09-03).
 
@@ -160,6 +174,31 @@ def field_slabs(size, rng, step, spacing=104, offset_rungs=0.55, fracture_rungs=
     machinery), crossing tile boundaries; the corner theorem binds constant-position constructions
     and this has none. Courses remain culled on caps; found rock keeps its grain but stops being
     structureless."*
+
+    ⚠ offset_rungs WAS 0.55 AND THE SLABS WERE NOT THERE — #194, measured 2026-09-11.
+    Rafe unblocked #194 by ruling that the remedy is this construction rather than courses, which
+    settled the open question. It also made it worth measuring what this construction actually
+    DELIVERS, and the answer was: nothing.
+
+        offset   authored   delivered   Weber vs the cap as delivered
+        0.55      7.27       6.25        +0.0824   UNDER §13.8's 0.1440 floor
+        1.00     13.23      11.37        +0.1499   clears by 4% — the ambiguous point
+        1.30     17.19      14.78        +0.1949   clears by 35%
+
+    (The cap delivers 0.859 of its authored value at the wall #202's arris was measured on, so an
+    authored difference of D levels arrives as 0.859 D.)
+
+    So the slab architecture was RULED IN, built, and then authored below the amplitude at which
+    §13.8 says a signal exists. The FRACTURES between slabs cleared it comfortably at 2.2 rungs
+    (+0.3298) — which is exactly the shape of the two critic complaints this construction was
+    written to answer: *"fine mottle with no architecture under it"* and *"noise blobs"*. The
+    breaks read; the parts they break the stone INTO did not differ.
+
+    1.30 is the first value that clears §13.8 by a margin the clause itself accepts — it says
+    plainly that clearing by 3% "proves nothing, that is the geometric midpoint between present
+    and absent", which disqualifies 1.00. ONE VARIABLE MOVED: the spacing stays at 104 (a slab
+    every 3.2 tiles), because the measured defect is amplitude and the ruling's own words are
+    "multi-tile scale".
 
     WHY THIS IS NOT THE THING THE GATE CULLED. §8.3.3's corner theorem binds constructions whose
     features sit at a CONSTANT POSITION in every tile: an edge-matched course set must agree at
@@ -323,7 +362,21 @@ def build_field(ladder, tint, top_rung, hue_shift, seed=1337,
     # cap keeps the value count the bar's does. Snapping hard to nine rungs would deliver a cap
     # with nine values against the bar's sixteen, which is the featurelessness this pass exists
     # to remove arriving through the palette instead of through the drawing.
-    lad = np.array(ladder)
+    # ⚠ THE SNAP LADDER STOPS AT THE FAMILY FLOOR — #209's second half, and the same law #206
+    # found in the walls. The ladder the cap snaps to used to be the WHOLE floor ladder, whose
+    # bottom rung was 48.5627 when this family was composed. The floor's ladder gained two rungs
+    # underneath (35.34 and 22.11) when its reach was extended, and the cracks and fractures
+    # subtract far enough to reach them: a recompose came back with 652 of 1024 tiles darker, to
+    # a maximum of 27 levels, and every single delta was NEGATIVE — the signature of a clip that
+    # stopped clipping.
+    #
+    # A clip is an anchor (§5.7), so it is stated as a value and not as the end of a list. It is
+    # the same 0.48 x anchor the wall family floors at, which is not a coincidence: both families
+    # were composed against the nine-rung ladder, and that was its bottom.
+    floor_rung = CW._nearest_rung(ladder, CW.ANCHOR * CW.FLOOR_RATIO)
+    if os.environ.get("YARL_CAP_PROVE") == "unfloored":
+        floor_rung = 0          # the pre-#209 state, for prove_cap_reproduces.py only
+    lad = np.array(ladder)[floor_rung:]
     idx = np.abs(img[..., None] - lad[None, None, :]).argmin(-1)
     snapped = lad[idx]
     w = SNAP if snap is None else snap
@@ -371,7 +424,11 @@ def main():
                     help="cool/desaturated split between cap and floor. §5.4 bounds it: a "
                          "material difference, never a saturated event.")
     ap.add_argument("--top-rung", type=int, default=None,
-                    help="override the arm's top rung for the cap only")
+                    help="override the cap's top rung by INDEX. ⚠ #209: an index is not stable "
+                         "under field size — prefer --top-ratio, which is.")
+    ap.add_argument("--top-ratio", type=float, default=CAP_TOP_RATIO,
+                    help="the cap's top value as a ratio of the floor's anchor (§5.7). "
+                         "Default %(default)s; the rung is whichever one is nearest.")
     ap.add_argument("--snap-sweep", action="store_true",
                     help="report levels/window against the bar for a range of SNAP, and stop")
     a = ap.parse_args()
@@ -381,7 +438,37 @@ def main():
     mat = dict(floor["material"])
     CF.rehydrate(mat)
     ladder = mat["ladder"]
-    top_rung = a.top_rung if a.top_rung is not None else CW.ARMS[a.arm]["top"]
+    # ⚠ #209 — AND THE LANDMINE IS IN THE MANIFEST'S OWN RECORD, NOT IN THIS DEFAULT.
+    #
+    # That distinction is worth stating exactly, because the first version of this comment got it
+    # wrong and a guard caught it. The numbers:
+    #
+    #     ARMS["material"]["top"] = 5   nine-rung: 114.696   eleven-rung: 88.243
+    #     the cap manifest records 3    nine-rung:  88.243   eleven-rung: 61.789
+    #
+    # The cap SHIPPED at 88.243, so it was not built from this default — it was built with
+    # `--top-rung 3` on the nine-rung ladder. Today's default happens to land on 88.243 too,
+    # which is correct BY ACCIDENT: the ladder grew by exactly the two rungs that turn index 5
+    # into the value index 3 used to mean.
+    #
+    # So the trap is not in the code path. It is in the RECORD OF HOW THE FAMILY WAS BUILT.
+    # Anyone rebuilding this cap the way the manifest says it was built drops it 26 levels — the
+    # exact failure the wall family shipped, and worse, because following the documentation is
+    # what sets it off.
+    #
+    # Nothing was wrong on disk, because nobody had recomposed. That is what made it a landmine
+    # rather than a bug, and it is why the wall family's reproduction guard is the only reason
+    # its version of this was ever caught.
+    #
+    # §5.7: anchors must be means and stable under field size. An index into a list whose length
+    # can change is not stable under field size, and neither is a NUMBER IN A MANIFEST that names
+    # one. So the cap states its plane as a RATIO of the floor's own anchor and takes whichever
+    # rung is nearest.
+    top_rung = (a.top_rung if a.top_rung is not None
+                else CW._nearest_rung(ladder, CW.ANCHOR * a.top_ratio))
+    if os.environ.get("YARL_CAP_PROVE") == "record":
+        # Rebuild the way the manifest says this family was built. For the guard only.
+        top_rung = 3
 
     out_dir = os.path.join(REPO, "src/Presentation/assets/tier1_cap"
                            + ("" if a.arm == "material" else "_" + a.arm))

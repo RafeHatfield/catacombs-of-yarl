@@ -1,0 +1,44 @@
+RANK: 3 > 2 > 4 > 1
+
+BEST: 3
+BEST_WHY: The floor in 3 is the one surface in the deck that reads as cut stone. Around the figure at (405,490) the blocks vary in size (full blocks, half blocks at (420,400) and (440,590)), the joint lines vary in darkness along a single course, and the hatching inside each block changes direction block to block, so it doesn't stamp. The light falloff is continuous with no banding from the figure out to the wall face at y≈770, and the wall face strip at y 770–840 stays a distinct lower value from the lit floor so the room edge reads. The two upper wall-top columns at x 310–375 and 440–500 are dark enough that the frame carries very little of the noise texture that dominates 2 and 4.
+
+WORST: 1
+WORST_WHY: There is no light in it. The figure at (220,15) is said to carry the only light, but the frame is evenly lit corner to corner — the grey tiles at (0,0) and (380,280) sit at the same value. The two chests at (70,10) and (70,55) are the same tile stamped twice with identical dark shelves beneath; the two barrels at (125,200) and (175,200) are identical. The brown floor is a single repeating noise tile with red speckle and stray isolated blue-cyan pixels at (137,12), (185,155), (450,50 in the zoom) that read as debris, not decoration. The moss blobs on the grey tiles at (35,65) and (10,215) are painted straight over the tile seams without breaking at them. The green pool at right has decorative lily pads and a 12px scallop pattern — cheerful, and against the tone, but craft-wise it's a flat repeating tile with no edge treatment where it meets the floor at x=248. It reads as an asset pack, not a paid game.
+
+FLAGGED: 1, 2, 4
+
+SHIP: NONE
+
+FLIP 1:
+- Add light falloff from the figure at (220,15): the far corners (bottom-left grey at (20,270), bottom-right at (370,270)) must sit at least 3 value steps below the tiles adjacent to the figure.
+- Replace the duplicated chest+shelf tile at (70,55) with a different object or a rotated/damaged variant; same for the second barrel at (175,200).
+- Remove the isolated cyan/blue single pixels scattered on the brown floor (e.g. (137,12), (185,155)) or cluster them into a readable object with a shadow.
+- Give the pool a bank: a 2–4px darker rim where the green meets the brown floor at x≈248 and where it meets the grey at x≈345, so it sits below floor level rather than on top of it.
+- Break the moss blobs at the tile seams (the blob at (35,65) crosses two seams uninterrupted) or shift them into a single tile.
+- Make the dark bottom wall strip at y 230–288 a wall face: it needs a top-edge highlight and per-brick value variation; right now it is one flat row of identical bricks.
+- Give the grey tiled area a reason to differ from the brown area: either it's a different floor (needs a threshold/edge tile at the boundary x≈55 and y≈195) or it's a wall top (needs a face). Currently it reads as neither.
+
+FLIP 2:
+- The wall-top surfaces (the mottled block at (120–500, 60–140) and the right block at (560–750, 100–430)) are a cellular-noise texture with 1px polygonal "crack" lines crossing them; replace with drawn masonry or rubble at the environment's pixel density. This is the largest area of the frame and it reads as a filter.
+- Render the figure at the environment's pixel density. The sprite at (405,490) is at 2× the pixel size of the floor beneath it (its outline steps are 2 source px; the floor crack next to it is 1 px).
+- The floor cracks (the arc from (200,610) through (330,520) to (500,490), and the one at (560–750, 620–700)) are single-pixel smooth curves that cross brick joints without deflecting. Either route them along joints or break them into the blocks they cross so they belong to the masonry.
+- The pit/hatch at (310,650)–(380,720) has a lit top sill but no lit left sill and no shadow cast into it; give it a consistent lip on the sides that face the light.
+- The left "wall" strip at x 120–185, y 400–720 is the same cloud texture as the wall tops with no face; add a wall face or make it read as a solid top surface with a defined edge against the floor at x≈185.
+
+FLIP 3:
+- The crate/shelf object at (185,455)–(245,515) is lit uniformly (light top face, mid-grey body) while the floor immediately left of it at (150,480) is nearly black. Light it by the figure: dark on its left, lit on its right/top-right face, with a shadow on the floor to its left.
+- Render the figure at (405,490) at the environment's pixel density (currently 2×).
+- The two grey columns flanking the top corridor at x 310–375 and x 440–500, y 0–200 are a single tile stamped vertically with a visible repeat every ~32px; vary the blocks and give the corridor's inner edges a shadow.
+- The floor cracks (the arc from (280,170) to (90,300) at the top-left, and the one at (600,440)–(720,400) right of the figure) are 1px smooth curves crossing joints without breaking; route them through the joints or fracture the blocks they cross.
+- The floor blocks in the darker zone at (600–750, 550–700) lose their interior texture and go flat grey while the joints stay crisp; keep hatching visible at lower contrast so the surface doesn't switch material at the edge of the light.
+
+FLIP 4:
+- Remove or redraw the salmon-pink standing slab at (270,540)–(295,620). It is a flat rectangle in an out-of-palette colour with random speckle, its highlight is on the top-left edge and its shadow strip on the right, but the figure carrying the light is up and to its right at (405,490). It is a placeholder and lit backwards.
+- The brazier at (595,550) has a burning fire and casts no light on the floor around it; either extinguish it (embers only) or give it a second light source with falloff onto the blocks at (550–650, 500–600).
+- The two broken-timber piles are the same prop in two palettes: the one at (205,465)–(285,515) is dark umber, the one at (395,590)–(480,630) is bright orange-tan with yellow rope. Pick one palette, then apply light falloff to both (the lower one is brighter than the floor it sits on despite being further from the figure than the upper one).
+- Replace the cellular-noise wall tops at (120–500, 60–140) and (560–750, 100–430) with drawn masonry or rubble; the polygonal crack lines read as a filter.
+- Render the figure at (405,490) at the environment's pixel density (currently 2×).
+- Route the 1px floor cracks (the arc at (560–750, 620–700), the diagonal through (330,520)) along the joints or fracture the blocks they cross.
+
+Model: Claude Opus 5 (1M context).

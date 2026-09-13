@@ -1,9 +1,9 @@
 # Catacombs of Yarl / The Under-Warden — ART-BIBLE v0
 
-**Status: v0.13 — DRAFT. Two clauses have been derived from rendered assets on the device (§6.3)
+**Status: v0.15 — DRAFT. Two clauses have been derived from rendered assets on the device (§6.3)
 or ruled at the gate on them (§8.3); §6.5 and §3.1 are measured against the asset bar and ruled,
-awaiting the device gate; §3 remains under test and ratifies at that gate. Everything else in
-this document still has not been derived.**
+awaiting the device gate; §3 is ratified for walls and §3.2 RULED for objects. Everything else
+in this document still has not been derived.**
 
 This bible is written *before* pixel work, deliberately. It records decisions taken in
 conversation during Phase 1–3 of the art-direction rework (2026-08). It graduates to **v1**
@@ -149,11 +149,19 @@ been declared finalised does not reopen because a later tier raised the standard
 
 ---
 
-## 3. Projection and grid — PROVISIONAL, riding into tier one
+## 3. Projection and grid — **RATIFIED 2026-09-09**
 
 - **Orthogonal square grid. Portrait orientation. Not isometric.**
-- **Volume lives in what stands up, not in the ground plane.** Objects and walls present
-  exactly two visible planes: a **front face** and a **top surface**. The floor stays flat.
+- **Volume lives in what stands up, not in the ground plane.** The floor stays flat. **Walls**
+  (continuous runs) present exactly two visible planes: a **front face** and a **top surface**.
+  **Objects** present three: front, top, and a **right side receding at 45°** — cabinet
+  oblique, **RULED for objects 2026-09-12, §3.2**. Round objects keep a true-circle top and a
+  vertical body (§3.2). Wall ends, corners and pillars follow the objects (§3.2, follow-up).
+
+⚠ **The two-plane clause below was drafted for objects and walls together and ratified for
+WALLS only** — the 2026-09-09 walk was of a scene with no objects in it (Rafe, 2026-09-11). The
+object half was provisional until §3.2 ruled it. Where the prose beneath says *"objects and
+walls"*, read *walls*; §3.2 is the object law.
 
 **Rationale.** Isometry is a way of showing volume, and its cost is paid entirely by the ground
 plane — diagonal grids waste screen corners, visible tile count drops, and portrait is the
@@ -166,7 +174,33 @@ The two-plane rule survives from the retired Oryx track unchanged. It was never 
 it was a way to draw volume without paying isometry's tax, and it is re-adopted on its own
 merits.
 
-**STATUS (2026-08-26): PROVISIONAL — UNDER ACTIVE TEST BY THE SIGHTED ROUND.**
+**STATUS (2026-09-09): ✅ RATIFIED AT THE DEVICE GATE. PROVISIONAL CLEARED.**
+
+Rafe, walking build `9022b179` on the SE, on real floors and real walls:
+
+> **"actually looks a lot better… pretty good; the floor largely works."**
+> **"§3 RATIFIED — two-plane, no side face: walls read as mass, sides exist, the grammar holds
+> at the gate on real assets."**
+
+**THE RULED CONDITION IS DISCHARGED.** §3 rode provisional under *"depth arriving ratifies §3;
+depth failing reopens it, with evidence"* (2026-08-26), and it has ridden that way through the
+composition spike's eight noes, the 2026-08-27 device FAIL, the Q3 control, the sighted round,
+the tier-one surface and four polish rounds. **Depth arrived.** Two-plane construction with no
+side face is now law rather than a hypothesis under test, and the clause it was tested against —
+*every seat asking for a side face* — was answered by the Q3 control finding that **the commercial
+bar carries the same missing plane and does not suffer for it**.
+
+⚠ **WHAT RATIFICATION DOES AND DOES NOT SETTLE.** It settles the PROJECTION: orthogonal square
+grid, portrait, two visible planes, flat floor. It does not settle how well any particular family
+executes it — the walk that ratified the clause routed two wall items in the same breath (the
+top-to-face turn reading as two objects, and a repeating vertical at tile pitch), and both are
+polish debt against a ratified grammar rather than evidence against it. **A ratified clause can
+still be badly served by an asset; that is a build problem, not a law problem.**
+
+**The status trail below is kept in full.** It is the record of a clause that was nearly struck
+twice and was right both times, and the reasoning that held it — particularly the Q3 control —
+is the reason it survived to be ratified rather than abandoned on the eight-round evidence.
+
 
 The composition spike's condition fired: two-plane construction with invented numbers, judged
 absolutely, in an all-top adversarial scene, did not deliver depth — eight rounds, eight noes,
@@ -336,6 +370,77 @@ value, joints at half-tile pitch. `tools/sighted_round/WALL-RECIPE.md` §2.3.
 ⚠ **Worth stating why this matters beyond walls: it is §8.3 in different clothes.** Coursing on
 a top plane is *material describing the wrong thing*, repeated in every cell. The tile was not
 badly drawn — it was a picture of the wrong surface, thirty times over.
+
+### 3.2 Object projection — RULED (Rafe, on device, 2026-09-12). Cabinet oblique, receding RIGHT, ½ depth.
+
+**Every object in the game stands in space the same way: a square-on front face, the top
+visible, and the RIGHT side receding up-right at 45° with the receding run at ½ of true
+depth.** Three planes. This is a §1.1.4 one-way door, walked and ruled on the handset across
+two rounds (`docs/OBJECT-PROJECTION-RULING.md`), and it is object law, not provisional.
+
+**The geometry, exactly, because a law that says "cabinet" without numbers is a label.** World
+axes: x right, d into the scene (north), z up. Screen (y down):
+
+    (x, d, z)  →  ( x + ½·d ,  −(z + ½·d) )
+
+The receding run is **½ of the depth on each screen axis** — the way a pixel artist steps a 45°
+edge — so the receding *edge* is 0.71·d long. This is the build Rafe walked (`projOdeep`: k=½,
+right). ⚠ Strict technical-drawing cabinet draws the receding *edge* at ½·d (a per-axis run of
+0.35·d), a visibly shallower side; the round's brief mislabelled the depths, and Rafe's ruling
+used the textbook name for the ½ build he walked. **The law records the walked geometry.** If
+the strict figure is ever wanted, that is a rebuild and a re-walk under §13.1, never a relabel.
+The authority for the projection is `tools/tier2_props/projection_mesh.py` — each object as a
+model, the projection as one function — and every re-authored object is generated from its
+projected template, because generation cannot be told a projection (§13.7 platform fact,
+2026-09-12: 16/16 Pro candidates returned the model's own view against a reference *and* an
+instruction).
+
+**Rejected, and why, in Rafe's words.** *True isometric* — reads wrong on this floor; the
+diamond fights the orthogonal grid (§3's own rationale, confirmed at the walk). *Flat front +
+top* (the walls' grammar on objects, candidate W) — *"if we're doing dynamic lighting it should
+count for something"*: a two-plane object has no surface for the carried lamp to turn, so the
+rig's one expressive act — form revealed by a moving light — is wasted on every prop. The
+walls can afford two planes because they are mass and run; an object has to be a thing.
+
+**The round exception.** A cylinder has no front face to keep true, and oblique makes its ends
+oblong — round one's honest archetype (the barrel, whose lid *"slides sideways and the body
+leans"* under oblique) showed the cheat rather than hiding it. So **round and cylindrical objects
+keep a true-circle top and a vertical body**: the ellipse of the lid states the camera, and
+nothing shears. Barrels, cauldrons, wells, round pillars, tree trunks if there are ever any.
+
+**Characters are unaffected.** Sprites are front-facing (§7.4: heraldic, planted) and stay so;
+this clause is for what stands *in* the room, not who walks through it.
+
+**Rationale, recorded so the ruling can be re-derived.** Cabinet is the technical-drawing
+convention for exactly this problem — a true front elevation with depth indicated, never a
+rotated view — and its ½ is the depth at which a side reads as a side without the front ceasing
+to be an elevation. Right is the drafting convention and the pixel-art norm (the receding axis
+runs up-right; the light side of a cabinet drawing is the front); no fixed light motivates it
+here (§6.3 — the lamp moves), so it is a whole-game constant chosen by convention and it stays
+chosen. Consistency is the actual law: one projection per scene was what made round two
+judgeable at all, and it is what makes a room read.
+
+**Walls, and what follows.** Continuous wall runs stay two-plane — §3 walls, ratified 2026-09-09,
+untouched by this ruling. But where a wall *ends* — a run's terminus, a corner, a free-standing
+pillar — it becomes an object in the room's terms and must agree with the objects beside it: a
+**right/east face at ½ depth**. Filed as a bounded wall follow-up rather than done here, because
+the wall family's composer is a different instrument (§13.7) and a wall end is one cell's worth
+of new plane, not a re-projection of the family.
+
+**Filed separately, not projection:** props that do not sit against walls — the depth order
+under the top band (which of prop and wall draws over which, and where a prop's base sits in
+the cell) is placement law, and the round-two walk raised it as such.
+
+**Shadows (cast-shadows round, 2026-09-12).** An object's shadow is cast by the engine from its
+FOOTPRINT — the cabinet base parallelogram, or the round exception's circle — never from its
+sprite, and never baked (§6.3). Its sprite is exempt from receiving shadows, which is what keeps
+the ½-depth side lit under any lamp. See §12.1a's status.
+
+**What re-authors under this clause.** The boundary marker stone, the three-variant barricade
+family and the orc fire — B-PROP-001/002/003 — are re-authored from projected templates at the
+ruled geometry (the fire is the round exception: ring true-circle, nothing sheared), and the
+§12 cold-naming walk resumes on projection-correct objects. Round two's review block
+(ids 9850–9884) stays a review block: nothing from the ruling instrument enters the prop set.
 
 ---
 
@@ -706,7 +811,33 @@ menace with almost no gothic vocabulary.
 
 ~~Only the Boundary's values are derived at the pilot. The rest are PLACEHOLDER.~~
 
-> ### ⚠ RE-RATIFIED (Rafe, 2026-09-06) ON THE CORRECTED SINGLE-ARITHMETIC LAMP. THIS TABLE IS THE LIVE ONE.
+> ### ⚠ RE-RATIFIED WITH SHADOWS (Rafe, shadow walk on the handset, 2026-09-13). THIS TABLE IS THE LIVE ONE.
+>
+> The 2026-09-06 values were walked on a lamp that shone through rock (§12.1a). This is the walk
+> taken with the occluder pass live — the void dark by occlusion, the props casting from the
+> lamp, the orc fire lit as the second light — at gameplay distance, on the reference device.
+> Every light value was **held** and every shadow value **set**:
+>
+> | knob | 2026-09-06 | **re-ratified with shadows (2026-09-13)** | unit / note |
+> |---|---:|---:|---|
+> | radius | 6.0 | **6.0** | tiles — held |
+> | falloff | 1.00 | **1.00** | held at the identity, a third time |
+> | ambient level | 1.50 | **1.50** | held |
+> | energy | 1.6 | **1.6** | held |
+> | **shadows** | — | **on, occluders `all`** | §12.1a: first surface exempt by mask, everything behind receives, every edge casts |
+> | **void ring** | 1 (interim fallback) | **0** | the void is dark by occlusion; the fallback is retired |
+> | **softness** | — | **12.0** | `shadow_filter_smooth`, PCF13, on a ladder to 64. *"The raised softness range melts edges (no beams at 12)."* |
+> | **darkness** | — | **0.8** | leak `rgb = 0.2 × ambient hue ratios`. *"The ambient-tinted leak reads as cool dark, not grey."* |
+> | **fire** | — | **energy 1.6, reach 4.0 tiles, warm `ff8a3c`** | B-PROP-003 emits (#205). Reach was not a knob; it rides with the mark. |
+> | **flicker** | — | **ON** | *"the tended fire is §9.2's exception."* |
+>
+> **Two-light physics, confirmed on device:** the fire's cast shadow is visible once the
+> player's lamp isn't filling it. **BOUNDARY ONLY**, as before; landed in
+> `tools/tier0_harness/harness_config.yaml`, the device marker template and the critic's capture
+> command, **passed explicitly and required by the engine**. The 2026-09-06 table below is
+> **superseded-by-re-ratification** and kept as the record it is.
+>
+> ### ⚠ RE-RATIFIED (Rafe, 2026-09-06) ON THE CORRECTED SINGLE-ARITHMETIC LAMP — superseded-by-re-ratification 2026-09-13; kept as the record.
 >
 > Ruling 56's values below were walked against **a floor lit at energy 1.0 while the walls beside
 > it ran at 1.6** — `tier1_polish.gdshader` discarded `LIGHT_ENERGY` (#174), so the two planes
@@ -2108,6 +2239,51 @@ Every clause in this section is a stated design purpose awaiting a derived value
   Threshold: PLACEHOLDER.
 - **Survives a busy screen** (§4.1). Every rule above is tested with neighbours present.
 
+### 12.2 Props are authored at READABILITY SCALE, not at true scale — RULED (Rafe, 2026-09-10)
+
+**Occasioned by the props walk, which FAILED on identifiability:** *"small, unrecognizable except
+the fire; colouring quite good."* That is this section's own first clause — **names itself at 1×**
+— failing at the human gate, on assets that passed every instrument and a five-seat panel. The
+panel ranked the frame first of four; not one of its six flips said *I cannot tell what that is*.
+A seat asked to rank craft will rank craft. **Nobody had asked the naming question.**
+
+**The law.** A prop's size relative to the tile and to the character is **exaggerated until its
+identifying feature reads at device 1×**. Real proportions are preserved: never squashed, never
+stretched, never given a cartoon outline — **the shape stays honest**. What changes is how much
+of the frame the honest shape is allowed to occupy.
+
+- **A prop fills most of its cell.** The prop family that failed this gate carried content as
+  small as **10 × 15 px in a 32 px tile** — a fifth of the cell, 20 device pixels across.
+- **Large objects may span 1 × 2 or 2 × 2 cells where the fiction allows.** A standing stone
+  **taller than Sasha** is correct. A barricade is **chest-high and wide**.
+- **Each prop's defining feature must occupy a legible fraction of the sprite** — the marker's
+  dressed face under its lashings, the barricade's over-built timber, the fire's fuel and ring.
+  A prop whose identity lives in a detail is already failing this section's second clause.
+
+**Register derivation — §12, and the standard is named rather than invented.** This is the
+Warcraft / Diablo-2 convention: a top-down world reads because its objects are drawn at the size
+at which they can be recognised, not at the size they would be if you measured them against the
+floor. §12's second clause already says *silhouette carries the read, interior detail not at all*
+— and a silhouette twenty device pixels across has no read to carry. Scale is the only lever that
+reaches it, because every other lever (value, chroma, joint, grain) operates **inside** a
+silhouette that is already too small to name.
+
+⚠ **THIS IS A PERMISSION, NOT A LICENCE TO DISTORT.** *"Real proportions preserved"* is the
+binding half. A barricade may be built larger than life and must still be built like a barricade;
+the moment the shape itself is bent to fit the cell, §12.2 has been used to break §7.1. Growing
+the object is legal; changing what the object is, is not.
+
+**Colouring is APPROVED AND FROZEN IN KIND** at this gate (Rafe, same walk): *"colouring quite
+good."* A re-author under this clause changes scale and keeps the colour treatment it has. That
+also settles what #204 may and may not do.
+
+**The instrument this clause gets, and it is eye-side.** §12's naming clause has always been
+carried at the human gate (§13.2) and the audit's own instrument row says so. It now also has a
+blind-seat form: **the cold-naming test** — a seat is shown the prop in scene, unprompted, and
+must say what it is. **A miss is a FAIL on §12, not a style note.** It is a naming question put
+before any ranking question, because the walk proved that ranking does not ask it. Promoted under
+§13.5 with its demonstrated failure on the record.
+
 ### 12.1a The void is dark by OCCLUSION, not by a ring — RULED (Rafe, 2026-09-03)
 
 **Unexcavated mass is unlit by construction.** The lamp stops at the wall face, because solid
@@ -2140,6 +2316,57 @@ currently lights wall cells regardless of what stands between them and the lamp.
 occlude against the wall faces is a presentation change (an occluder pass), not a composition
 one, and it is outstanding at the time of writing. §6.5's standing-distance law is unaffected —
 it governs what a LIT surface delivers at range, and this governs which surfaces are lit at all.
+
+**STATUS (2026-09-12, cast-shadows round): THE OCCLUDER PASS IS BUILT AND MEASURED; the walk
+that lands it is Rafe's.** `ReviewLighting.AddOccluders` + the light-mask split in
+`Tier1BoundaryWall`, `--occluders all`, void ring **0**. Measured on the props room, no
+occluders → occluders: **face 40.16 → 39.61, cap 52.92 → 52.92** (the r29 failure, 37.90 → 5.51,
+is closed), **unexcavated 27.35 → 12.50** — the same rock at ambient, where the ring's 2.58 was a
+darker *material*. The interim fallback below is therefore retired for every capture this round
+and after; it stays in the record as the ruling it was.
+
+**THE SHADOW WALK (Rafe, on the handset, 2026-09-13): *"Props sit on the floor, the room has an
+outside — the round's two questions are answered yes."*** Marks: darkness 0.8, softness 8.0 (the
+knob's ceiling), void 1/3; **flicker RULED ON** — the tended exception over §9.2, the orc fire
+is the one thing in the world that moves. Provisional reference seeded from the walked frame,
+re-marked after the flips. Three flips, all engine, and each is the §13.4-shaped kind — the
+instrument was fine, the travel was a builder's guess:
+
+1. *"8.0 is the knob's ceiling and shadow edges are still traceable lines ... a lantern doesn't
+   throw searchlights (§1: nothing is staged)."* The ladder now runs to the engine's 64
+   (PCF13 was already the widest kernel); 24 is soft, 48 melts the edge.
+2. *"Dropping darkness below 0.8 fills shadows with grey lamp-leak, not dark. Tint the leak
+   toward the ruled ambient hue (§6.2)."* The leak now carries the ambient's channel ratios:
+   at darkness 0.5 the shadowed floor reads rgb 72/72/93, not grey.
+3. *"The fire glows but doesn't light its surroundings or cast; it needs real radius and
+   energy."* 0.9 / 2.5 tiles → 1.6 / 4.0 tiles, a `fire` row on the panel, values PLACEHOLDER
+   until marked. A "dark" probe 2.2 tiles from the fire had to move — a real fire lights it.
+
+**RE-MARKED (Rafe, 2026-09-13), both fixes confirmed on device:** softness 12.0 (*"melts
+edges — no beams at 12"*), darkness 0.8 (*"the ambient-tinted leak reads as cool dark, not
+grey"*), fire 1.6 with its cast shadow visible once the player's lamp isn't filling it. Ratified
+as required engine flags (§6.2's live table); this frame seeds the shadowed reference. Props sit
+— yes; the room has an outside — yes.
+
+**How, since the obvious mechanism was measured and did not survive.** A 2D occluder cannot
+say *light this cell's own surface and stop behind it*: a per-cell quad whose light-facing edges
+cast shadows its own face (r29), and with those edges culled the cells of a wall row shadow each
+other obliquely through their far edges (face → 28.47 / 37.19; cap → 30.05 / 38.00 under the two
+cull modes) — and a far edge cannot darken a thick mass whose far side is rock. So **the first
+surface the lamp meets is exempt by mask, and everything behind it receives**: a wall cell with
+floor anywhere in its 8-neighbourhood (the reveal, and the cap beside it) sits on a light mask
+the lamps illuminate but never shadow; deeper mass, the floor and the walls behind receive; every
+edge casts. Objects the same way (§3.2): a prop's sprite is drawn north of its footprint on
+screen, exactly where a lamp from the south throws the footprint's shadow, so props never
+self-shadow *by mask* — measured Δ +0.00 on every sprite's interior — and their footprints
+(the cabinet base parallelogram, or the round exception's circle) cast onto the floor.
+
+**The shadow is the ambient, and on this engine that is a black shadow colour.** Measured, after
+two wrong guesses: `Light2D.ShadowColor`'s RGB is the fraction of the lamp that *leaks* into a
+shadowed pixel (the ambient hue leaked 15% and read as a wash); its alpha is inert. Black leaks
+nothing, so what remains in shadow is the `CanvasModulate` ambient — §6.2's hue — and the
+darkness knob is `rgb = 1 − d`. Never black paint: the shadowed floor measures the ambient-lit
+floor, not 0.
 
 > **THE INTERIM, RULED (Rafe, 2026-09-05): THE FLAT-DARK FALLBACK STANDS UNTIL THE OCCLUDER
 > SHIPS, AND IT IS DECLARED PER CAPTURE RATHER THAN BAKED.**
@@ -2536,6 +2763,40 @@ Not law, and not banked speculation either: each line below was paid for by a ru
 to the audit that paid. They are here rather than in the tooling notes because each one closes a
 question a future session would otherwise re-open with generations.
 
+- **A 2D occluder cannot light its own surface and stop behind it.** Measured (cast-shadows
+  round, 2026-09-12): a per-cell quad whose light-facing edges cast shadows its own face
+  (r29, 37.90 → 5.51); with those edges culled, cells in a wall row shadow each other obliquely
+  through their far edges (face 40.16 → 28.47 / 37.19, cap 52.92 → 30.05 / 38.00), and a far
+  edge cannot darken a thick mass whose far side is rock. **The mechanism that survives: the
+  first surface the lamp meets is exempt by light mask (ring-1 wall cells, every prop sprite),
+  everything behind it receives, every edge casts.** Face 40.16 → 39.61, cap unchanged,
+  unexcavated 27.35 → 12.50, sprites Δ 0.00. This replaces the "occluder behind the reveal"
+  §12.1a first imagined. `ReviewLighting`, `Tier1BoundaryWall`.
+- **`Light2D.ShadowColor`: RGB is the fraction of the lamp that leaks into shadow; alpha is
+  inert.** 0.0 / 0.5 / 1.0 alpha delivered the identical shadowed value; the ambient-hue RGB
+  leaked 15% and read as a wash. So "the shadow is the ambient" is black RGB (the lamp
+  contributes nothing; the `CanvasModulate` hue remains), and a darkness knob is `rgb = 1 − d`.
+  A fill light is not a darkness knob — additive, it lifted the lit floor too (62.9 → 69.7).
+  An emitter inside its own occluder polygon shadows the whole room from itself: emitters get
+  no occluder.
+- **The SE holds 60 fps with 216 wall occluders, 3 prop occluders and two shadow-casting
+  lights** — every steady 240-frame window 16.67 ms mean / p95 / max, identical to the build
+  without occluders (`tools/cast_shadows/evidence/perf_*_boot.log`). Vsync-locked: the frame is
+  *met*; headroom is unmeasured and a GPU-time probe would be needed to say how much.
+- **A control lit differently from the build measures exposure, not craft.** Round 1 of
+  `art/cast-shadows`: three of five seats ranked unshadowed culls above a shadowed room. RULED
+  (Rafe, 2026-09-12): not a broken judge — a seat-blind axis (§13.2); **plants and reference
+  are captured under the deck's lighting regime — scene, rig, and shadow state.** The judge
+  refuses an off-regime plant or reference (`frame_critic.pick_plant`, `regime`).
+- **Generation cannot be told a projection.** Pro, given a projection template as a labelled
+  reference AND the projection in the prompt, returned its own ¾ view receding right on
+  **16/16** chests against a left template, and **16/16** straight-on barrels. img2img holds an
+  authored projection at `init_image_strength` ≥ 150 and loses it by 90, and at 150 adds no
+  object to a bare box. So a projected object is **authored as geometry** (every band, hoop,
+  plate and shelf in the template — `tools/tier2_props/projection_mesh.py`) and generation
+  supplies surface. A forced palette from a LIT frame turns every material the same tan
+  (limestone → pine): the floor-mottle law, at props. `docs/OBJECT-PROJECTION-RULING.md`,
+  round two.
 - **Architecture and conditioning do not exist on the same surface.** BitForge conditions
   (12/12 propagation, §5.5) and produced architecture **0/100**; tiles-pro produces clean parts
   (0 mechanical culls in 114) and refuses style conditioning on connectable features. **Any
@@ -2740,6 +3001,148 @@ whose dark ground is byte-identical, **passes**; a genuinely darkened capture �
 > the end of its range. If the answer is *it keeps returning a number*, the instrument has a blind
 > spot exactly where the picture is brightest, and that is where the eye is.
 
+### 13.12 An assertion DERIVES the property; it never copies the value — LAW (Rafe, 2026-09-08)
+
+**A check that copies a value is a snapshot of a conclusion.** It stops tracking the thing it was
+written to protect the moment anything upstream moves, and — this is the part that costs rounds —
+**it goes on asserting.** A copied constant cannot notice that its premises have changed, so it
+fails in the worst available direction: confidently, silently, and in whichever direction the
+drift happens to point.
+
+**The occasion.** The device gate's ruled-fix registry carried
+
+```
+{"id": "lane-gain-stepped", "rule": "wear modulates the same stones", "check": "const:POLISH_LANE_GAIN==0.6"}
+```
+
+0.6 was the value that satisfied that rule the day it was pinned. Then #174 corrected the lamp and
+Ruling 56 was re-ratified, the lane window moved underneath it (§6.2's re-derivation rule), and
+**0.6 stopped satisfying the rule it was pinned for** — on-lane masonry 0.1338, *below* §13.8's
+0.1440 floor. On 2026-09-08 the registry was simultaneously
+
+- **blocking** a build that met the law, and
+- **asserting** a value that no longer did.
+
+The successor measures the law on the delivered frame: *on-lane identity and lane-vs-flank both at
+or above the perceptual floor*. Proved in both directions on real captures, which is the whole
+point — **the new assertion refuses the exact value the old one required:**
+
+| build | on-lane | lane-vs-flank | derived check |
+|---|---:|---:|---|
+| lane 0.3 (ratified) | 0.1513 | 0.3456 | **passes** |
+| lane 0.6 (the old pin's value) | **0.1338** | 0.3939 | **refuses** |
+
+**THE THIRD INSTANCE, and the family is what makes it a law rather than an anecdote.**
+
+| | what was copied | what should have been derived |
+|---|---|---|
+| **the working ladder** (§5.6) | a manifest's stored rungs, trusted by consumers | the rungs, re-derived from the donors' percentiles at every read — *"a manifest written under an older rule cannot silently keep it"* |
+| **the shelter weights** | the weight tuple, as though it were the signal | the delivered **modal joint contrast**, which the tuple only influences — the weights looked fine while the mode sat at 0.107 Weber, under §13.8's floor, and the frame critic found it before the number did |
+| **the lane-gain pin** (here) | `POLISH_LANE_GAIN == 0.6` | the lane **window**, measured on the build |
+
+Each is the same shape: a *value* standing in for a *property*, holding correctly right up until
+the relationship between them moved.
+
+> **Write the assertion against the property the rule is about, and measure it on the artefact.
+> If the check cannot be expressed that way, the rule is not yet understood well enough to gate
+> on.**
+
+⚠ **THE BOUNDARY — RATIFIED (Rafe, 2026-09-08):** *"§13.12 licenses deriving the measurement,
+never the bar; re-deriving §13.8 per capture is §13.11 in disguise."*
+
+The floor a derived property is compared against is **ruled and stays ruled**. §13.8's 0.1440 is
+not re-derived per capture — a bar that moves with the artefact it judges is the saturating
+comparator of §13.11 wearing this clause's name, and it would pass everything. **Derive the
+measurement; never derive the bar.**
+
+The two laws are therefore a pair and are read together: §13.12 says *measure the property on the
+build*, §13.11 says *against a reference that cannot move with it*. Either one alone is a way to
+build a check that always agrees with whoever wrote it.
+
+### 13.13 A gate's binding term must have a MEASURED NOISE FLOOR, and must never be a single sample — LAW (Rafe, 2026-09-08)
+
+**The occasion, and it is one frame.** On the morning of 2026-09-08 `PASS-INSTALL` was ratified:
+a polish round passes when it *ranks above `approved_capture`*. That afternoon lane
+`polish-c-183` judged **the same build twice** — sha `839fb12f`, with the round's own
+no-change measure reading `picture moved mean 0.000 / worst 0` between them:
+
+| round | build rank | reference rank | verdict under the new rule |
+|---|---|---|---|
+| r001 | **1 of 4** | 2 | PASS-INSTALL |
+| r002 | **2 of 4** | 1 | FAIL |
+
+**The build and the reference swapped places with no pixel changing.** The gate's entire
+discriminator was a single draw from a distribution nobody had measured.
+
+**Why the previous rule had not exposed it.** SHIP∧rank was ratified against a null reference, and
+rank only ever *added* a condition to a SHIP-based decision. Making rank the **sole** binding term
+moved the whole gate onto the least stable quantity the deck produces — and §4 had already
+recorded, three times, that a blind seat's ordering does not reproduce the human gate's. What was
+new was that it does not reproduce **itself**.
+
+> **RULED: a term that binds a gate must (a) be sampled more than once, and (b) have its own
+> variability measured and published beside it. A threshold on an unmeasured single sample is not
+> a gate; it is a coin with a number written on it.**
+
+**The refinement, for this gate:** a majority of **three independent blind seats** rank the build
+above `approved_capture`, with **no unrouted flags from any**, each seat drawing its own
+axis-matched plant.
+
+**The asymmetry between the two terms is deliberate.** Rank takes a majority because rank is the
+noisy term. A **flag does not** — one seat finding a defect is enough, because a flag outvoted 2–1
+is still a defect two seats missed. Averaging *findings* would discard the only thing a panel is
+good at, while averaging *rankings* is the entire reason it exists.
+
+**And the noise floor is measured rather than assumed** — the same bytes through five seats, the
+disagreement rate recorded and published as rank's error bar. That number belongs beside the
+threshold wherever the threshold is quoted; a bar without it is a bar nobody can size.
+
+⚠ **THIS IS NOT A LICENCE TO AVERAGE THE PLANT.** Every seat must catch its own. §4 voids a round
+on one missed plant, and a panel does not get to dilute that into a proportion: a soft seat's
+ballot is exactly what §4 refuses to read. More seats make the plant condition *harder*, never
+softer.
+
+⚠ **And a panel is not independence for free.** Where the axis-matched morgue set has one member,
+every seat draws the same plant and their catches are **correlated** — the panel multiplies the
+rank samples but not the plant's evidence. Reported per round rather than assumed away.
+
+### 13.14 Flag disposition — matched, measured-false, or it goes to the gate — RULED (Rafe, 2026-09-08)
+
+A blind seat's flag is not automatically work. It is one of three things, and **which one must be
+checkable by someone other than the person asserting it.**
+
+| state | means | requires | who may assert |
+|---|---|---|---|
+| `ROUTED-ALREADY` | this is the thing we already decided | **a citation** — an issue (`#nnn`) or a clause (`§x.y`) that RESOLVES | the builder |
+| `MEASURED-FALSE` | the stated cause is not what is happening | **the measurement** that disproves it **and the percept, recorded** | the builder |
+| `ROUTED` / `CLOSED` / `PARKED` | a new destination, or a decision not to chase | **Rafe's words, quoted** | Rafe only |
+
+**Only new, unmatched flags block — and those go to Rafe.**
+
+**The division of authority is the point.** A builder disposing by citation is *not* routing: it
+asserts a **match against a record that already exists**, and the citation is what lets anyone
+else look it up and contradict it. An uncited match is an opinion. A routing is the creation of a
+new destination, and that stays with the human gate.
+
+**The citation is checked, not trusted** (`critic_gate.check_dispositions`): a cited clause must
+exist in the bible or the process law, and a cited issue must appear in the repository's own
+record. ⚠ **And the search space is the RECORD, not the repo** — the first implementation grepped
+everything, and its own proof caught it: the case asserting that an invented issue number is
+refused has to *write that number into the test file*, so the grep found it and the citation
+passed. An assertion whose search space includes its own fixtures is §13.11's shape again, an
+input wider than the thing it measures.
+
+**`MEASURED-FALSE` keeps the percept, and that is not a formality.** §13.4.1's whole finding is
+that a seat's *explanation* fails while its *seeing* stands — three times in one session on this
+project. A disposition that discarded the percept along with the explanation would throw away the
+observation and keep only the argument, which is exactly backwards.
+
+**Worked, on the round that occasioned it** (`r001-polish-abc-install`, three seats): nine flags
+disposed — three measured-false (an off-centre falloff whose two named points were *wall cells*;
+a collapsed range measured against the **plant's** blowout rather than the reference; a far-field
+value claim off by a factor of 3.3) and six routed-already against #193, #194, §12.1a, §6.2.1 and
+§13.4.1 — with **seven left unmatched and handed up**.
+
 ---
 
 ## 14. Out of scope for this document
@@ -2838,6 +3241,25 @@ Recorded so they are not re-derived; deliberately not law.
 ---
 
 *Revision history:*
+
+- *v0.15 — 2026-09-12. **§12.1a's occluder pass BUILT AND MEASURED** — the void is dark by
+  occlusion, faces and caps untouched (40.16 → 39.61, 52.92 → 52.92), unexcavated mass at ambient
+  (27.35 → 12.50), ring 0. The mechanism the clause imagined (an occluder behind the reveal) was
+  measured and could not work in a 2D light; the first surface is exempt by light mask instead
+  and everything behind it receives. Objects cast from their §3.2 footprints and never
+  self-shadow (Δ 0.00). Godot's ShadowColor semantics recorded (rgb leaks, alpha inert). The orc
+  fire is the second light (#205). Walk pending: softness, darkness, flicker are Rafe's.*
+
+- *v0.14 — 2026-09-12. **§3.2 — OBJECT PROJECTION RULED.** Cabinet oblique, receding RIGHT,
+  ½ depth (per-axis; the walked `projOdeep` build), on device across two rounds
+  (`docs/OBJECT-PROJECTION-RULING.md`). §3's head clause now separates walls (two planes,
+  ratified 2026-09-09) from objects (three), and records that the old joint wording was ratified
+  for walls only. True isometric and flat front+top rejected — *"if we're doing dynamic lighting
+  it should count for something."* Round objects excepted: true-circle top, vertical body.
+  Characters unaffected. Wall ends/corners/pillars gain an east face at ½ depth — bounded
+  follow-up. Props-not-against-walls filed as placement, not projection. New §13.7 platform
+  fact: generation cannot be told a projection; geometry is authored (`projection_mesh.py`),
+  generation supplies surface.*
 
 - *v0.13 — 2026-09-03. **The deflection theorem — the corner theorem's twin, recorded in §13.7.**
   Ruled a PLATFORM THEOREM at the gate: a treatment keyed to WORLD position cannot register

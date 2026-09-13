@@ -1,0 +1,53 @@
+{
+ "wave": "projection2",
+ "candidate": "OR",
+ "props": [
+  {
+   "key": "OR_stone",
+   "w": 1,
+   "h": 2,
+   "ids": [
+    9864,
+    9865
+   ],
+   "url": "FILL-ME"
+  },
+  {
+   "key": "OR_chest",
+   "w": 1,
+   "h": 1,
+   "ids": [
+    9866
+   ],
+   "url": "FILL-ME"
+  },
+  {
+   "key": "OR_barrel",
+   "w": 1,
+   "h": 1,
+   "ids": [
+    9867
+   ],
+   "url": "FILL-ME"
+  },
+  {
+   "key": "OR_altar",
+   "w": 2,
+   "h": 1,
+   "ids": [
+    9868,
+    9869
+   ],
+   "url": "FILL-ME"
+  },
+  {
+   "key": "OR_rack",
+   "w": 1,
+   "h": 1,
+   "ids": [
+    9870
+   ],
+   "url": "FILL-ME"
+  }
+ ]
+}

@@ -209,6 +209,25 @@ chroma had already been fixed, so the two frames differed on an axis the plant w
 the seat had no reason to rank the plant last, and the round voided **on the judge rather than on
 the art**. The right image for the wrong question is not a control.
 
+### Plants and the reference are captured under the deck's LIGHTING REGIME
+
+**LAW (Rafe, 2026-09-12).** *"Plants and reference are captured under the deck's lighting regime
+— scene, rig, AND shadow state; re-capture the object/wall plants shadowed before any critic
+round runs on this lane."*
+
+Round 1 of `art/cast-shadows` put a room with cast shadows into a deck whose plants and
+reference were all captured before shadows existed. Three of five seats ranked a culled,
+unshadowed frame above the build and flagged nothing in it. That was **not a broken judge — a
+seat-blind axis (§13.2)**: the seats compared exposure, not craft, because the only difference
+they could see was the light. A control lit differently from the build is not a control.
+
+So `docs/FRAME-CRITIC.json` names the deck's `regime`, every morgue entry carries the regime it
+was captured under, and the approved reference carries its own. `pick_plant` **refuses** an
+off-regime plant and the runner **refuses** an off-regime reference — before any seat is spent.
+A regime's first reference is seeded by Rafe's walk; there is no round before it. Off-regime
+misses in a covered round are excused by a `JUDGE-CLEARED.json` entry naming `deck_regime`, and
+only where the morgue's own tag disagrees with it (`prove_judge_clear.py` R1–R4).
+
 ### The morgue
 
 `morgue/` holds frames **Rafe personally culled at the device gate**, with his verbatim words and
@@ -224,6 +243,57 @@ reason, which is not a control at all.
 `MORGUE.json`, with the quote and the commit.
 
 ---
+
+## 4a. Two laws about the plant — RULED 2026-09-08
+
+**An axis is the cull's percept, never its mechanism.** `replaced-tiles-lane.png` was tagged
+`tonal` because it was *made* by restoring `POLISH_LANE_GAIN` to 1.9. What Rafe saw was that the
+stones had stopped being the same stones — material identity, which is `value`. Tag what the eye
+rejected, never the knob that produced it: a seat is never asked about the knob.
+
+**A seat voided by a mis-tagged plant is re-drawn, not the round; a correct plant missed still
+voids.** `--redraw-seat N` implements it and is fenced: the frame's sha must not have moved,
+nothing is re-captured, the other seats are carried unchanged and never re-parsed, the ballot is
+written to `-seat{N}-redraw.txt` so no transcript is overwritten, and an existing re-drawn ballot
+is REUSED — the no-re-roll check runs **before** the seat is spent, because the first version ran
+after it and guarded nothing. The re-draw is recorded by an added artifact, `SEAT-REDRAWN.json`.
+
+⚠ **The softness control is untouched.** A seat that misses a plant correctly tagged for the axis
+it was asked about is soft, and softness voids the round. That is the only control the mechanism
+has, and nothing here weakens it.
+
+## 4b. The autonomy amendment — what stops the run, and what does not
+
+**RULED (Rafe, 2026-09-08).** LOOP-PROCESS §1.1.4 is amended and §1.1.5 added. There are now
+**three** reasons to return to a human mid-run:
+
+1. **a one-way door** — canvas, projection (§3), palette lock (§5.1), rig ratification (the
+   Ruling 56 family), or a **landing** at the surface gate;
+2. **the bible is silent or self-contradictory** on a question the round needs answered — a
+   genuine gap, quoted;
+3. **broken judge** (the plant missed twice) **or budget exhausted**.
+
+Everything else is the builder's, under the bible:
+
+| was escalated | now |
+|---|---|
+| a flip touching a ruled system | **ruled BY the clause**, by the builder, citation recorded. *"This touches §X"* is an answer |
+| build-id drift, pin staleness, plant axis mismatch, hash exclusions, guard scope | **engineering.** Fix under existing law, record, continue. Rafe never hears about a hash |
+| routing a flag | **the builder routes**, with a citation the gate verifies |
+| a PASS-INSTALL | **installs as `latest`.** Builds queue; Rafe walks whichever is current |
+| a single item's STOP | **write the report and continue to the next item** |
+
+**Why: escalation is free for the machine and expensive for the human.** A loop that is uncertain
+drifts toward asking unless that asymmetry is corrected, and the run of 2026-09-07/08 stopped for
+a hash exclusion, a value pin and a routing decision — none of which needed a human, each of which
+cost a night.
+
+⚠ **Nothing here weakens a guard.** The plants, the panel, the progress guards and the citation
+checks are what make an unattended run safe, and §4's rule is unchanged: no check's pass counts
+until it has demonstrated it can fail. `prove_gate.py` case **J1** is the amendment working — a
+flip citing a resolvable clause disposed with no human anywhere in it — and **J2/J3/J4/J5** are
+the guard that makes J1 safe: an unresolvable citation, a bare assertion, a missing destination,
+and a `CLOSED` attempted by citation all still refuse.
 
 ## 5. The loop guards — they measure progress, not rounds
 
@@ -338,7 +408,7 @@ verdict with a quoted ruling and a named destination per item — and `critic_ga
 both conditions from the verdict's own recorded numbers rather than trusting the label, because a
 verdict that merely *says* PASS-INSTALL proves nothing.
 
-> ### ⚠ IMPEACHED ON THE DAY IT WAS RATIFIED, AND HELD FROZEN
+> ### ⚠ IMPEACHED ON THE DAY IT WAS RATIFIED — IMPEACHMENT UPHELD, RULE REFINED
 >
 > **The rank term is not stable across seats on an unchanged picture.** Lane `polish-c-183` judged
 > **the same frame twice** — build sha `839fb12f`, "picture moved mean 0.000 / worst 0":
@@ -365,6 +435,40 @@ verdict that merely *says* PASS-INSTALL proves nothing.
 >
 > **What it does not touch:** the plant, which caught on both rounds, and the two SHIP terms,
 > which are recorded either way.
+>
+> ### THE RULING ON THE IMPEACHMENT (Rafe, 2026-09-08) — UPHELD, AND REFINED
+>
+> > *"PASS-INSTALL rests on a single rank sample and flipped on identical bytes — impeachment
+> > upheld. Refine: majority of three independent blind seats rank the build above
+> > `approved_capture`, no unrouted flags from any; each seat its own axis-matched plant.
+> > Measure the comparator's noise floor: same bytes through five seats, record the flip rate,
+> > publish it as rank's error bar."*
+> >
+> > **LAW: a gate's binding term must have a measured noise floor and must never be a single
+> > sample.** (bible §13.13)
+>
+> **Run it with `--seats 3`.** Each seat gets its own working directory, its own shuffle and its
+> own plant draw; the directory is a hash of (lane, round, build, seat) for the same reason the
+> round number is hashed — a seat that can read *"seat 2 of 3"* off its own cwd can infer it is
+> one of a panel.
+>
+> **The two terms are asymmetric and the asymmetry is the ruling:**
+>
+> | term | why | rule |
+> |---|---|---|
+> | **rank** | the noisy one — it flipped on identical bytes | **majority** of seats |
+> | **a flag** | a *finding*; one seat seeing it is enough | **any** seat disqualifies |
+> | **the plant** | §4 refuses to read a soft seat's ballot at all | **every** seat must catch its own |
+>
+> More seats make the plant condition *harder*, never softer. `prove_panel.py` drives the real
+> `panel_verdict` through all of it — a lost majority, a lone flag against a unanimous rank, a
+> single missed plant, and a deck with no reference — because a new gating rule's pass counts for
+> nothing until it has been shown to refuse (§13.5).
+>
+> ⚠ **A panel is not independence for free.** Where the axis-matched morgue set has one member —
+> which is the case for `combined`/`tonal` today — every seat draws the *same* plant and their
+> catches are **correlated**. The panel multiplies the rank samples, not the plant's evidence.
+> The round prints this rather than assuming it away.
 
 **Proved before it was believed** (§13.5). `prove_gate.py` drives the real gate through the three
 ways the state can fail — no reference in the deck, build below the reference, an item left
@@ -390,7 +494,29 @@ the rest is a FAIL wearing a better name.
 | `CLOSED` | ruled not to be chased | a quoted ruling |
 | `PARKED` | first-time item, awaiting Rafe eye on the walk | a quoted ruling |
 
-**The builder can never route**, and the enforcement is not a signature — it is **visibility**.
+> ### ⚠ SUPERSEDED IN PART — THE BUILDER NOW ROUTES, BY VERIFIED CITATION
+>
+> **RULED (Rafe, 2026-09-08):** *"CC routes flags to issues with verified citations. Routing is no
+> longer a human-only act; the citation verifier is the laundering guard. Rafe audits the routing
+> table at the walk."*
+>
+> The sentence below — *the builder can never route* — was written when the only guard available
+> was a human recognising his own words. There is a machine guard now: `critic_gate` refuses a
+> `ROUTED` whose citation does not **resolve** — a clause must exist in the bible or the process
+> law, an issue must resolve in the record. **A routing nobody can look up is refused by the gate
+> rather than by someone's memory**, which is a stronger guarantee than the signature it replaces,
+> not a weaker one.
+>
+> `CLOSED` and `PARKED` are **unchanged and still need Rafe's words**, and the distinction is
+> exact: routing says *this belongs over there*, which is checkable; closing says *a human decided
+> not to chase this*, which is not.
+>
+> What survives from the paragraph below is its principle, and it still does the work: **the
+> enforcement is visibility.** Every disposition is printed at the gate and stamped onto the
+> handset, and the routing table is audited at the walk.
+
+**The builder can never route** *(superseded above for `ROUTED`; still true of `CLOSED` and
+`PARKED`)*, and the enforcement is not a signature — it is **visibility**.
 Every disposition is printed at the gate and stamped onto the handset, so a routing the builder
 invented is a quote Rafe does not recognise, on his own screen, while he is holding the build.
 

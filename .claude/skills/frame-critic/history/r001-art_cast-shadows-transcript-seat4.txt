@@ -1,0 +1,46 @@
+RANK: 3 > 4 > 2 > 1
+
+BEST: 3
+BEST_WHY: The brazier at (x≈580–620, y≈535–570) is built at the floor's own pixel density — a ring of pale stones with dark joints, a three-tone flame inside, sitting on the tile grid — so it belongs to the floor instead of being pasted on. The floor blocks to its left and below (x≈450–700, y≈520–640) carry hatch-scratch wear that differs block to block in direction and amount, so they read as individually worn slabs rather than one stamped tile, and the joints stay legible right into the cool blue-grey at the far right edge as the light falls off. The wall's timber rail (y≈425–450) has driven pegs and joint notches at the same density as the floor and a darker shadow line under it, so the wall face has real thickness above the floor. The debris pieces (the crossed sticks at (x≈390–425, y≈600–630)) are drawn at the same density as the floor and sit under the crack line correctly.
+
+WORST: 1
+WORST_WHY: Three separate integration failures, all at a glance. (a) The upper-right wall block (x≈560–750, y≈70–400) is rendered as a grey-brown textured surface crossed by two large flat dark polygons with dead-straight, anti-aliased diagonal edges (one runs from about (620,80) down to (560,400)) — vector shadow geometry laid over 2-px pixel art, while the matching block at top-left is solid black; the same wall is drawn two different ways in one frame. (b) The props are not from this scene: the crate (x≈195–305, y≈470–525) is drawn in oblique projection with a visible front face in a straight-top-down room; the pillar (x≈250–350, y≈535–645) is a tall cream slab in side elevation with a rope band — from directly above you would see its cap, not its height — and it stays near-white at the edge of the light instead of taking the falloff; crate, pillar and log (x≈380–500, y≈590–640) use smooth gradient shading and pixels roughly twice the floor's size. (c) Hard-edged uniform dark-blue shadow wedges below the pillar and log (x≈300–520, y≈630–720; x≈170–250, y≈630–720) and to the right of the crate (x≈300–370, y≈500–540) have straight non-pixel-snapped edges, and the crate's wedge falls toward the figure's light rather than away from it.
+
+FLAGGED: 1, 2
+
+SHIP: NONE
+
+FLIP 1:
+- Remove the polygon shadow pass from the upper-right wall block (x≈560–750, y≈70–400) and render that block the same way as the top-left block: solid black interior with the textured rim.
+- Redraw the crate in true top-down (cap only, no front face), at the floor's pixel size, with flat pixel-art shading, no gradients.
+- Redraw the pillar as a top-down cap (a square/round cap with a short shadow ring), not a side-elevation slab; drop its value so it sits inside the light falloff like the floor around it.
+- Redraw the log bundle at the floor's pixel size with two-to-three flat tones instead of a gradient.
+- Pixel-snap all cast shadows (or remove them): the wedges at (x≈300–520, y≈630–720), (x≈170–250, y≈630–720) and (x≈300–370, y≈500–540) must have stepped edges at the floor's pixel size and must fall away from the figure.
+- Run the props through the same light falloff as the floor so nothing in shadow is brighter than the lit floor next to the figure.
+- Replace the upper wall stone above the timber rail (y≈390–425), which is soft and blurred, with stone drawn at the same crisp 2-px density as the rail and the floor.
+
+FLIP 2:
+- Give the pool (x≈245–345, y≈0–190) an edge: a bank/rim tile on the dirt side and a lip tile on the stone side, with a darker depth band inside the edge; the current dead-straight 1-px boundary reads as a fill rectangle.
+- Replace the single repeating dirt tile (red-brown vein blotches, visible repeat every ~32 px) with at least three variants and a hand-placed set of larger features so no period is readable at play size.
+- Remove or redraw the scattered 3–5 px blue specks on the dirt (e.g. (185,155), (140,42), (230,125)); they read as stray pixels.
+- Fix the door at (x≈45–58, y≈80–145): the orange plank should stop at the wall row; the brown bar continuing down over the dirt to y≈145 must go, or become a proper threshold tile.
+- Bake the moss into stone tile variants (x≈15–65, y≈55–85; x≈15–65, y≈215–235; x≈350–384, y≈150–175) instead of soft-alpha teal blobs painted over the grid.
+- Give the stone tiles per-tile variation (value, edge chipping, at least two joint widths); the flat grey with 1-px grid lines reads as a placeholder.
+- Fix the lighter brick patch at (x≈275–315, y≈272–280) in the bottom wall so the wall course is continuous.
+
+FLIP 3:
+- Give the brazier flame (x≈580–620, y≈535–570) a small warm light on the surrounding floor tiles; a burning fire that casts nothing in a single-light game contradicts the frame's own rule. Same for the ember dots on the middle debris (x≈390–425, y≈600–630), or remove the embers.
+- Redraw the left (x≈265–295, y≈600–625) and right (x≈515–550, y≈600–625) debris pieces with more mass and a darker outline; at play size two saturated orange strokes read as map glyphs, not fallen timber.
+- Replace the upper wall stone above the timber rail (y≈390–425), which is soft and blurred, with stone at the same crisp 2-px density as the rail and floor below it.
+- Break the crack decals at block joints: the long crack from (≈280,480) to (≈445,510) crosses four joints with no offset, as do the branching crack at (x≈230–310, y≈600–720) and the arc at (x≈600–740, y≈640–720); either step them at each joint or confine each crack to single blocks.
+- Give the hatch tile (x≈315–380, y≈650–710) a lit top edge or a visible frame so it reads as a hatch rather than a black-outlined missing tile.
+- Vary the timber rail: the peg-and-notch pattern repeats at ~90 px (pegs at x≈297, 390, 477, 580); add at least one variant segment.
+
+FLIP 4:
+- Replace the upper wall stone above the timber rail (y≈390–425), which is soft and blurred, with stone at the same crisp 2-px density as the rail and floor below it.
+- Break the crack decals at block joints: the long crack from (≈280,480) to (≈445,510), the branching crack at (x≈230–310, y≈600–720) and the arc at (x≈600–740, y≈640–720) all run continuously across joints; step them at each joint or confine each to single blocks.
+- Give the hatch tile (x≈315–380, y≈650–710) a lit top edge or a visible frame so it reads as a hatch rather than a black-outlined missing tile.
+- Vary the timber rail: the peg-and-notch pattern repeats at ~90 px; add at least one variant segment.
+- Add at least one object at the floor's density (the brazier from 3 is the model) so the room's four-hundred-year occupation is visible; an empty lit floor is not a defect, but the same frame with props is the one to defend.
+
+Models used: Opus 5 (1M context).

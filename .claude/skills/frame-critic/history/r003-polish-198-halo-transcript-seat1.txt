@@ -1,0 +1,60 @@
+All four read. Here is the assessment.
+
+---
+
+**RANK:** 3 > 1 > 4 > 2
+
+**BEST:** 3
+
+**BEST_WHY:** In the light pool immediately left of the figure (roughly x 325–400, y 465–545) the masonry joints survive at peak exposure — the vertical joint at x≈370 and the horizontal course break at y≈505 are still legible as pale warm lines *inside* the brightest part of the frame. Measured: only 0.05% of the frame sits above luminance 230, against 0.85% in 1, so the light adds value without eating the drawing. The consequence is that the stone under the lantern still reads as cut blocks of differing widths — a short block at x 325–360, a long one running x 400–500 — rather than as a glow. Second thing, in the same frame: the character sprite holds a full dark outline and a cream shield face against the tan floor, so the figure is the highest-contrast object on screen, which is what you want when it is also the light source. Third: the wall band above the figure (y 390–455) sits at luminance ~39 against the floor's ~72 at the same distance from the lamp, so the wall's top surface and the floor never collapse into each other along the whole run.
+
+**WORST:** 2
+
+**WORST_WHY:** The green pool is an axis-aligned rectangle butted straight against the dirt with no transition tile anywhere — its bottom-left corner at approximately (248, 190) is a clean 90°, and the dirt simply stops at that line with no bank, no wet margin, no debris. The same failure repeats at the dirt/flagstone seam along y≈216, which is a ruler-straight horizontal cut across the full width, and again at x≈344 where the dirt ends mid-tile against stone in a staircase notch. Beyond that: there is no lighting model at all — luminance runs 72 mean with nothing above 230 and nothing below 12, corner to corner, so no figure carries any light and the far edges of the room are as bright as the near ones. The flagstone floor is one tile repeated with an identical 1px grout line on every edge and identical speckle placement. The two barrels at (117, 200) and (170, 200) are the same sprite pasted twice with the same rim highlight at the same clock position. The green blob used as algae in the water at (222, 152) is the same shape recolored and used as moss on the stone at (25, 60). The crates at the top-left are undamaged, square, and bright yellow-tan — nothing in this frame has been repaired, salvaged, pinned or roped, and nothing in it has been used for four hundred years. The figure at the top edge is clipped by the frame and stands on a brown ellipse that is not a shadow, it is a pad.
+
+**FLAGGED:** 1, 2, 4
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- The light pool clips: the floor from roughly x 300–420, y 465–560 reaches luminance 218 mean / 249 peak and the tile joints in it are gone — that region is a smooth cream field where the surrounding floor has visible courses. Cap the light multiplier so the brightest floor pixel lands near 190 and re-check that the vertical joint at x≈370 and the horizontal course at y≈505 are still visible after the light is applied.
+- Light the stone *multiplicatively against the joint value*, not additively against the whole tile — currently joint and face converge to the same value under the lamp, which is why the geometry disappears only where it is brightest.
+- The room interior at x 110–460, y 120–400 contains no art. At 5.5× gamma it is a flat mottled field with two thin crack lines and no stones, no joints, no floor grid, no objects. Draw that floor at the same tile pitch and joint density as the lit floor, then let the darkness cover it.
+- The far strip along the top edge (y 0–120) sits at luminance ~13.5 while the mid-frame at y 180–300 sits at 3.3–8.3 — the tiles furthest from the lamp are the brighter ones. Make the falloff monotonic with distance, or remove the ambient term that is lifting the frame border.
+- The large brown fields flanking the vertical corridor (x 130–200 and x 600–700, y 180–380) are soft airbrushed mottle with no masonry structure at any scale. Give them the same block/joint treatment as the wall band at y 390–455.
+- Nothing in the frame has been repaired. The company has held this line for four hundred years with rope, driven pins, hide and salvaged timber — put at least one of those in the lit area, as an object with a cast shadow, not as a texture mark.
+
+**FLIP 3:**
+- Same empty room: x 110–460, y 120–400 has nothing under the darkness. Draw the floor and let the light hide it.
+- Same inverted falloff: y 0–120 is brighter than y 180–300 at the same column. Fix the distance curve so the frame edge is the darkest thing, not a lit band.
+- Same blurred flanks: the fields at x 130–200 and x 600–700, y 180–380 are airbrush, not stone. Structure them.
+- The figure is lit flat — its own palette is uniform across the sprite while it stands at the exact centre of a strong light. Add a value ramp across the sprite consistent with a lamp at its own position (hood and shield rim brighter, boots and lower-left in its own shadow).
+- The figure casts no shadow. At this light intensity it should throw one, and its absence is why the sprite reads as pasted over the floor rather than standing on it.
+- No repair anywhere in the lit area. Same note as above: rope, pins, hide, salvaged timber — at least one, as a drawn object.
+
+**FLIP 4:**
+- The player character loses its silhouette. The shield disc at (410–425, 483–498) sits at almost the same value as the tan floor behind it, and the face at (395–405, 472–482) is a flat red-brown mass with no eye — compare the same sprite in the other frames where the eye and shield boss are both legible. Restore the sprite's dark outline and pull the shield face two steps lighter than the floor it stands on.
+- There is a grey-green amorphous smear at roughly (430–460, 520–548), overlapping the joint line and containing one stray black pixel. It has no silhouette and resolves into nothing at any zoom. Either draw it as an object or delete it.
+- The whole frame is compressed: peak luminance is 231 with zero pixels above that, so the lantern never produces a highlight and the "only light there is" does not read as a light. Open the top of the range to around 245–250 at the lamp centre while keeping the joints intact (see FLIP 1).
+- The wall band's top edge from x 200–500 at y≈395 is soft and blurred where the same edge in the other frames is a hard one-pixel transition. Re-cut that edge crisp; a wall does not have a fuzzy top.
+- The vertical corridor at x 505–560 has a hard straight seam running its full height on both sides, with no masonry course crossing it. Break the seam by carrying at least two floor courses across the corridor mouth.
+- Same three shared faults as above: the empty room at x 110–460 / y 120–400, the inverted falloff at the top edge, and the airbrushed wall flanks.
+
+**FLIP 2:**
+- Draw edge tiles for the water. The pool boundary (x 248–408 horizontally, ending at y 190) is a bare rectangle — it needs a bank: a darker wet margin one tile wide, corner pieces at all four corners, and an irregular outline so the pool is not a rectangle.
+- Break the dirt/flagstone seam at y≈216. It is currently a straight cut across the full frame width. Interleave the two materials for one tile in each direction and scatter loose grit from the dirt onto the first course of stone.
+- Fix the notch at x≈344, y 190–216 where the dirt ends mid-tile against the stone column with a square step.
+- Introduce a lighting model. There is currently no falloff anywhere: mean luminance 72, nothing above 230, nothing below 12. The scene needs a single light at the figure and darkness at the frame edges, same as the other frames attempt.
+- Vary the flagstone. It is one tile with one grout pattern repeated across the whole floor; cut at least four variants with different crack placement, different chipping on the corners, and two with the joint eroded away entirely.
+- Stop reusing one blob for two materials. The green shape at (222, 152) in the water and at (25, 60) on the stone are the same sprite. Algae in standing water and moss on dry flagstone are different things.
+- Redraw the barrels at (117, 200) and (170, 200) — identical sprite, identical highlight. Give one a sprung stave, a different lid angle, a different rim value.
+- The crates at the top-left are new-looking: clean bright frame, undamaged panel, a decorative diamond centred on each face. Nothing here has been repaired or salvaged. Replace with something that has been mended: a split panel held by a rope lashing, a driven pin, a patch of hide over a break.
+- The figure at (170, 8) is cropped by the top edge and sits on a brown ellipse. Move it fully inside the frame and replace the ellipse with a shadow that matches the scene's light direction once you have one.
+
+---
+
+The thing worth naming: 1 and 3 are the same frame — they differ only in a 265×235 px region around the light, 2.9% of pixels. The entire distance between "would ship" and "would not" in this pair is one exposure decision on the light pool. That is a cheap fix and a repeatable rule: cap the light so the joints survive it. The expensive problem is the one all three share, which is that roughly a third of each frame has nothing drawn under the darkness. That will not survive a player turning up their brightness, and it is the fault that will read as "generated" rather than "made."
+
+*Model: Opus 5 (1M context).*

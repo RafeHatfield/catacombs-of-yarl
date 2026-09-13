@@ -1,0 +1,42 @@
+RANK: 2 > 3 > 4 > 1
+
+BEST: 2
+BEST_WHY: Frames 2 and 3 are the same render to within measurement (max per-channel pixel delta of 5, confined to the lower-right floor; visually indistinguishable). I put 2 ahead because 3 is fractionally brighter in the already-overexposed floor right of the figure, i.e. marginally more blown out. What is well made: the wall face band running under the dark wall-top at y≈420–460 (x 180–750) is a distinct surface from the wall-top above it and the floor below it — brown timber-and-stone with driven iron pins at x≈300, 400, 460, 590, 690 and a small strapped bracket at x≈340, so the "repaired with pins and salvaged timber" read is in the art, not the caption. The long crack on the floor starting at the plinth (x≈290, y≈600) and running to x≈560 crosses tile joints rather than stopping at them, so the flagstones read as one cracked floor rather than a stamped tile. Floor scratches vary per stone (compare the stone under the figure with the one under the brazier). The lashed timber bundle at (390–500, 590–640) is drawn straight top-down, matching the floor's projection. The light is one warm source with a cool ambient in the dark, and the falloff is continuous rather than banded.
+
+WORST: 1
+WORST_WHY: Nothing in it is lit. The orc at (210,10) carries no light; the frame is one flat value from corner to corner, with a drop shadow under the figure implying a ceiling light that doesn't exist anywhere else. The brown floor (x 55–245) is uniform speckle noise — blue and red flecks with no tile structure, no wear pattern, no direction. The grey "wall" band along the bottom (y 215–265) and the left column (x 0–55) are big flat slabs with hairline joints, drawn at the same texture density as a floor; only the 1-tile dark brick strip at y≈265 says "wall face", so the grey reads as raised floor, not wall. The same green moss stamp is placed unchanged at (30,60), (25,215), (365,160), (355,180) and once on the floor at (130,225). The pool (x 250–345) is a hard-edged rectangle with a honeycomb pattern and identical lily-pad stamps; it looks like a swimming pool. Projections are mixed: the chests at (65,5) and (65,50) are front-on with the lid open, the barrels at (120,195) and (170,195) are 3/4 with a visible side, the floor is straight top-down. It is a free tileset laid out on a grid.
+
+FLAGGED: 1, 2, 3, 4
+- 1: flat lighting and identical moss stamp reused five times — visible at a glance.
+- 2, 3: the wall-top surface is a soft, low-frequency cloud noise (clearest in the lit corridor mouth at x 640–750, y 300–400, and top-left at x 180–440, y 80–390) that is blurry at 2–3× the pixel size of everything else. Next to 1-px pixel-art sprites it reads as a Perlin filter laid over the map, not painted stone. The floor to the right of the figure (x 470–560, y 470–530) is blown to near-white and the joints disappear.
+- 4: every unlit wall-top is a single flat slate-blue wash (top-left quadrant x 0–440, y 70–390; right x 570–750, y 70–260; bottom-left x 0–110). Faint crack lines float on solid fill. It looks like a fog layer that never got a texture under it.
+
+SHIP: NONE
+
+FLIP 1:
+- Give the figure a light source and apply a radial falloff to the map; the far corners should sit at least 3–4 value steps below the tile under the figure.
+- Replace the floor's random blue/red speckle with drawn flagstone joints at the tile grid, and put wear (scuffs, cracks) that crosses tile boundaries so it doesn't stamp.
+- Separate wall-top from floor by value and texture: darken the grey slabs, drop their joint density, and give every wall run a face strip (the dark brick at y≈265) on its room-facing side, not just along the bottom edge.
+- Draw at least three moss variants and rotate/flip them; no two instances of the (30,60) stamp should appear identical in one screen.
+- Redraw the chests and barrels straight top-down (lids and barrel tops as seen from above) to match the floor projection; remove the figure's offset drop shadow or replace it with a contact shadow.
+- Break the pool's hard rectangular edge with a stone lip or irregular waterline; replace the honeycomb fill with a still-water texture that has no visible repeat within the pool.
+- Remove or redraw the loose white pixels at (215–235, 115–125); as drawn they read as stray pixels, not debris.
+
+FLIP 2:
+- Repaint the wall-top surface at pixel resolution: hard-edged stone blotches and cracks at 1-px scale, matching the floor's texture density. The current cloud noise must go.
+- Pull the light's peak intensity down or clamp the floor's brightest value so the joints at (470–560, 470–530) stay visible; the tile under the brazier glow should never reach the same value as the plinth face.
+- Finish the corridor mouth at x 500–560: the wall face band is simply cut where the corridor passes through it. Add a jamb or threshold tile so the opening reads as built, not as a missing strip.
+- Draw the plinth at (265–300, 540–640) from above: it's currently a side elevation (tall pale rectangle with a strap at the bottom) sitting on a top-down floor. Same for the crate at (195–305, 475–515) — show its lid, not its front.
+- Light the figure sprite. Its cyan and orange are at full saturation while every surface around it is warm-tinted; multiply it by the same light colour or desaturate it so it belongs to the scene.
+- Soften the brazier's ground glow edge at (570–625, 520–570); it is currently a hard circle lighter than the surrounding stone.
+
+FLIP 3:
+- Same list as FLIP 2, item for item; this is the same frame.
+- Additionally, bring the lower-right floor brightness back to at least frame 2's level (it is measurably hotter here) before doing the clamp above.
+
+FLIP 4:
+- Restore a stone texture to the unlit wall-tops — this frame has none. Paint it at pixel resolution (see FLIP 2, item 1), not as a returned cloud filter.
+- Drop the ambient in the dark by 2–3 value steps and pull its hue toward neutral; the current slate-blue wash sits far enough above black that the whole top half reads as evenly fogged, not unlit.
+- Everything in FLIP 2 items 2–6 also applies here; the lit region is the same render.
+
+Model used: Claude Opus 5 (1M context).

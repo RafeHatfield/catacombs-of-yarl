@@ -374,6 +374,7 @@ public static class Tier1BoundaryWall
         var traffic = tf.Field;
 
         int face = 0, top = 0, voidCells = 0, missing = 0, faceSuppressed = 0;
+        int firstSurface = 0, occludedMass = 0;   // the light-mask split, reported
         int bound = 0, capLaid = 0, capVoid = 0;
         var ageHist = new int[System.Math.Max(1, 8)];
         var ageMap = new Dictionary<(int X, int Y), int>();
@@ -650,6 +651,30 @@ public static class Tier1BoundaryWall
                         }
                     }
                 }
+
+                // ── THE LAMP STOPS AT THE FACE — BY MASK (cast-shadows round, §12.1a) ──────
+                //
+                // A 2D occluder cannot say "light this cell's own surface, stop behind it":
+                // measured, a per-cell quad with its light-facing edges casting shadows its own
+                // face (r29: 37.90 -> 5.51), and with them culled the cells in a wall row shadow
+                // each other obliquely through their far edges (face 40.16 -> 28.47 cw, 37.19
+                // ccw; cap 52.92 -> 30.05 / 38.00) — and a far edge cannot darken a thick mass
+                // whose far side is rock. So the FIRST SURFACE the lamp meets is exempt from
+                // shadows and everything behind it receives them: a wall cell with floor
+                // anywhere in its 8-neighbourhood — the reveal the player sees, and the cap
+                // beside it — lights as it always did; a cell with no floor beside it is
+                // unexcavated mass and goes dark by occlusion. §12.1 calls the boundary this
+                // draws FORM: it sits on geometry, moves with the lamp, and no ring is laid.
+                bool adjacentFloor = false;
+                for (int dy = -1; dy <= 1 && !adjacentFloor; dy++)
+                    for (int dx = -1; dx <= 1; dx++)
+                        if (map.InBounds(x + dx, y + dy) && !map.IsWallTile(x + dx, y + dy))
+                        { adjacentFloor = true; break; }
+                int lmask = adjacentFloor ? ReviewLighting.PropLightMask : 1;
+                s.LightMask = lmask;
+                foreach (var ch in s.GetChildren())
+                    if (ch is CanvasItem cci) cci.LightMask = lmask;
+                if (adjacentFloor) firstSurface++; else occludedMass++;
             }
         }
 
@@ -681,6 +706,7 @@ public static class Tier1BoundaryWall
              + $"planes(top={cfg.TopValue:0.##} face={cfg.FaceValue:0.##}) "
              + $"edge_check={cfg.EdgeCheck.Count}/OK bindings={bound}({kinds}) "
              + $"cap={capLaid}+{capVoid}void "
+             + $"lightmask(first_surface={firstSurface},occluded_mass={occludedMass}) "
              + $"age0..3={ages} traffic=spine:{tf.SpineLength:F0}/routes:{tf.Routes} "
              + $"manifest={manifestResPath}";
     }

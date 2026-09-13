@@ -1,0 +1,48 @@
+Read all four. Before the answers, one measured fact that shapes them: **1, 3 and 4 are the same scene, same assets, same camera.** Files 1 and 3 are pixel-identical everywhere except the region x 269–534, y 387–622. File 4 differs from 1 only in the band y 390–500 (the wall run) and the light pool. So the ranking among those three is a ranking of *lighting passes over one piece of art*, not of three pieces of art. File 2 is unrelated work at a different tile size.
+
+RANK: 1 > 4 > 3 > 2
+
+BEST: 1
+
+BEST_WHY: The floor plane inside the light pool. At x 250–320, y 470–560 the joints are not one treatment repeated — a course line runs solid 1px near-black for four blocks, then breaks into a broken two-value dotted line partway along the *same* course, and two blocks meet with no joint at all. Blocks carry different base values against each other rather than a single tile tinted, and the incised scratch/spall marks at ~(255,485) stop at the block edge instead of running across it, so they read as damage to *that* stone. There's a driven timber pin at ~(310,505) with its own short cast shadow to its lower-left. The crack network across x 240–420, y 540–650 is pixel-stepped, not anti-aliased, and it forks and changes width along its run. And the light holds tonal separation instead of eating the art: across y=560 the floor steps v 0.96 → 0.78 → 0.59 → 0.47 from x 380 to 560, and only 298 pixels in the whole frame reach R≥250 with G≥230, so the stone stays readable at every distance from the lamp.
+
+WORST: 2
+
+WORST_WHY: Three things, any one of which is disqualifying. (a) The water is a strict axis-aligned rectangle, x 248–343, y 0–191. Dirt becomes deep green in a single pixel column at x=248, and the bottom edge stops dead at y=191 against dry dirt with no bank, no lip, no containment — water held in mid-field by nothing. Its surface is one flat green with a hexagonal cell pattern at constant density edge to edge. (b) The two barrels at (112–145, 190–216) and (160–193, 190–216) are the same sprite pasted twice — mean per-pixel difference 1.4, identical rim highlight, identical cross mark on the lid — and the two crates at (63–98, 2–30) and (63–98, 50–78) likewise, mean difference 0.13. (c) There is no lighting model at all: every surface sits at flat full ambient, the only shadow in the frame is the ellipse under the figure, and the crates and barrels — which are drawn in 3/4, showing lid ellipse and front stave face, over a strictly top-down floor — cast nothing.
+
+FLAGGED: 2, 3, 4
+
+SHIP: 1
+
+FLIP 2:
+- Draw a bank at the water's left edge (x=248) and bottom edge (y=191): a 2–3px wet-dirt lip darker than the dry dirt, then a shallow-water value between dirt and deep green, then the deep fill.
+- Terminate the water against something. Run it to a stone kerb or cut it into the ground with a visible edge; do not let it end at a straight line in open dirt.
+- Break the flat fill: darken toward the centre of the body and lighten at the margins so depth reads. Vary the cell-pattern density instead of running it at one frequency across the whole rectangle.
+- Redraw one of the two barrels — different stave count, different lid, different damage — so the pair at (112,190) and (160,190) stop being one stamp.
+- Redraw one of the two crates at (63,2) and (63,50) for the same reason.
+- Add contact shadows under both barrels and both crates, matched to the ellipse already under the figure at (212–234, 0–27).
+- Resolve the projection conflict: redraw the barrels and crates looking straight down, since the dirt, water and stone floor are strict top-down.
+- Break the dirt field. The 16px tile seams are visible as a faint square grid at x 100–190, y 0–140, and the maroon speckle sits at identical density across the entire field. Vary the tile, and add wear where traffic would be — a path between the crates and the water, scuffing at the barrels.
+- Recolour or remove the saturated cyan chips at ~(132,9), ~(122,17) and ~(112,37). That blue appears nowhere else in the frame's range and none of them touch the ground.
+- The white scatter at (208–233, 113–127) has no readable silhouette and no shadow — it reads as noise. Redraw as identifiable objects with contact shadows, or cut it.
+- Vary the stone floor. Nine 16px tiles in the bottom band alone are byte-identical, with mortar at constant width and value. Change block values against each other, break some joints, chip corners.
+- Give the teal splats at (10–60, 155–185) and (30–60, 215–245) internal value steps and settle them into joints and low points instead of laying them across the masonry as flat single-value decals.
+- Finish the object at (27–35, 128–167): the brown shaft below the orange bar runs off the wall stub onto the dirt and ends in a blunt taper at y≈167 with no base, no footing and no shadow.
+- Add the light model. Nothing in this frame is lit by anything.
+
+FLIP 3:
+- Clamp the pool. 6,730 pixels clip at R≥250 & G≥230, peaking at rgb(253,236,147) at (430,520). Cap the lit floor at or below the value the same art reaches in file 1's pool, rgb(247,182,115).
+- Composite the light multiplicatively against the tile art rather than additively over it. The mortar joints inside x 310–470, y 440–540 — the vertical joint left of the figure and the two course lines at its feet — exist in the identical pixels of file 1 and are gone here; the floor there is blank cream.
+- Lock the light's hue. The pool centre sits at hue 50° while every floor sample outside it reads 24–41°. The lamp is turning the stone yellow-green at its core.
+- Remove the diagonal striations across the pool's upper-left, around x 300–360, y 440–480. They run at ~45° continuously over joints and block boundaries, and nothing in a top-down floor plane can cast them.
+- After the composite fix, confirm the three loose brown specks at ~(300–320, 475–490) reconnect to their joint. They are the surviving fragments of a crack whose joint the blow-out erased.
+
+FLIP 4:
+- Ramp the occlusion cut at the top of the wall run. At y=390, x 170–500, the lit wall face steps from mean L=19 to L=73 in one pixel row, dead straight for 260px. File 1 ramps the same boundary 21 → 27 → 58 over eight rows; do that, or stop lighting the wall face short of the cut.
+- Apply the same ramp to the right-hand wall run, x 570–750, which carries the identical hard boundary.
+- Tighten the falloff. The floor holds v 0.65–0.93 across y 460–640 with little modelling between, so the light reads as room ambient rather than a carried lamp; bring the half-value radius in to roughly four tiles from the figure.
+- Draw the wall top surfaces at x 120–190, y 400–700, or keep them out of the light's reach. Brightened, that whole column is a soft blob field of three or four close values with no joints, no courses and no repair — sitting directly against floor blocks that have hard 1px joints and per-block value variation. Two levels of finish in one frame.
+
+One thing I'd flag beyond the questions, since it applies to the frame I *am* shipping: that last defect — undrawn, structureless wall tops next to fully authored floors — is present in 1 as well. In 1 it survives because the wall mass stays dark enough to read as deliberate value hierarchy. It is the frame's thinnest inch, and the moment anyone widens the lamp radius it stops being defensible. That's what 4 demonstrates.
+
+Model: Opus 5 (1M context).

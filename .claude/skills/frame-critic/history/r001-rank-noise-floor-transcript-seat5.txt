@@ -1,0 +1,54 @@
+Read all four at native size, then at 3–8× on the wall runs, the light pool, the sprite, and the material boundaries, with pixel-value profiles across the transitions.
+
+**RANK:** 4 > 2 > 3 > 1
+
+**BEST:** 4
+
+**BEST_WHY:** The corridor running north at x≈504–564, y≈150–460. The far end sits at a cold blue-grey (35,30,30) and the near end at a warm (206,163,102), and the transition between the two temperatures happens across the masonry courses, not across a gradient laid over them — individual blocks change value at their own joints, so the corridor reads as depth rather than as a fade. Strung across it are rope lines that terminate on small dark driven pins on both side faces (around (505,215), (513,280), (530,300)); the lines run at three different angles, cross tile boundaries without breaking, and none of them repeat. Second thing: the figure is inside the scene's own gamut. Sprite bbox at (382,462)–(432,512) contains zero pure-255 channel values and the frame's overall ceiling is luminance 231.7 — the shield's cream is pulled toward the amber and the helmet's cyan is desaturated into it. Nothing in the picture is brighter than the light model allows. That is the difference between a lit character and a decal.
+
+**WORST:** 1
+
+**WORST_WHY:** The water. At row 120 the pixels go dirt (91,67,26) → water (36,76,62) between x=247 and x=248 — one pixel, no bank, no edge tile, no wet margin. The green body is a rectangle: its right edge is a dead-straight vertical at x≈310 for its full height, its bottom a dead-straight horizontal at y≈231, and at (310,175) it terminates in a square corner against dirt. It is a fill, not a shoreline. Underneath that, the stone floor is literally flat: sampling x=300 down y=230–242 returns (90,90,90) at every row except one grout pixel at (71,71,71). Every block in the frame is the identical grey, so the masonry reads as one plane with a grid printed on it. And there is no light model at all — the top-left corner reads luminance 90 and a stone tile three-quarters of the frame away from the figure also reads exactly 90. A frame whose whole premise is one carried lamp has zero falloff in it. On top of that the chests at (60–105, 8–38) and (60–105, 45–75) each carry a rendered front face below them and the barrels at (118,192) and (158,192) show their side staves, all sitting on a floor drawn from directly overhead — two projections in one frame.
+
+**FLAGGED:** 1, 3, 2
+
+**SHIP:** NONE
+
+---
+
+**FLIP 1:**
+- The water/dirt seam is a 1-pixel hard cut at x=248. Author a proper edge: a wet-dark rim, a bank of loose stone, and corner pieces so the rectangle's square corner at (310,175) stops being a corner.
+- The green body's right edge (x≈310, full height) and bottom edge (y≈231) are perfectly axis-aligned. Break the outline off the grid — the pool should not have any run of straight edge longer than about two tiles.
+- The stone floor is a single flat value: (90,90,90) everywhere, grout at (71,71,71). Give the blocks a 3–4 step value spread within the same hue so adjacent stones differ, and vary the joint depth along a single run so they read as cut rather than stamped.
+- The dirt texture (x 55–248) is airbrushed noise with no grid discipline, sitting flush against a hard 32px stone grid. Either resolve the dirt to the same pixel scale or make it debris on top of a floor, not a floor.
+- There is no light falloff. Corner and centre stone both read 90. Add the distance-from-figure model the rest of the deck uses.
+- The chests at (60,8) and (60,45) and the barrels at (118,192) and (158,192) are drawn in ¾ with visible front/side faces on a straight top-down floor. Redraw them from directly above — lid, hoops, rim.
+- The green figure at (222,0)–(244,30) is soft-shaded at a different rendering standard from every tile around it. Bring it onto the same palette and outline discipline as the tileset, or it stays a pasted asset.
+- The black brick band across y=258–288 has no top surface and no contact with the floor above it. Give it a lit top face and a joint line where it meets the stone.
+
+**FLIP 2:**
+- The sprite carries 542 pure-255 channel pixels; the brightest surface the lighting produces anywhere in the frame is 250. The shield at (410,478)–(428,500) is a near-white cream no floor tile reaches, and the helmet is saturated cyan in a frame whose gamut is amber and olive. Multiply the sprite by the same light term as the floor it stands on, exactly the way 4 does — no channel above the scene ceiling.
+- 298 pixels in the play area sit at ≥240 and the floor immediately around the figure washes toward flat. Pull the light's peak down about 8% so the stone joints under the character survive; that is where the player is looking.
+- The visibility mask is unfeathered. At row 500 the frame steps from luminance 39 to 4 across the single pixel at x=119, and the same knife edge runs horizontally at y=135. Ramp or dither that boundary over 8–12px.
+- The two dark levels are flat untextured fills — luminance 1 in the outer black, 16 in the inner. Give the 16-level region enough ambient that the wall silhouette survives, so those areas stop reading as missing tiles.
+- The dark regions at top-left and top-right are axis-aligned rectangles with square corners landing mid-wall-run. Clip the mask to the geometry — wall lines, doorway mouths — not to a rectangle.
+- There is a 9×2 pixel bar at (473–481, 178–179) reading luminance 222 on a field of 24. It is the brightest thing in the upper-left quadrant, it is nowhere near the lamp, and nothing else at that distance exceeds 40. Remove it or give it a source.
+
+**FLIP 3:**
+- Everything in FLIP 2 (this frame shares the mask edges, the flat dark fills, the untinted 255-white sprite, and the unexplained bright bar at (473,178)), plus:
+- A glow overlay has been added over (259,379)–(545,631) and it is diagonally hatched. Differencing against the neighbouring frame shows the added light as a striped pool running at roughly 35°, crossing the tile grid, the wall base and the stone courses at an angle that matches nothing in the geometry. That is a filter, not lighting. Remove it and rebuild the falloff radially from the figure.
+- The overlay clips: 3,490 pixels in the play area sit at ≥240 versus 298 in the comparable frame. Around (300,440)–(520,540) the mortar joints and block edges are gone — the floor the player is standing on has no masonry left in it. Cap the light so the joints hold at the centre of the pool.
+- The added glow stops dead at the sprite's silhouette — the delta is exactly zero inside the character's outline while the floor around it gains up to +70. The figure is an unlit cutout sitting in the middle of its own halo. The light must apply to the sprite and the floor in the same pass.
+- The bright pool's centre is offset down-left of the figure rather than on it. Recentre it on the carried light.
+
+**FLIP 4:**
+- The visibility mask is unfeathered: row 500 steps from luminance 39 to 4 in one pixel at x=119, and the horizontal edge at y=135 does the same. Ramp it over 8–12px or dither the boundary so it stops reading as a rectangular hole in the tilemap.
+- The outer black (luminance 1) and the inner dark (16) are both flat, textureless fills covering a large share of the frame. Carry a faint ambient into the 16-level region so the masonry silhouette persists.
+- The top-left and top-right dark areas are square-cornered rectangles whose corners land in the middle of a continuous wall run. Cut the mask on the architecture instead.
+- The 9×2 pixel bar at (473–481, 178–179) reads luminance 222 against a surround of 24, in the unlit zone, with no source. Nothing else that far from the lamp exceeds 40. Delete it or justify it.
+- The floor hatch at (300,645)–(385,720) is bounded by a 1-pixel black rectangle on all four sides with square corners. Break that outline: let the boards overshoot the opening at the ends and vary the gap, the way a salvaged-timber patch actually sits over a hole.
+- The sprite's tint has flattened its internals — the face at (398,472)–(414,488) is close to a single orange and the shield boss barely separates from its rim. Keep the light multiply but restore two steps of internal value on the face and the shield so the character still reads at play size.
+
+Frames 2, 3 and 4 are the same production; 1 is not, and the gap is not stylistic. The thing to fix first across the shipping candidates is the visibility mask — it is the one defect all three share, it is a renderer setting rather than art, and it is what makes an otherwise well-built dungeon look like it has tiles missing.
+
+*Model: Claude Opus 5 (1M context)*

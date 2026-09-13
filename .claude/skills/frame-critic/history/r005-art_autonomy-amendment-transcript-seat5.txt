@@ -1,0 +1,47 @@
+RANK: 3 > 2 > 4 > 1
+
+BEST: 3
+BEST_WHY: The floor in 3 is the best-made surface in the deck. The blocks are cut at different lengths within each course (compare the long block at roughly x 500–555, y 525–545 against the short pair just left of it), and the courses stagger, so the floor reads as laid masonry rather than a stamped tile. The thin dark cracks run continuously across block joints — the long one from about (210, 495) down through (330, 600) and on toward (390, 720), and the arc at right from (600, 690) to (740, 600) — which is exactly how a fracture behaves in a real floor and is what makes the surface read as one slab rather than a grid of repeats. The light falloff is smooth in all directions from the figure with no visible banding, and the wall face along the top of the room (the row of darker brick at y ≈ 430–445) is a clear step in value below the wall top and above the floor, so the three planes separate.
+
+WORST: 1
+WORST_WHY: There is no light in it. The fiction says the figure carries the only light and the frame darkens away from it; in 1 the corner at (0, 280) is exactly as bright as the tile under the figure at (222, 12). The torch on the left wall at (30, 135) has a drawn flame and emits nothing. The grey wall tiles in the left column (x 0–50, y 0–190) are identical 32-px stamps — the same crack decal recurs on the tile at (25, 75) and again lower — and the dirt floor's speckle repeats on the tile grid so the seams are readable across the whole room. The pool at (245–345, 0–190) is a razor-straight rectangle laid over the dirt with no bank, no wet edge, no depth change at the margin; the lily pads at (330, 120) sit right up against that hard edge. The bottom "wall" (y 270–288) is a single flat lighter row with a brick pattern and no thickness. Everything is at the same saturation and value, which is what a free tileset looks like.
+
+FLAGGED: 1, 2, 4
+
+SHIP: NONE
+
+FLIP 1:
+- Add distance falloff from the figure at (222, 12): the tile under the figure should be the brightest thing in the frame and the corner at (0, 280) should be near black. Right now they are the same value.
+- Either make the wall torch at (30, 135) throw a warm pool onto the adjacent grey tiles and dirt, or remove the flame; a drawn flame that lights nothing is a placeholder.
+- Break the grey wall tile repeat in the left column (0–50, 0–190): at minimum three distinct base tiles plus rotation, and stop the identical crack decal recurring at fixed grid positions.
+- Give the pool (245–345, 0–190) an edge: a one-tile bank transition (darkened, damp dirt or a stone lip) and a darker value at the water margin so it reads as sunk into the floor rather than pasted on top.
+- Give the bottom wall (y 270–288) thickness: a top surface and a face at different values, not a single flat lighter row.
+- Kill the tile-grid repeat in the dirt floor — the speckle pattern is readable as 32-px cells across (60–240, 0–190); use larger variants or an overlay so no seam is traceable.
+- Give the barrels at (128, 200) and (175, 200) and the chests at (80, 10) and (80, 55) contact shadows; they currently float on the floor.
+
+FLIP 2:
+- Fix or remove the pale vertical slab at roughly (270–295, 540–620). It is a flat, unshaded, uniform tan rectangle with no top/side distinction, no contact shadow and no visible relation to the light — it is the brightest object in the frame after the hotspot and reads as an unfinished placeholder.
+- The brazier at (598, 550) has glowing red-orange embers and casts no light on the floor around it. Either it emits (a small warm pool on the surrounding blocks and a soft shadow under its rim) or the embers are out and dark. A glowing source that lights nothing contradicts the frame's own lighting rule.
+- Give the crossed timbers at (240, 485) and (440, 610) contact shadows on the floor; they currently sit on the surface with no grounding.
+- Clamp the hotspot: the blocks directly under and right of the figure (approximately 380–450, 480–530) are washed to near white and the joints disappear. Cap the peak so joint lines survive at the brightest point.
+- The wall tops (e.g. 130–440, 80–140, and the corridor top 505–560, 0–70) are a mottled cloud-noise texture with no stone structure. Replace with drawn block tops or coarse cut-stone at the tile scale so it reads as material, not a noise overlay.
+- The upper corridor (505–560, 80–400) and the top wall band (y 0–70) are visible at roughly constant brightness up to the frame edge, 400+ px from the only light. Make the far corridor fall to the same near-black as the room's far corners, or make the ambient floor uniform everywhere — pick one rule.
+- The wall-face strip at y ≈ 430–445 is one identical brick row repeated across the full width; vary block length in that course as the floor already does.
+
+FLIP 4:
+- The falloff is not smooth. Right of the figure (approximately 480–560, 470–560) individual blocks jump between bright and dark with adjacent blocks at very different values, and there are dark blotches in the floor around (300–380, 560–660). This reads as a per-tile lighting artefact or an over-pushed contrast curve, not a light source. Use a continuous falloff and remove the per-block variance.
+- The left boundary of the lit area at x ≈ 230 (y 470–560) is an abrupt step from lit floor to dark; the same edge in 3 is a gradient. Soften it.
+- The hotspot around the figure (380–450, 470–530) clips to white harder than in 2 or 3; joints vanish. Cap the peak.
+- The left-hand wall top (130–185, 400–650) is a warm, textured, fairly evenly lit strip while the floor it borders is dark — a wall top should not be brighter than the floor it stands on at that distance from the light.
+- The wall face at (130–470, 395–440) is warm and brightly lit while the corner at (450–500, 395–440) goes abruptly dark; light falls off along a face gradually, not in a hard segment.
+- Same as 2/3: wall tops (130–440, 80–140) are cloud-noise, and the top band (y 0–70) stays visible far from the light while the corridor below it goes dark — the inconsistency is more glaring here because the falloff in the room is so steep.
+
+FLIP 3:
+- Replace the wall-top texture (130–440, 80–140; 505–560, 0–70; 570–750, 70–140): it is a mottled sponge/cloud noise with no block structure and reads as a filter overlay rather than stone.
+- Clamp the hotspot under the figure (380–450, 480–530): blocks go to near white and the joint lines wash out.
+- The top wall band (y 0–70) and the upper corridor (505–560, 80–300) remain visible at near-constant value 400+ px from the only light while the room's far corners go black; make far surfaces fall to the same floor value.
+- The wall-face course at y ≈ 430–445 is a single identical brick row across the full width; vary block lengths as the floor does.
+- The figure at (405, 490) casts no shadow and shows no light-bearing object; if the figure is the light source, the floor immediately around the feet should carry the darkest contact shadow in the frame, not the brightest pixels.
+
+---
+Model: Opus 5 (1M context)

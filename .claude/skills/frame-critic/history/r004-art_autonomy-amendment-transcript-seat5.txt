@@ -1,0 +1,44 @@
+RANK: 1 > 3 > 2 > 4
+
+BEST: 1
+BEST_WHY: The wall band bordering the room (y≈420–450, x≈190–500 and x≈560–750) is built correctly for a straight-down view: flat top surface above, dark brick face below it on the side that touches the floor, with vertical driven-pin marks breaking the face at irregular intervals (x≈235, 330, 450, 470, 580) — the pins are different heights and don't repeat on a fixed period, so the band reads as repaired rather than tiled. The light falloff is continuous with no banding: floor value at the figure measures mean 174/255 with nothing clipped, and the corridor above (x≈505–555) darkens smoothly to black over ~300px. The corridor floor bricks run at a smaller module than the room bricks and carry their own crack line, so the two spaces read as separately laid. Nothing in it is broken; it is the only frame where the wall, the floor and the light all agree with each other.
+
+WORST: 4
+WORST_WHY: The wall band above the room is drawn on the wrong side. In 4 the brick-face strip with the pin marks sits along the TOP edge of the wall mass (y≈390–410), against the black void, and the flat top surface is below it, touching the floor — the reverse of 1 and 3. From straight above, the face you can see of a wall bordering a room to its south is the south face; here the face is on the north edge, so the wall reads as inverted/extruded upward. The strip is also stepped: it begins offset at x≈120–140, breaks at the corridor and restarts at a different y on the right (x≈560+), and a detached rectangular chunk sticks above the line at x≈700. Separately, the floor under the figure is blown out: mean 207/255 in the 130×60 patch at the figure, 536 pixels at ≥245, and the brick joints vanish inside the hot spot (x≈370–470, y≈480–560). Neither 1 nor 3 clips a single pixel.
+
+FLAGGED: 4, 3, 2
+
+SHIP: NONE
+
+FLIP 1:
+- The character sprite is crisp, fully saturated 16-bit pixel art (cyan helmet, orange skin, hard 1px outline) sitting on a floor that has a soft, blurred grain layer over its brick outlines; either remove the blur/noise pass from the floor tiles so their edges are as hard as the sprite's, or run the sprite through the same treatment. Pick one language.
+- The dark square patch at x≈310–380, y≈645–710 is a hard-edged 64px tile variant with a blurred halo bleeding ~15px into its neighbours; give it a hard edge like every other tile, or delete it. Right now it reads as a rendering smear, not an object.
+- The floor brick module changes at x≈470–500: left of that line the bricks are small with hard grey joints, right of it they are ~1.5× larger and smooth (e.g. the big pale slab at x≈490–560, y≈520–550). Make the room one module, or put a visible break (a repair line, a different stone course) where the two meet.
+- The long crack from (250,455) down to (240,760) is a continuous 1px dark line that crosses brick joints without deflecting; cracks in laid stone follow joints or split individual blocks. Break it into per-tile fragments that respect the joint grid.
+- Some bricks in the lower right (x≈600–740, y≈580–700) carry a diagonal 45° hatch texture that no other bricks have; it reads as a noise overlay clipping through. Remove it or apply it consistently.
+
+FLIP 3:
+- The brazier at x≈575–625, y≈530–575 is a lit fire (orange flame, red coals) and casts no light: the 180×140 floor patch around it measures mean 48/255, darker than the same patch in 1 (55). Either add a local light source with its own falloff, or make it a dead brazier (grey ash, no flame). A lit fire that lights nothing is the single most noticeable fault in the frame.
+- The pale standing block at x≈265–300, y≈540–625 is a flat, near-featureless pinkish rectangle with a lit top face and a solid black right-hand face — a 3/4-view block in a straight-down scene. Redraw it as seen from above (a short top face, minimal side), give it wood grain or stone texture, and a contact shadow on the floor.
+- The lashed timber at x≈395–480, y≈590–630 is saturated orange with bright yellow rope; nothing else in the room is that saturated. Desaturate to the floor's range and darken the rope to hemp brown.
+- None of the four props (two timber piles, block, brazier) has a contact shadow; they float on the floor. Add a 1–2px dark offset under each on the side away from the figure.
+- Same sprite/floor blur mismatch as 1: props are hard-edged pixel art, floor is soft; unify.
+- Same floor module seam at x≈470–500 and same continuous overlay crack as 1; fix as in FLIP 1.
+
+FLIP 2:
+- There is no light falloff at all: the frame is uniformly lit corner to corner, and the orc at top (x≈215–245, y≈0–25) carries nothing that lights anything. Add a radial falloff from the figure with the far corners (the grey tile at 350–384, 0–40; the bottom band) dropping to near-black.
+- The green pool (x≈250–345, y≈0–190) is a flat hexagonal honeycomb fill pattern with a hard straight edge against the dirt on all four sides; replace the hex fill with drawn water and give the pool a bank tile (stone lip or wet dirt) on its edges.
+- The moss blob on the grey tiles is one stamp repeated identically at least four times (x≈15–45 y≈55–75; x≈10–30 y≈200–230; x≈355–380 y≈150–170; x≈130 y≈220). Draw at least three variants and rotate/flip them.
+- The grey 32px "wall" tiles at left (x≈0–55) and bottom (y≈215–265) are the same flat grid as a floor; only the bottom band has a dark brick face under it. Give every wall a face on its room-facing side so wall and floor are distinguishable without the map.
+- The dirt floor is a single tile with a visible repeat (red-brown flecks recur on a 32px period across x≈55–250); add 2–3 variants.
+- The two crates at x≈60–95 (y≈0–40 and y≈50–90) are a flat yellow top with a brown side face, i.e. 3/4 view in a top-down scene, and have no shadow; redraw as top faces with a 1px contact shadow.
+- The barrels at x≈115–145 and x≈160–190, y≈195–215 show a full side face below the lid — same 3/4-view problem; reduce to the lid with a thin rim.
+
+FLIP 4:
+- Move the wall face to the correct side: the pin-marked brick strip at y≈390–410 must sit BELOW the flat wall top, against the floor (as in 1), not above it against the void. This is a tile-ordering error, not a style choice.
+- Close the stepped seams in that strip: it starts late at x≈120–140, and restarts at a different y right of the corridor (x≈560+); align the strip to one y across the full width, and remove the detached chunk protruding above the line at x≈700.
+- Clamp the light: the hot spot at the figure clips (536 pixels ≥245, brick joints gone at x≈370–470, y≈480–560). Reduce the source intensity or apply a tone curve so peak floor value lands around 200–210 as in 1 and 3 and the joints stay visible.
+- The corridor light column (x≈505–555, y≈250–420) blends into the room hot spot as one white streak; keep the corridor's own falloff so the two spaces stay separate.
+- Then apply the FLIP 1 items (sprite/floor blur mismatch, blurred dark patch at 310–380/645–710, floor module seam at x≈470–500, continuous overlay crack, diagonal hatch on lower-right bricks), all of which are also present here.
+
+Model: Claude Opus 5 (1M context)

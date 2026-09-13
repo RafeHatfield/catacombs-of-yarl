@@ -88,6 +88,7 @@ EXCLUDED = (
     "CRITIC-VERDICT.json",
     "STALL-REPORT.md",
     "PARK-CLEARED.json",
+    "SEAT-REDRAWN.json",          # a ruling that re-draws one seat. Same: it describes a round.
     "GATE-RULING.json",
     # the review layer's SOURCE — the judge, its morgue, its controls, its law. Ruled
     # 2026-09-07. `.claude/skills/frame-critic/history/` was already here and is subsumed;
@@ -98,7 +99,46 @@ EXCLUDED = (
     "docs/",
     # the review build's own marker, written by the build script and removed after
     "src/Presentation/assets/tier0_harness/REVIEW_BUILD.json",
+    # ── THE RUN'S OWN REPORTS — added 2026-09-08 under LOOP-PROCESS §1.1.5.2 ─────────────────
+    #
+    # A hash exclusion is ENGINEERING, not an escalation, and the law it is fixed under is the one
+    # already in this list's own words: *they describe the build; they are not in it.* A report is
+    # the archetype of that, and `a historical report never gates` is settled law.
+    #
+    # THE OCCASION, and it cost a night. `POLISH-REPORT.md` is the morning deliverable a run is
+    # REQUIRED to write, and writing it after a round moved the build id, so the round's verdict
+    # stopped describing the tree and the install refused. The report had reached no pixel. The
+    # loop then escalated a hash to a human, which §1.1.4 now names as the defect.
+    #
+    # ⚠ SCOPED TO NAMED FILES, NEVER A PATTERN. `*.md` at the root would swallow anything anyone
+    # dropped there, and the blacklist's chosen failure direction is an id that moves NEEDLESSLY
+    # rather than one that fails to move — so each report is named, and `prove_build_id.py` case 6
+    # holds the line by requiring that an unnamed root file STILL moves the id.
+    "POLISH-REPORT.md",
+    "RUN-REPORT.md",
+    # The routing table is the record the amendment made auditable: `critic_gate` resolves a
+    # ROUTED citation against it, and Rafe audits it at the walk. It describes where flags
+    # went; it reaches no pixel. Named, like the reports, never a pattern.
+    "ROUTING-TABLE.json",
 )
+
+# ── CAPTURE LOGS ARE RECORDS OF A BUILD, NOT INPUTS TO ONE — added 2026-09-08 ────────────────
+#
+# A capture log carries DIAG frame timings: `[DIAG 00000 F0 T1.121] === Session started ===`
+# becomes `T3.588` on the next run of the same build. Re-capturing byte-identical pixels
+# therefore moved the build id, and a verdict stopped describing its own tree over wall-clock
+# noise. Measured: combined.png byte-identical at 839fb12f, combined.log 29 lines changed, every
+# one of them a timing.
+#
+# §13.11 — an instrument's input must be no wider than the thing it measures. The id measures the
+# BUILD; a log measures the RUN that produced a capture of it.
+#
+# ⚠ THE PNG STAYS HASHED, and that is what keeps this narrow. A shader, scene or asset change
+# moves the delivered pixels and so moves the id; only the log's own timings fall out. The
+# verdict pins the frame separately by sha in `build_frame`, so nothing about which pixels were
+# judged rests on this.
+def _is_capture_log(path):
+    return path.endswith(".log") and "/evidence/" in path
 
 
 def _git(*args, **kw):
@@ -126,6 +166,8 @@ def _excluded(path):
     Found by testing the narrowed id rather than by reading it: the ruling asked for a control that
     a scene config MUST move the id, and the template is one.
     """
+    if _is_capture_log(path):
+        return True
     for p in EXCLUDED:
         if p.endswith("/"):
             if path.startswith(p):

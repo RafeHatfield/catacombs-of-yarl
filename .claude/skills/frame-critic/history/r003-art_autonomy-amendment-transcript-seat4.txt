@@ -1,0 +1,46 @@
+RANK: 1 > 2 > 4 > 3
+
+BEST: 1
+BEST_WHY: The wall band at y≈420–450 (x 190–500) is the one place in the deck where the fiction is drawn rather than described: a dark ledge line runs the length of the wall, a course of laid blocks sits under it, and two driven pins (x≈300 and x≈390) break upward through the ledge as distinct dark verticals — a repair that reads as a repair. The block course under the ledge varies in width and value along the run, so it reads as laid, not stamped. The light falloff is coherent: the floor joints are still legible at the frame's bottom edge (y≈850) instead of crushing to black, and the corridor going north at x≈510–560 brightens correctly where it's nearest the figure. Nothing is clipped — 0 pixels ≥240 in the lit region around the figure.
+
+WORST: 3
+WORST_WHY: There is no light falloff at all — the orc at (220,10) is in the frame's far corner and the floor tile at (380,280) is exactly as lit as the one under its feet, so the stated single-light premise is simply absent. The grey floor (x 0–160 and the band at y 215–240) is flat grey squares separated by a 1px darker grid with a sparse speckle — a placeholder tile. The pool (x 250–345, y 0–190) is a flat teal fill with a visible honeycomb/hex repeat and a hard straight tile-edge boundary against the dirt — no bank, no lip, no depth, and the lily pads have plus-sign veins. The "bones" at (620–710, 340–390) are loose white pixels, not an object. Chests (x 65–95) and barrels (y 195–215) are drawn side-on with front faces on a straight-down floor.
+
+FLAGGED: 1, 2, 3, 4
+
+SHIP: NONE
+
+FLIP 1:
+- The cracks are a single continuous 1px stroke laid over the floor: the arc at (600–750, 640–720) is a clean semicircle, and the line at (300–330, 650–720) runs straight across the pit/grate square without breaking at its edge. Cracks must follow joints, break where they cross a block edge, and stop at objects.
+- The rock mass of the wall (x 120–500, y 0–140 and the band at 380–420) is a soft, blurred brown noise fill; the floor and the figure are crisp 1px pixel art. Redraw the wall body at the same pixel resolution as the floor — no blurred texture anywhere in the frame.
+- Floor blocks on the right half (x 550–750, y 470–700) carry near-identical diagonal hatch scribbles; that's a scatter brush, not wear. Replace with a small set of hand-drawn wear variants (chip, spall, drag-mark) placed with intent, and ensure no two adjacent blocks share one.
+- The vertical strip at x≈505–515, y 200–450 (left face of the north corridor) is brighter than the floor beside it although it faces away from the light. Kill that highlight; a vertical face above the light source should be darker than the floor, not lighter.
+- The pit/grate square at (310–380, 645–715) has no rim: the floor blocks run straight up to its edge and its interior is a flat blurred brown. Give it a raised or recessed edge and a readable interior (bars, drop, or fill).
+
+FLIP 2:
+- The brazier at (575–625, 525–575) is a lit fire that casts no light: the floor at (540,560) and (660,560) are the same value as the floor two tiles away. Add a second, warm, short-radius light at the brazier so the surrounding floor and the timber cross at (400–480, 590–630) pick it up.
+- The pale slab at (270–295, 535–620) has a lit top face, a darker right side, and a cast shadow — a side-on standing object on a straight-down floor, in a flesh-pink that occurs nowhere else. Either lay it flat as a plank (top-down, wood colour, joint-aligned) or cut it.
+- Same crack overlay defect as 1: the arc at (600–750, 640–720) and the line crossing the pit square at (300–330, 650–720).
+- Same blurred wall-body defect as 1 (x 120–500, y 0–140 and 380–420).
+- Same hatch-brush floor scribbles as 1 (x 550–750, y 470–700).
+- Same bright corridor face at x≈505–515, y 200–450.
+- The timber bundle (200–280, 460–500) and the rope-bound cross (400–480, 590–630) are the best-made pixel objects in the deck — keep them, and make the slab match their resolution and palette.
+
+FLIP 4:
+- The floor and wall face directly above and right of the figure (x 400–560, y 380–500) are blown to a flat pale tan with texture gone: 1,180 pixels at ≥225 luminance in that region against 16 in the same region of 1. Clamp the light so the brightest floor block still shows its joint and surface detail.
+- The wall's block course sits at the top against the void (y≈385–400) with the pins at x≈265 and x≈355 poking up into blackness, and the blurred rock band sits below it against the floor. That's the wall from frame 1 upside-down. Put the laid-block face nearest the floor and the rock body behind it.
+- Along the wall's top edge (x 250–480, y 385–400) small rectangular stubs jut into the void at irregular heights; these read as tile misplacement, not damage. Either draw them as broken coping with a shadow, or align the edge.
+- Same crack overlay defect as 1: the arc at (600–750, 640–720) and the line through the pit square.
+- Same blurred rock body as 1 (x 120–500, y 0–140).
+- Same hatch-brush floor scribbles as 1 (x 550–750, y 470–700).
+
+FLIP 3:
+- Add the single light source: the frame must darken with distance from the orc at (220,10). Right now every tile in the frame is at full value.
+- Replace the grey floor tiles (x 0–160; band y 215–240) — flat fill with a 1px grid — with blocks that have individual edges, varied joint width, and a value difference between block and joint that isn't a single darker line.
+- Replace the pool (x 250–345, y 0–190): remove the honeycomb repeat, give the water a bank/lip at its edge instead of a hard tile boundary, and put a darker rim where water meets dirt.
+- The dirt floor has a visible tile repeat — the dark red blotch cluster at (30,80) recurs at (30,160) and (30,240). Break the repeat with at least four variants.
+- The white pixel scatter at (620–710, 340–390) must be drawn as a thing (bones, gravel) with an outline and a shadow, or removed.
+- The bottom wall (y 265–288) is a single brick row with no top surface or shadow onto the floor; the lighter block at (490–560, 270–278) and (980–1150, 258–264) reads as a mismatched tile. Give the wall a face/top distinction and a drop shadow onto the floor row above it.
+- Chests (x 65–95, y 0–90) and barrels (x 115–190, y 195–215) are side-on sprites; redraw as straight-down objects or commit the whole frame to a ¾ view.
+
+Model used: Claude Opus 5 (1M context).

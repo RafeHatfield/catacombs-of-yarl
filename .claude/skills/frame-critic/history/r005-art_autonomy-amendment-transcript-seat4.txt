@@ -1,0 +1,42 @@
+RANK: 1 > 4 > 2 > 3
+
+BEST: 1
+BEST_WHY: The floor masonry in the lit pool around the figure (roughly x 190–560, y 450–720) is actually cut stone: the courses are staggered, block lengths vary along a single row (compare the short block at ~x 480, y 520 against the long one at ~x 400, y 560), mortar lines are 2px and consistent, and the 1px scratch/hatch marks on individual blocks sit inside block boundaries rather than crossing them. The wall face strip (y ~420–445, x 190–500) is built from discrete dark blocks with vertical pin/tick marks at ~x 300 and ~x 385 that read as driven pins, which is the fiction. The light falloff is smooth with no banding and the fully-black voids have clean hard edges. Of the three near-identical frames, 1 has the tightest falloff (measured: the lower-left floor patch at x 190–320, y 700–800 is the same 28.9 mean value as 4, but the lit pool near the figure is marginally more concentrated, 159.6 vs 157.8), so the least of the smeared wall-top texture is exposed.
+
+WORST: 3
+WORST_WHY: It is uniformly lit and flat with nothing carrying the eye; the whole 384×288 frame is at a single value. The water pool (x 248–343, y 0–192) is a hard-edged rectangle meeting dirt with no bank, edge or shoreline tile on any side — it looks like an untiled fill. The two chest-over-crate stacks at x 62–97, y 0–40 and y 48–88 are pixel-identical copies placed on the same column; the two barrels at x 115–142 and x 163–190, y 195–215 are the same stamp; the soft green-grey grime blob on the grey tiles is the same stamp at (x 12–45, y 55–85), (x 15–45, y 205–230) and (x 350–375, y 150–175). The dirt floor carries scattered bright blue flecks (e.g. x 180, y 150; x 230, y 45) that have no source and read as noise. The orc sprite at x 212–235 touches the top edge of the frame at y 0. The lily pads on the pool are garden-pond decoration in a place the brief says is an administered underworld.
+
+FLAGGED: 1, 2, 3, 4
+
+SHIP: NONE
+
+FLIP 1:
+- The wall top band (x 120–500, y 390–420 and the vertical band x 505–565, y 70–440) is a smeared, blurred noise texture at a visibly lower resolution than the crisp 1px-detail floor it sits against; redraw it as pixel-level masonry with the same mortar treatment as the floor, or at minimum quantise it to the floor's pixel grid.
+- The trapdoor tile at x 310–380, y 645–710 is a soft-edged blurred stamp with an indistinct lever shape inside it; redraw it crisp at the floor's pixel scale with a hard frame so it reads as a hatch and not a missing tile.
+- The single continuous 1–2px black crack line runs from ~x 210, y 470 down to ~x 330, y 640 and across into the top corridor (x 520–560, y 240–350) without ever breaking at a mortar line or terminating at a block edge, and it passes over the trapdoor tile's edge; break it at block boundaries, vary its weight, and stop it at the hatch frame.
+- The bright soft haze blotch at x 230–330, y 500–620 (left of the figure) and the second at x 560–700, y 470–560 are blurred at a different resolution from everything around them; remove them or rebuild them from the floor's own pixel-scale dirt.
+- The lit wall top directly above the figure (x 380–500, y 395–420) sits at nearly the same warm value as the lit floor below the face strip; drop the wall top a step so top, face and floor are three separable values.
+- The same hatch-scratch stamp is repeated verbatim on blocks at ~(600, 510), ~(660, 540), ~(720, 540) and ~(540, 700); draw at least three variants and rotate them.
+- The left-side vertical wall band (x 50–120, y 700–911) has no face strip while the horizontal walls do; give it a face treatment consistent with the horizontal walls or make it read unambiguously as wall top.
+
+FLIP 2:
+- The pale vertical plank at x 268–298, y 540–625 is a flat cream rectangle with a 2px dark right edge, no grain, no end-grain, no shadow, and it is brighter than the lit floor around it despite being further from the light than the figure; draw it as timber with grain and the falloff applied, or remove it.
+- The brazier at x 570–625, y 525–575 has a lit fire but the floor around it sits at the ambient falloff value (~62 mean); either add a warm local light pool around it or unlight it, since the brief says the figure carries the only light.
+- The lashed timber X at x 395–480, y 590–635 is drawn from a 3/4 angle in a top-down scene and casts no contact shadow; redraw it flat from above with a 1–2px contact shadow on its down-light side.
+- The log pile at x 205–285, y 460–510 is drawn with a heavy black outline while the floor and wall around it have none; drop the outline weight to match the world.
+- All items from FLIP 1 (blurred wall-top band, blurred trapdoor tile, overlay crack line, haze blotches, wall-top value, repeated hatch stamp, left wall face) — the base frame is the same.
+
+FLIP 3:
+- Give the water pool (x 248–343, y 0–192) edge tiles: a bank, a rim or a shadowed lip on all four sides so it stops being a hard rectangle of fill.
+- Replace the duplicated chest/crate stacks at x 62–97 (y 0–40 and y 48–88) with two different props or offset them; replace one of the identical barrels at x 115–142 / x 163–190, y 195–215 with a variant.
+- Draw at least three grime variants for the grey tiles instead of the one stamp used at (12–45, 55–85), (15–45, 205–230) and (350–375, 150–175).
+- Remove the bright blue flecks scattered on the dirt floor (e.g. x 180, y 150; x 230, y 45), or give them a source.
+- Move the orc sprite at x 212–235 down so its head is not touching the top edge at y 0.
+- Add a light carrier and falloff so the frame has a value range; as it stands the whole floor is one flat value from edge to edge.
+- Remove the lily pads from the pool; a working, uncared-for underworld pool would carry scum, debris or nothing.
+- The dirt floor texture has no visible block/plank/flagstone structure and tiles seamlessly as a single noise pattern; give it any drawn structure so it reads as a surface rather than a fill.
+
+FLIP 4:
+- Identical to FLIP 1 in every item; the only measurable difference from 1 is a marginally wider light pool (lit floor near the figure 157.8 vs 159.6 mean, changed pixels confined to x 243–550, y 331–642 at a max delta of 62/255), which exposes slightly more of the smeared wall-top texture above the figure and in the corridor at x 505–565, y 200–400, so the wall-top redraw matters slightly more here.
+
+Model used: Claude Opus 5 (1M context).

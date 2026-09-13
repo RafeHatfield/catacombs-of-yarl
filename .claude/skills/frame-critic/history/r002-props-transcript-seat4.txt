@@ -1,0 +1,58 @@
+Four frames, one of which isn't in the same league as the others, and none of which I'd ship. The three that share a scene (1, 3, 4) are three passes over the same render — 1 is the clean base, 3 adds props that don't belong to it, 4 has had something run over it.
+
+RANK: 1 > 3 > 4 > 2
+
+BEST: 1
+
+BEST_WHY: The masonry in the lit room actually reads as laid stone rather than a stamped texture. Around (460,500)–(620,580) the courses are different heights, the vertical joints are staggered between courses, and individual blocks carry different interior values — some blocks are double-width and one at (560,540) is half-height, so the run reads as cut and fitted. The crack network is the second thing done right: the line entering at (300,760) runs continuously up to (500,470), changes direction where it crosses joints, and does not restart at tile boundaries — it was drawn across the floor, not per-tile. Third, the corridor at x≈500–575: the light gradient runs the full length of the shaft and dies at the sill, and the taut lines crossing it at y≈240 and y≈290 each sag at a different angle with a thicker dark blob where they meet the wall — that reads as rope tied off on driven pins, not as a decal strip.
+
+WORST: 2
+
+WORST_WHY: It has no light model at all. The stone at the bottom-left corner (30,270) sits at the same value as the dirt beside the figure (170,20) — a scene that is supposed to darken away from a carried lamp is uniformly lit corner to corner. Under that, the dirt field is a single 16px tile stamped without variation: the identical hooked dark-red crack sits at the top-left of every tile in the field — it repeats at (200,30), (216,30), (232,30) across the entire brown area. The water is a flat rectangle whose edge runs dead straight down x≈248 and turns a hard 90° at (248,190), with one unvarying cell texture from bank to centre and no wet edge. The lily pads at (325,20) and (313,113) are pure saturated green in a scene whose next-brightest chroma is a muted tan. Nothing casts a shadow — the barrels at (130,203) and (177,203) meet the ground on a hard sprite edge and float. The figure at (225,8) is clipped by the top frame edge, head cut off.
+
+FLAGGED: 2, 4, 3, 1
+
+SHIP: NONE
+
+FLIP 1:
+- The unlit mask is cut as hard rectangles. The left black region's right edge is a dead-straight vertical at x≈118 from y≈380 to y≈650, cutting through the middle of floor stones, and the top-right black block has square corners at (630,60) and (750,390). Replace the rectangular cull with the same radial falloff used everywhere else, or move the cut onto a wall face so it reads as occlusion.
+- The room floor carries no evidence of the occupation. Between the wall course at y≈430 and the bottom frame edge there is not one rope, pin, hide patch or salvaged timber, while the corridor at x≈530 has three. Extend the repair vocabulary into the room and onto the wall bases.
+- The wall band at y≈390–460 has one clear joint line across its entire width and nothing else; the individual stones have no defined top edge. Cut the courses in at the joint contrast the floor stones carry at y≈500.
+- The top-left quadrant (x 120–430, y 60–380) is one uninterrupted soft blur with no object readable at any scale. Put geometry in it or let the falloff take it fully to black — as it stands it reads as an out-of-focus photograph.
+- The crack entering at (240,530) fades to nothing at (270,470) in the middle of a stone. Terminate cracks on a joint or an edge.
+- The figure is drawn at roughly half the environment's pixel scale — its outline is 1px while floor joints are 3–4px — and takes no colour from the lamp it is carrying. Match the sprite's pixel scale to the tiles and let the light reach it.
+
+FLIP 3:
+- All six items in FLIP 1 apply unchanged; the base render is identical.
+- The socket at (600,551) holds a lit flame and lights nothing. The floor stones at (560–630, 520–580) sit at exactly the value of unlit floor two tiles further out. Give it its own falloff or take the flame out.
+- That socket's ring is a cool near-white grey while every other surface at the same radius from the lamp is warm brown. Repalette it onto the scene's warm ramp.
+- The three crossed-timber props at (278,613), (408,613) and (533,613) are the same asset three times along a single line, distinguished only by saturation. Vary the asset or cut it to one.
+- Those timbers are the most saturated pixels in the frame — the centre pair reaches pure orange, close enough to the flame's colour that the wood reads as glowing, while nothing else in the room leaves a muted tan. Pull them into the floor's chroma range.
+- No prop has a contact shadow. The crate at (343,552) meets the floor on a hard sprite edge on all four sides and floats. Add an occlusion shadow under each prop.
+- There is a hard-edged pale patch immediately right of the figure, roughly (425–470, 465–520), squared off and brighter than the falloff surrounding it. Remove it or blend it into the radial gradient.
+
+FLIP 4:
+- A regular set of 45° streaks runs across the whole lit area, from about (300,640) up to (520,440), crossing stone joints and the crack line without interrupting. That is an overlay, not surface damage. Remove it, or redraw the marks per stone so each one stops at its joints.
+- The mortar lattice has been erased inside the highlight. Between (350,460) and (500,560) there is not a single joint line, while the same masonry at (250,600) in the darker zone still shows them. Restore the joints through the bright area.
+- The lit floor tops out at near-white cream and the wall's top surface at (300,400) sits at the same value. Separate them by at least two steps so the wall reads as standing above the floor.
+- Several floor blocks are flat single-value quads with hard edges and no interior texture — (540,520)–(575,555) and (600,455)–(640,490). Texture them; they currently read as missing tiles.
+- The wall band at y≈380–450 has lost its courses entirely and is a soft brown gradient with two block outlines floating in it. Re-cut the joints.
+- The vertical timbers at (455,378) and (630,378) project above the wall's top edge into pure black with no shadow and no visible fixing. Ground them, or clip them at the wall.
+- The unlit mask is the same hard rectangle problem as FLIP 1, item 1.
+
+FLIP 2:
+- There is no falloff. Add the carried-lamp lighting model: the stone at (30,270) and the dirt at (170,20) are currently identical in value.
+- The dirt field is one tile stamped on a strict lattice — the same hooked dark-red crack sits at the top-left of every tile, visible at (200,30), (216,30), (232,30). Author at least four variants and break the lattice.
+- The water edge is a straight line down x≈248 with a 90° turn at (248,190). Give it an irregular bank and transition tiles.
+- The water has one cell texture at one value across its whole area. Add depth shading from bank to centre and a wet strip at the shore.
+- The lily pads at (325,20), (313,113) and (277,163) are pure saturated green against a muted scene. Repalette them onto the scene's ramp.
+- The moss on the stone floor is one asset copy-pasted unrotated: the identical blob appears at (33,60), (27,220) and (367,157). Rotate, mirror and vary it.
+- Nothing has a contact shadow — barrels at (130,203) and (177,203), crates at (80,10) and (80,60). Add occlusion shadows.
+- The figure at (225,8) is clipped by the top frame edge. Move it inside the frame.
+- The white scatter at (227,118) has no readable silhouette; it is loose unrelated pixels. Draw it as an object or delete it.
+- The dirt-to-stone boundary at y≈215 is a pure horizontal seam between two tilesets. Author edge tiles.
+- The orange bar at (30,133) is a lone saturated element on a grey wall with no context and no shadow. Resolve it or remove it.
+
+The thing to watch: 1 is the strongest because it is the least worked-on. Both attempts to add to it — props in 3, surface treatment in 4 — made it worse, and in 4's case made the base render itself unrecoverable. Fix the black-rectangle cull and the empty floor on 1 first, then add props to *that*, with the light model applied to the props rather than around them.
+
+*Model: Opus 5 (1M context).*

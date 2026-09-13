@@ -1,0 +1,66 @@
+Read all four at 1:1 and at 5× on the specific regions, and measured where my eye might be lying to me. Two of my initial reads didn't survive measurement and I dropped them.
+
+---
+
+**RANK:** 2 > 4 > 1 > 3
+
+**BEST:** 2
+
+**BEST_WHY:** The light survives the exposure. In the rectangle around the figure (x300–470, y455–540) the floor reaches a mean luma of 166 with **zero pixels above 245** — nothing clips — and the mortar grid keeps the same normalised local contrast under full illumination (0.051) as it has out in the gloom. You can trace an unbroken horizontal joint running right through the hottest part of the frame, three tiles left of the figure and three tiles right of it. That is the hard part of a carried-light scene and it is the part that's done.
+
+Underneath it, the presentation is clean: a 2× nearest-neighbour upscale at consistent odd-row phase (95.3% row-pair identity across the interior), so every pixel is the same size and nothing is resampled to mush. The crack network reads as damage rather than decoration — the long crack entering at x≈235, y≈480 runs diagonally, then **turns and travels along a mortar joint** for about two tiles near y≈565 before breaking off again, which is what a crack in laid stone actually does. And the upper wall band at y≈425–445 has driven pins and horizontal timber with joints at irregular intervals — that's the repair-with-salvage brief actually landing in the geometry, not in a caption.
+
+**WORST:** 3
+
+**WORST_WHY:** Two things a person sees before they see anything else.
+
+First, **the barrels are cut in half by the floor.** Both barrels at y≈190–217 terminate on a perfectly straight horizontal line at y=217, exactly where the grey cobble row begins. Their stave lines are still faintly visible continuing *down over the stone*, so the sprite is being drawn and the cobble tile is compositing on top of it. That's a draw-order bug, shipped.
+
+Second, **they are the same barrel twice.** I sampled the pixel column at x=125 and x=173 down through both sprites — identical RGB at every single row. Mean absolute difference across the whole 26×22 sprite: 1.2, and that residual is the dirt speckle showing through. Same lid ellipse, same bung dash on the right, same stave spacing, 48px apart. The two chests at top-left are the same trick vertically.
+
+Beyond those: the water is an **axis-aligned rectangle**. Dirt at x=248, teal at x=249, hard step, no bank, no shoreline, no transition tile, no darkening at the edge — for 380 pixels straight down. The dirt/cobble border is the same untreated rectangle. And each chest is two projections glued together: a flat top-down lid welded to a front-elevation plank face, with a hard seam between them, sitting on a floor drawn straight from above.
+
+**FLAGGED:** 1, 3, 4
+
+**SHIP:** NONE
+
+---
+
+**FLIP 2:**
+- The only object on the entire floor — the brown rectangle at (295–385, 635–715) — is unreadable. It has a hard dark border on three sides, no top-face value separation, no contact shadow, and no silhouette that identifies it. Give it a top face at least 20 luma above its sides, an occlusion shadow on the side away from the figure, and a profile you can name in half a second (a chest, a grate, a hole) — or delete it.
+- The room is empty of the thing the fiction is about. A company that has been repairing this floor for four hundred years with rope, pins, hide and timber has left no trace on the playfield, only on the wall band. Put three to five repair objects on the floor at varying distance from the light — a pinned timber brace across a cracked course, a coil of rope, a hide patch over a hole — so the light has something to fall across at different radii.
+- The figure's cyan is (104, 235, 210). Nothing in the environment comes within half that chroma; the whole set is a warm brown ramp. Pull the sprite's cyan and orange onto the environment ramp, or add a corresponding cool accent somewhere in the set, so the character isn't the only saturated object in the world.
+- At the doorway where the north corridor meets the room (x≈500–570, y≈430), the corridor floor carries texture but no block joints while the room floor two tiles away is clearly cut block. Add a threshold course — a sill or a worn-through transition — so the two surfaces are joined rather than abutted.
+
+**FLIP 4:**
+- **Every fire in this frame subtracts light.** I compared identical regions against 2 (global exposure matched within 1 luma across four control patches). Floor left of the firepit: −9.5. Floor right of it: −10.7. Floor below it: −13.8. Floor around the burning stick pile: −15.8. There is a lit flame in a ring of hearthstones at (596, 548) and the stones of its own ring are darker than the bare floor was before the fire was placed there. Make each fire prop a light emitter: warm falloff of 2–3 tiles, brightest on the hearthstones themselves, and remove the darkening halo the placement pass is currently applying.
+- The lantern at (330–360, 535–570) is illegible at play size. Its left edge has a hard outline, its right edge has none — the pixels just stop into the floor. Close the silhouette on all four sides with the same outline weight, and give the top face a distinct value so it reads as an object seen from above rather than a front panel.
+- That lantern and the firepit ring are drawn in near-elevation — you see a front face and a grate — inside a strictly overhead frame. Redraw both to the same camera as the floor.
+- The same two-crossed-sticks motif appears three times inside four tiles: dark brown at (275, 612), saturated red-orange at (405, 612), and as a parallel pair at (530, 618). Cut it to one, and vary the remaining timber by length and angle rather than by hue.
+- The crossed sticks at (405, 612) sample (158, 49, 20) — a saturated red that appears nowhere else in the set, on stone that samples (127, 93, 64). Bring the props onto the environment ramp; they currently read as a different artist's layer dropped on top.
+- None of the five floor props has a contact shadow. They sit on the stone with no anchor. Add a one-to-two-pixel occlusion darkening on the side facing away from the carried light.
+
+**FLIP 1:**
+- **The lit core clips.** In (x300–470, y455–540), 3.29% of pixels exceed luma 245 and the region means 199.5; frames 2 and 4 render the identical geometry at 166 and 163 with 0.00% clipped. Pull the light's peak down about 35 luma so the brightest stone lands near 210 and nothing touches white.
+- Because of that clipping, the mortar grid dies where the eye goes first. Immediately right of the figure and for roughly three tiles below, the block joints flatten into an undifferentiated cream field. Once the peak comes down, hold a floor of at least 25 luma of separation between block face and joint at every illumination level, so the grid never fully closes.
+- The blown region also reads soft rather than pixel-crisp — the noise in the hot zone is blobby where the same texture two tiles out is hard-edged. Re-grade from the source texture rather than lifting the composited result; the current pass looks like exposure applied after the fact.
+- Everything in FLIP 2 applies here as well: same empty floor, same unreadable brown rectangle at (295–385, 635–715), same corridor-to-room transition, same orphaned cyan on the sprite.
+
+**FLIP 3:**
+- Fix the draw order. Both barrels at y≈190–217 are composited *under* the cobble row and sliced flat at the tile boundary. Sort floor props above floor tiles by their base Y.
+- Stop duplicating sprites. The two barrels are pixel-identical at 48px offset; the two chests are pixel-identical vertically. Author at least three variants of each, or vary rotation, lid state and value per instance.
+- Build a water edge. Dirt ends at x=248 and teal begins at x=249 in a dead-straight 380px line. Add shoreline tiles — a darkened bank, a wet-stone lip, an irregular boundary that steps at the tile grid instead of running ruler-straight.
+- Same for the dirt/cobble border: it is an axis-aligned rectangle. Add transition tiles so dirt spills over the stone edge.
+- Resolve the chests into one projection. Right now a top-down lid is welded to a front-elevation plank face with a hard horizontal seam. Pick the overhead camera the floor is drawn in and redraw the body to match.
+- The cobble at the bottom is 24 consecutive tiles at one flat value with a uniform grout lattice — stamped, not cut. Vary block size, break the lattice so courses offset, and vary face value by at least 15 luma between adjacent stones.
+- Add light. This frame has zero falloff — the corner farthest from the figure is exactly as bright as the tile under their feet. If the design is a carried light, the frame has to show it.
+- The teal blotches on the cobble at (20–60, 100–160) and (10–70, 290–330) use the same green as the lily pads in the water. If they are moss, give them a distinct hue and an edge; as drawn they read as water tiles leaking onto stone.
+- Give the barrels and chests contact shadows; they currently float on the dirt.
+
+---
+
+Two corrections to my own working: I initially read the lower-left floor in 2 and 4 as a blurred wash with the grid smeared out, and read the north corridor as detail-free. Both failed measurement — normalised local contrast there is *higher* than the surrounding floor (0.044 vs 0.039, and 0.061 vs 0.029). The detail is present, just dim. I'm not counting either against those frames.
+
+What this deck actually says: 1, 2 and 4 are three passes over one asset, and the asset is competent — the masonry, the crack logic and the wall repairs are made by someone who knows what they're doing. All three failures are in the pass, not the art: 1 is a bad exposure of good work, 4 is good work with a prop set from a weaker hand and a lighting system that darkens where it should emit. 2 is the closest, and what stops it is that there's almost nothing in the room to judge. The next thing worth doing is dressing 2's floor properly and getting the emitters working before adding another frame — right now you can't tell whether the prop pipeline is broken or just unfinished, and 4 is the only evidence either way.
+
+*Model: Claude Opus 5 (1M context).*

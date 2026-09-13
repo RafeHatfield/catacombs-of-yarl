@@ -1,0 +1,68 @@
+== FRAME CRITIC GATE
+   verdict:  INSTALL-LATEST   lane art/cast-shadows round 2   2026-09-12T22:40:57
+   build:    4e35a8b61824  (+dirty)
+
+   INSTALL-LATEST — non-regression against the seeded reference.
+     panel: not below it in 5 of 5 seats (above in 3); flagged by 3.
+     item exit MET: the void is dark by occlusion (faces lit, unexcavated mass at ambient, no 
+       measured: tools/cast_shadows/evidence, props room, ring 0, no occluders -> occlude
+     Outstanding items, each disposed:
+     ROUTED-ALREADY Repaint the wall-top surface at pixel resolution: hard-edged stone blo
+                    -> walls
+                    cites #202
+                    measured: The cap field's texture is the wall lane's standing item (#202's t
+     ROUTED-ALREADY Pull the light's peak intensity down or clamp the floor's brightest va
+                    -> floor
+                    cites #184
+                    measured: #184 — '#174 polish tuning now the lamp is set: hot on worn lanes'
+     ROUTED-ALREADY Finish the corridor mouth at x 500–560: the wall face band is simply c
+                    -> walls
+                    cites #211
+                    measured: A wall END. #211 is exactly this: wall ends, corners and pillars g
+     CLOSED         Draw the plinth at (265–300, 540–640) from above: it's currently a sid
+                    cites §3.2
+                    Rafe: Object projection RULED (Rafe, on device, 2026-09-12): OBLIQUE, re
+     ROUTED-ALREADY Light the figure sprite. Its cyan and orange are at full saturation wh
+                    -> hero
+                    cites #183
+                    measured: #183 — the hero's light-response term. Sprites are front-facing an
+     ROUTED-ALREADY Soften the brazier's ground glow edge at (570–625, 520–570); it is cur
+                    -> props
+                    cites #205
+                    measured: The fire's engine light (#205) landed this round at energy 1.6 / 4
+     MEASURED-FALSE Additionally, bring the lower-right floor brightness back to at least 
+                    cites §13.4.1
+                    measured: Frame 2 IS this frame: the reference was seeded from the ratified 
+                    percept KEPT: The seat saw a hotter lower-right and it is real for that in
+   plant:    cement-cap-shadowed.png — caught
+   GATE OPEN — a blind seat would ship this exact frame.
+DEVICE GATE PRECONDITIONS — round 33, standing capture r24_onroute
+
+  ~  1. round VALID                 no seat round        (advisory: demoted)
+  ~  2. diagnostic seat's axis      not recorded         (advisory: demoted)
+  ~  3. comparative seat            no approved capture  (advisory: demoted;
+                                       the frame-critic runs a three-frame deck)
+  4. every ruled fix present        ok (11 checked)
+  ~  grid-coincidence               ok                    (advisory)
+  ~  shipped-path                   ok                    (advisory)
+
+PRECONDITIONS OK — every ruled fix is in this build. The frame-critic's PASS is what
+opened the gate; this file only checked that the artefact carries what was ruled.
+== scene override: res://src/Presentation/assets/tier0_harness/scenes/tier1_props_review.json
+== WALK PRECONDITIONS — marker src/Presentation/assets/tier0_harness/REVIEW_BUILD.json
+   walk: rig-energy — the §6.2.1 / Ruling 56 rig pass
+   requirements present. This says the walk CAN BE PERFORMED, and nothing about
+   whether the picture is any good — that is the frame critic's question.
+== void ring: 0 (marker; the manifest's ruled 0 is what a shadow build runs)
+== cast shadows: occluders=all softness=12.0 darkness=0.8 flicker=1
+== build identity: commit=4e35a8b6182415d01ae818eb9f14a0e772068d04+dirty built=2026-09-13T05:42:25Z
+== marker written: REVIEW_BUILD.json
+== grid: tile 32 at x2.0
+== bundle id: com.rafehatfield.catacombsofyarl.tier0   name: YARL Tier0
+== export (--export-debug, preset 'iOS') from /Users/rafehatfield/development/c-yarl/.claude/worktrees/cast-shadows
+== xcodebuild (Debug, scheme 'CatacombsOfYarl')
+   built: YARL Tier0  (com.rafehatfield.catacombsofyarl.tier0)  [C#: CatacombsOfYarl.Presentation.framework]
+== devicectl install -> 5DB969FF-269C-5A8A-86EB-99EC9FF22397
+   install attempt 1 failed; retrying...
+   installed.
+== marker removed (a leftover would silently make the next build a review build)

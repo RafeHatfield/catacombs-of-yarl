@@ -1,0 +1,56 @@
+Read all four at native size and at 3–8× on the specific regions I cite. Numbers below are pixel measurements, not impressions.
+
+Structural finding first, because it changes how the deck reads: **1, 3 and 4 are the same painted plate under three different light passes.** 1 vs 4 differ only inside a blob bounded by x277–532, y401–606 (mean abs diff 1.75/765 over the whole frame); every dark region is byte-identical across all three. So ranking them is ranking a lighting pass, not three pieces of art. 2 is a genuinely separate asset at a different pitch (384×288, 16px tiles, 854 colours).
+
+RANK: 4 > 1 > 3 > 2
+
+BEST: 4
+
+BEST_WHY: The drawing under the light survives the light. In the floor immediately west of the figure (x340–400, y462–540) the block joints run as continuous straight lines in a distinct pink-warm tone — one vertical at x≈363 and horizontals at y≈477 and y≈517 — so the courses read as separate cut blocks right through the brightest part of the pool. Same window in 1 measures 212.7 mean vs 4's 189.3: 1's lamp lifts the near floor toward a flat cream and the same joints sit on a hotter base. The right-hand lit floor (x440–750, y560–780) carries the deck's only genuinely authored masonry: courses of irregular width in a running bond, short dark bars driven at the joints reading as pins, and a rope arc from x≈290,y≈600 up to x≈560,y≈520 that terminates on a small cross-fitting at a block joint rather than just fading out. Someone decided where that rope was tied. Also the wall band at y≈390–450 holds ~40 levels below the floor it meets, so the wall/floor boundary reads as a boundary. That is the whole of the case, and it is thin.
+
+WORST: 2
+
+WORST_WHY: Nothing in it was drawn twice. The two barrels at x112–150 and x160–198, y190–222 are the same sprite pasted 48px apart — best-alignment mean abs difference 2.19/255 at exactly dx=48, dy=0, i.e. pixel-identical except where dirt shows through. The grey flagstone run along y232–264 is the same tile end to end: tile-vs-tile mean abs difference 2.5/255 across twelve consecutive tiles, every joint the same 1px width and the same value along its entire length, the same 3–4 stamped light specks in each. The pool at x248–344 meets the dirt on a dead-straight vertical at x=248 and the stone at x=344 with zero transition pixels — no bank, no darkening, no rim — so it reads as a green rectangle painted on the ground rather than water. Neither barrel, neither chest (x64–96, y0–92) nor the orc has a contact shadow; every prop's bottom edge is a hard cut against the floor. The chests and barrels are drawn in a front-facing projection with visible staves and lid ellipses while the floor is dead top-down. The orange striped block on a brown post at x25–34, y122–165 does not resolve into any object at play size. This is the cleanest-edged image in the deck and the one where the least work was done: it is assembled from stamps, and stamp density is exactly what a player reads as cheap.
+
+FLAGGED: 1, 2, 3, 4
+
+- **1, 3, 4** — the figure is hard-edged 2×-pixel art with 1px black outlines and a saturated orange/cyan palette, standing on a soft painted plate with no crisp edge anywhere in it. Two media in one frame, visible from across the room. Second, the brown quadrilateral at x285–380, y640–715 sits mid-frame and resolves into nothing — not a crate, not a pit, not a shadow, no top surface, no cast shadow, no defined edge.
+- **3** additionally — the shield disc sits within a few levels of the floor directly behind it (lit patch mean 141.8, and the sprite is tinted down with the plate). The player loses their own avatar against the ground.
+- **2** — the twin identical barrels, and the razor-straight water edge on the tile grid.
+
+SHIP: NONE
+
+FLIP 4:
+- Redraw the figure's plate contact: the sprite is drawn at 2 device px per art pixel with hard outlines; the plate has no edge under 3px of ramp. Either re-render the plate to a fixed 2px art-pixel grid with quantised edges, or drop the sprite's black outline and re-render it at the plate's softness. One or the other, not both as they stand.
+- The brown quadrilateral at x285–380, y640–715 must become a specific object. Decide what it is, then give it a defined top surface at least 25 levels off the floor, a hard silhouette, and a cast shadow away from the lamp at x≈405,y≈485.
+- The masonry scratch detail is one stamped motif — the same four-stroke diagonal hatch at the same angle and pitch recurs on blocks at (470,600), (520,700), (600,640) and (700,590). Draw three more hatch variants, vary the angle, and leave at least a third of blocks bare.
+- The corridor at x500–570, y180–420 has no legible wall-to-floor edge on its west side: the boundary is a 3–4px value ramp. Give the corridor wall a hard 1–2px edge at least 30 levels below the corridor floor for its full run.
+- The cables crossing the corridor at y≈230, y≈290 and y≈400 vary in thickness along their own length and pass through the wall face without an anchor. Fix each to a constant width and terminate every one on a visible pin or eye at the wall.
+- The pin bars at the joints in the right-hand floor are flat near-black rectangles of inconsistent length. Give each a 1px top highlight and a 1px cast shadow so they read as driven metal rather than gaps.
+
+FLIP 1:
+- Everything in FLIP 4 — it is the same plate.
+- Pull the lamp's inner falloff down: the floor in x300–400, y470–545 reads 212.7 mean against 4's 189.3, flattening the near-lamp masonry into cream. Drop the hot core by ~20 levels so the joint lines hold the same relative contrast at the centre of the pool as at its rim.
+- The pool's boundary is ragged and diagonally mottled along its south-west edge (visible x270–380, y500–600). Make the falloff monotonic with distance from the lamp so the light reads as a lamp rather than a painted patch.
+
+FLIP 3:
+- Everything in FLIP 4 — it is the same plate.
+- Restore the figure's separation from the floor: the sprite is tinted down with the plate until the shield disc and the floor behind it sit within a few levels. Exclude the sprite from the plate's colour grade, or hold its palette at least 40 levels off the local floor value.
+- The global lift has collapsed the frame's range — lit patch peaks at 193 where 1 and 4 reach 240, and the whole midground is one mid-beige. Restore the top of the range and re-darken everything outside a ~200px radius of the lamp so the room is hidden again.
+- The soft blur under and left of the figure (roughly x300–390, y480–560) has no edge and no cause. Either remove it or resolve it into a named thing with a silhouette.
+
+FLIP 2:
+- Replace one of the two barrels at x112–150 / x160–198 with a different sprite, or at minimum re-shade the second: lid ellipse rotated, different stave count, different notch position. Identical props 48px apart is the first thing seen.
+- Give every prop a contact shadow — both chests, both barrels, the orc. A 2px dark ellipse under the base, offset consistently, so nothing floats.
+- Break the flagstone run at y232–264. Author at least four floor-tile variants (chipped corner, cracked, stained, worn) and scatter them; tile-vs-tile difference across a twelve-tile run is currently 2.5/255.
+- Vary the joints on the stone floor: they are 1px at one constant value along every run. Make them break, widen and lose value at intervals so the stones read as laid rather than printed.
+- Build a real edge on the pool at x=248 and x=344: a 2–3px darker bank tile between water and ground, a value drop at the waterline, and at least one place where the boundary steps off the 16px grid.
+- Vary the pool surface — it is one uniform hex tessellation with no relation to the pool's shape. Darken toward the centre, lighten at the edge, break the pattern where the lilies sit.
+- The bone scatter at x208–232, y108–128 is near-white specks that read as dust at play size. Redraw at a size and contrast that reads as bones, or cut it.
+- The orange striped block on the post at x25–34, y122–165 does not resolve. Decide what it is and redraw it with a readable silhouette, or remove it.
+- The lone lighter rectangle in the dark brick wall at roughly x163–190, y268–280 sits in the run with nothing to explain it. Make it a sill, a grate or a doorway, or match it to the wall.
+- Add a light source. The frame is uniformly ambient — no directional light, no falloff, no darkness anywhere.
+
+The forward look: 1, 3 and 4 are not three candidates, they are one candidate and two grades of it, and the grade is not what is holding them back. The plate has authored content in it — the rope anchors and the driven pins are real decisions — but until the sprite and the environment are rendered at the same edge hardness, no light pass will fix the frame. That is the next thing to settle, before any more variants get generated.
+
+*Model: Claude Opus 5 (1M context)*

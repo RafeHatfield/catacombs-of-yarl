@@ -1,0 +1,61 @@
+All four read. Coordinates below are in each file's own pixel space (1.png is 384×288; 2/3/4.png are 750×911).
+
+RANK: 4 > 3 > 2 > 1
+
+BEST: 4
+
+BEST_WHY: The wall band running left-to-right at y≈418–455, x≈190–500. Three things are genuinely built there. First, a continuous top rail with vertical pins dropped from it at x≈250, 300, 340, 415, 455, 490 — the spacing is uneven, so the pins read as driven one at a time into a wall someone was actually fixing, not as a repeated batten pattern. Second, the block joints under that rail vary in width along a single course — some are 2px, some 5px, and a few blocks abut with no joint at all, so the run reads as cut and re-set rather than stamped. Third, and this is the thing the other frames get wrong: sampling a vertical slice at x=300, the wall's top surface holds a flat 51–54 in value, the base of it drops to 22, and the lit floor below sits at 96–112. Three separated plateaus, not a gradient. The wall therefore reads as a solid with thickness sitting above the floor, instead of a pattern painted onto it. That value plan is the one piece of craft in this deck I'd point at as deliberate.
+
+WORST: 1
+
+WORST_WHY: The water at x≈248–343, y≈0–191 is a flood-filled rectangle. Hard vertical edge where it meets the mud on the left, hard vertical edge where it meets the flagstone on the right, hard horizontal edge across the bottom, square 90° corners. No bank, no shoreline, no edge-darkening, no transition tile of any kind — the mud simply stops and teal begins on the next column of pixels. The body itself is 18 unique colours across its entire 95×190 area, one uniform cellular pattern repeating with no depth cue, and the lily pads sit on top of it with no reflection, no ripple and no contact. It is a selection filled with a colour. Underneath that, the mud field is worse in a way that's measurable: of 88 sampled 16×16 blocks in the region x 110–240, y 10–200, **44 are byte-identical to another block** — half the field is one tile pasted over and over, and the repeat is visible at a glance as a red speckle cluster recurring on a 16px beat. The grey flagstone is a single flat value (6 unique colours across a 130×30 sample) with only the grid line for relief, and the same moss blob is reused verbatim at (10,52), (18,200) and (363,157). This is a default asset pack laid on a grid. It's the free one.
+
+FLAGGED: 1, 2, 3, 4
+
+SHIP: NONE
+
+FLIP 4:
+- The figure at (375–435, 455–515) is drawn with a hard 1px near-black outline and saturated flats (the cyan headwrap, the orange body) while every environment element in the frame is unoutlined and desaturated. Replace the outline with a dark value sampled from the floor's own shadow ramp (~22–30) and pull the cyan and orange into the wall's amber/grey palette.
+- The figure casts no shadow and makes no contact with the floor — its feet at y≈508 sit on top of the slab, not on it. Add a cast shadow offset away from the light centre.
+- The bright patch behind and right of the figure, roughly x 415–465, y 460–505, peaks at value 244 and has a straight stair-stepped vertical right edge and a straight bottom edge. It is a rectangle, not a light pool. Either replace it with a radial falloff centred on the light, or drop that slab's top value from 244 to the 200–210 of the slabs beside it.
+- The fire in the floor pit at (595,548) emits no light. The ring stones immediately around it and the slabs two tiles out are at the same value. In a frame whose stated premise is one light source and falloff away from it, a visible second flame lighting nothing is the loudest error in the image. Add its contribution: brighten the ring stones and the four adjacent slabs, and put a shadow on the far side of each ring stone.
+- That flame is pure red/orange/yellow, saturation far above anything else in the frame. Remap it into the frame's warm ramp.
+- The ring stones around the pit are shaded as rounded 3/4 volumes lit from upper-left; every other stone in the frame is a flat top-down slab. Redraw them flat with a rim shadow falling into the pit.
+- The concentric incised arcs across the floor at x≈470–700, y≈430–620 run continuously across slab joints without breaking. Break each arc at every joint it crosses and offset the segments by 1–2px, or drop the decal — as drawn it reads as an overlay laid on top of the tiles rather than carved into them.
+- The two planks at ≈(505,545) and ≈(520,565) each carry a 2px near-white blob at mid-length. At this value they read as stray pixels. Resolve each into a pin head with a dark side, or delete them.
+- The cage/lantern at ≈(340,545) and the crossed timbers at ≈(280,615) and ≈(405,610) carry orange highlights on the faces turned *away* from the light. Re-light all three from the lamp position and give each a contact shadow.
+- Those three props are also the only saturated objects on the floor. Desaturate them into the slab palette so they stop reading as a separate asset set dropped in.
+
+FLIP 3:
+- Every sprite item from FLIP 4 applies unchanged here: the outline, the saturation, the missing contact shadow, and the same hard-edged rectangular bright patch at x 415–465, y 460–505.
+- The lit floor from x 190–700, y 460–720 contains exactly one object, the dark crate at (310,645). A four-hundred-year-held line with an empty room in it reads as a blockout that never got dressed. Populate it.
+- The slab joints from x 190–330, y 470–560 fade out entirely mid-run — the slab edges dissolve into one continuous cream wash where the light is strongest. Hold each joint at a fixed darker offset from its slab through the lit area instead of letting brightness eat it.
+- The grey mass at (490–540, 555–605) has no readable silhouette — it is neither damage, nor object, nor stain. Give it an edge and make it something, or remove it.
+- The crate at (310,645) is a flat single-value interior with hard 90° corners and no cast shadow. Add a lid line, a value break between top face and side, and a shadow away from the lamp.
+- The vertical pins that exist along this same wall run further right are absent from x 190–380 — the repair language stops halfway across one wall. Carry it across the full run.
+
+FLIP 2:
+- The wall band at y 415–460, x 190–500 has lost its structure. On the identical wall in the other frames this strip carries a top rail, vertical pins and block joints; here it is a soft brown gradient with two faint scratch lines. Restore the rail, the pins and the joints at the same crispness as the rest of the frame. As it stands this is the "a filter was run over it" tell, and it's the reason this frame ranks where it does.
+- The wall's top surface is a gradient, not a plane: a vertical slice at x=300 climbs 76→83→96 across the wall band. Flatten it to a single value and keep that value below the lit floor beneath it, with a dark base line separating the two.
+- The lit floor from x 190–420, y 465–620 has no slab joints at all — one continuous cream gradient reaching 250, effectively clipped. Draw the joints back in and pull the peak down off the ceiling.
+- The floor at x 250–400, y 600–720 carries vertical dark streaks that don't align to any slab or joint; they read as a stretched texture rather than wear. Replace with slab-aligned damage.
+- Same sprite items as FLIP 4: outline, saturation, contact shadow, and the rectangular bright patch.
+- Same emptiness as FLIP 3 — one crate at (250,650) in the whole lit room.
+
+FLIP 1:
+- Cut an irregular bank for the water at x 248–343, y 0–191: edge tiles on all three sides, no 90° corners, and darken the water 2–3 values within one tile of the bank.
+- Break the water's interior repeat and add a depth cue — currently 18 colours across the whole body with one cellular pattern tiling uncorrected.
+- Author 4–6 mud variants and scatter them: 44 of 88 sampled 16×16 blocks in the mud field are exact duplicates, and the repeat is visible.
+- Vary or mirror the moss decal — the identical blob appears at (10,52), (18,200) and (363,157).
+- Give the flagstone per-slab value variation of 2–4 steps. It is currently one flat tone with a grid line drawn over it.
+- Add a transition at the mud/flagstone boundary (the straight vertical edges at x≈56 and x≈248, and the horizontal edge at y≈215). Spill mud onto the first row of slabs; right now the mud stops dead on a pixel column.
+- Pick one projection. The two barrels at (127,203) and (175,203) show rim *and* side; the crates at (63,5) and (63,48) are pure top-down; the water and floor are orthographic.
+- The crates at top-left are cut by the frame edge mid-object with no partial-tile art authored for that cut.
+- The white debris cluster at ≈(220,118) is a scatter of near-white pixels — the highest-contrast element in the entire frame, on a mid-brown field, with no legible silhouette. Drop it into the mud's value range and give it a readable shape.
+- Add contact shadows to the crates, barrels and the orange post at (30,130); nothing in the frame has one. The figure's shadow is a flat hard-edged brown ellipse — soften and shape it.
+- There is no light source and no falloff anywhere: the frame is uniformly lit at full brightness edge to edge. The lamp-carrier premise that defines every other frame in this deck is simply absent here.
+- Finish the bottom band, y≈265–288 — a black strip with one lighter grey rectangle in it, with the flagstone floor terminating into nothing.
+
+One thing worth naming across the deck: 2, 3 and 4 are the same room with the same camera, and the only differences are how much wall structure survived and how much of the floor got dressed. The shared faults — the figure being in a visibly different art language from everything around it, and the rectangular "light pool" behind it — are identical in all three and cost each of them a ship. Fix those two once and 4 becomes a real candidate; leave them and the dressing work on 4 is decoration on a frame that already fails at a glance.
+
+Model used: Claude Opus 5 (1M context).

@@ -1,0 +1,59 @@
+Read all four at 1:1 and at 4–12× on the regions I cite. Coordinates below are in each file's own pixels.
+
+RANK: 1 > 3 > 4 > 2
+
+BEST: 1
+
+BEST_WHY: The wall run at y≈425–455 (x 200–500, and continuing right of the corridor at x 570–750) is the only place in the deck where structure is actually drawn rather than implied. The block course there has joints of unequal width — the gap at x≈310 is one pixel, the one at x≈345 is three — and the block faces catch light unevenly along a single run, so they read as cut and set by hand rather than stamped. The driven pins at x≈297 and x≈389 are contained within that course for their whole length, with the left one carrying two short cross-rungs; they sit on the stone, not in front of it. Below it a single hard 1px line separates wall from floor, and the soft mottled band is pushed *above* the course, into the unlit side, where softness costs nothing. That ordering — crisp edge at the boundary the eye lands on, mush behind it in shadow — is the one real craft decision in the set, and 3 and 4 have it exactly backwards. The hatch at x 300–380, y 645–710 is also axis-true: four square corners, edges parallel to the grid, a lighter top rim reading as a lid.
+
+WORST: 2
+
+WORST_WHY: Three things, any one of which stops it.
+
+The two barrels at x 113–145 and x 161–193 are flat-cut by the stone floor edge at y=216. Their staves run down and terminate on a straight horizontal line — no bottom rim, no rolloff, no contact. The grey floor tile is drawn over them. Nothing occludes them; the terrain boundary just eats them.
+
+The water is the literal rectangle x∈[248,343], y∈[0,191]. I checked every column and row: it is 96×192 px of one fill with a 1px cut on all four sides. Dirt at y=192, teal at y=191, nothing between — no bank, no edge tile, no wetting, no darkening at the margin. Its surface carries a faint hexagonal net whose pitch has no relationship to the 24px square grid everything else obeys.
+
+The two crates at x 64–96, y 2–26 and y 50–74 are pixel-identical — mean channel difference 0.0, not "similar," the same stamp twice, one directly above the other. Each is also two projections welded together: a lid seen straight down (bevel frame, diamond stud) sitting on a body seen in side elevation with vertical planks and a visible front face, in 24 pixels.
+
+Underneath all that, the frame has no lighting model whatsoever — uniform ambient edge to edge, not one cast shadow under crate, barrel or figure.
+
+FLAGGED: 2, 4, 3
+
+SHIP: NONE
+
+---
+
+FLIP 1:
+- The slab at x 495–560, y 520–548 is a flat fill — one value, two stray specks, no grain — while every block touching it carries diagonal scratch hatch. Texture it to match its neighbours.
+- That same slab's outline changes weight without cause: hard black for the leftmost ~15px of its top edge, then a pale 1px brown for the rest; its bottom edge is a broken dashed line of unequal darks; its left edge is black only in the lower half. Pick one joint weight and run it around the whole block.
+- The falloff is not centred on the lamp. At equal radius (150–250px) the floor left of the figure averages luminance 47 and right of it averages 68. Concretely: open floor at x≈190, y≈490 — two tiles from the light — is near-black, while the same tileset at x≈630, y≈490 — seven tiles out — is pale cream, with nothing occluding either. Re-centre the attenuation on the figure or introduce the second emitter the image is already implying.
+- The wall's top surface at y 395–420 is structureless airbrushed mottle — no courses, no joints, no block edges anywhere across x 200–500. It is the widest single element in the frame and it is the only one with no drawn information in it. Give it coursing consistent with the band below it.
+- The background is rendered in soft blurred noise with razor-hard 1px black rectangles laid on top (clearest at the wall/floor line y=455 and around the hatch). Two mark languages in one image. Either soften the joint lines to sit in the same material or sharpen the fills.
+
+FLIP 3:
+- The driven pins at x≈265, x≈355 and x≈690 have their top 8–10px standing in undifferentiated black above the wall's top edge at y=392 — dark sticks in a void with nothing behind them to be driven into. Either shorten them to the wall's edge or extend the wall's top surface behind them.
+- The band from y≈425 to the hard floor line at y≈455 is soft brown mottle with zero structure, and it is the part of the wall directly under the light, abutting the highest-contrast edge in the frame. Swap it with the block course currently at y 390–420 so the drawn coping sits at the floor boundary and the mottle sits in shadow.
+- The object at x 290–380, y 640–715 has lost its silhouette: the right edge is vertical but the left steps diagonally, there is a soft diagonal seam through the body, and a detached T-shaped dark bar floats at x 292–312, y 632–660 attached to nothing. Redraw it axis-aligned with a closed outline and delete the orphan bar.
+- The shield at x≈400–430, y≈478–500 is pushed to near-white and the emboss is half gone. Pull the top two ramps down so the shield's form survives inside the light.
+- Same blank slab at x 495–560, y 520–548 and same off-centre falloff as 1 — both apply here unchanged.
+
+FLIP 4:
+- The light pool is clipping. 2.4% of the frame sits above luminance 250, against 0.12% in image 1. Inside roughly 60px of the figure the floor's tile joints are gone entirely — compare the grout lines at x 430–520, y 490–520, which are legible in 1 and 3 and absent here. Cut the near-field intensity until the joints survive under the lamp.
+- The shield at x≈400–430, y≈478–500 is flat white with no emboss and no rim shading left; it is the brightest object in the frame and has less information in it than the floor. Clamp the sprite's lit ramp below the blowout point.
+- Everything in FLIP 3 applies here identically: pin tops in black at x≈265, 355, 690 above y=392; structureless wall band y 425–455; skewed hatch and orphan T-bar at x 290–380, y 632–715; blank slab at x 495–560, y 520–548; off-centre falloff.
+
+FLIP 2:
+- Give the water a bank. Draw edge tiles on all four sides of the x∈[248,343], y∈[0,191] rectangle — a darker wetted rim on the dirt side, a value break where the fill meets the stone floor at x=344 — and break the four perfectly straight cuts so the pool is not a filled selection.
+- Replace the hexagonal net on the water surface with a pattern authored on the 24px grid, or remove it; at present it is the only element in the frame not on the game's own grid.
+- The barrels at x 113–145 and x 161–193 are cut flat at y=216 by the stone floor edge. Fix the draw order so the floor renders behind them, and give each a bottom rim so the silhouette closes.
+- The crates at x 64–96, y 2–26 and y 50–74 are the same sprite pixel-for-pixel. Vary at least the plank spacing, the stud position and the wear on the second one.
+- Resolve the crate projection: the lid is drawn from directly above, the body from the side. Pick one. If the game is straight-down, the crate is a lid and a 1px dark edge, not five vertical staves.
+- Add a lighting model. There is currently none — uniform ambient across the whole frame, no attenuation from any source, and not one contact shadow. At minimum: a dark contact shadow under each crate, barrel and the figure, and a falloff so the frame is not equally bright in all four corners.
+- The plank at x 26–35, y 122–170 steps through three hard values down its length — bright orange over the brick band, mid-brown at the transition, dark brown over the dirt — and the steps land exactly where the background changes. An opaque object cannot take its value from what is behind it. Give it one value ramp driven by a light direction.
+- The moss cluster is the same unrotated shape at x 40–75/y 52–72, x 10–46/y 205–225 and x 360–383/y 150–180, and it is drawn as a translucent sticker whose outline crosses the tile joints without interacting with them. Rotate/mirror the instances and break the outline where it meets a joint so it reads as growth in the seams.
+- The white scatter at x 205–240, y 110–128 has no readable form — it is a dust of unconnected pixels. Either draw identifiable bones with closed silhouettes or remove it.
+
+One thing that runs through 1, 3 and 4 and is worth naming outside the ranking: the figure is a side-elevation sprite — visible face profile, sword extended sideways, shield seen face-on — standing in a scene where the floor, the wall tops and the hatch are all drawn straight down. It is the same in image 2, so it reads as a deliberate house convention rather than an error, and I have not ranked on it. But it is the single largest projection break in every frame, and if the straight-down read of the environment is the thing being defended, that sprite is arguing against it.
+
+**Model: Opus 5 (1M context).**

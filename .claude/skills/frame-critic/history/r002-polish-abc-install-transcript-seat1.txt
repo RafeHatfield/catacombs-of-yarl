@@ -1,0 +1,47 @@
+Read all four. Measured rather than eyeballed where it mattered — luminance profiles, block-level duplicate detection, and pixel diffs. Worth knowing up front: 2, 3 and 4 are the same plate with only the near-field light re-rendered (a pixel diff of 2 vs 4 confines every difference >8 to the light pool and the corridor shaft), so they share every defect that lives outside that pool. 1 is unrelated work at a different order of finish.
+
+RANK: 4 > 2 > 3 > 1
+
+BEST: 4
+
+BEST_WHY: The floor masonry from x≈440–700, y≈430–640 is genuinely cut rather than tiled. Slab sizes are unequal within one course — a single large slab spans x≈495–560 while its neighbours to the right are half that width — and joint weight varies along a single run: some joints are a solid 2px dark line, some drop to a broken 1px, and some adjacent slabs share an edge with no joint drawn at all. The crack network that enters at x≈300,y≈450 and runs down to x≈440,y≈600 branches twice, changes weight along its length, and crosses slab boundaries without breaking at them — it was drawn over the floor, not into the tiles. Under the lamp, 4 is the only one of the three that keeps that information: measuring mean absolute local contrast in the hot zone (x 240–480, y 455–600), 4 scores 15.36 against 2's 10.42, at a *lower* mean brightness (154 vs 172). It gets the reach without spending the texture. And it's the only one of the three with no clipped pixels anywhere in frame — max luminance 208, so the character's shield keeps three separate values (mid-tan body, darker rim shading at lower-left, dark central boss) and the sword keeps a lit edge against a shaded flat.
+
+WORST: 1
+
+WORST_WHY: There is no light model at all. The mud directly beneath the figure (x 218–232, y 30–45) averages luminance 66.1; the mud 170px away at bottom-left (x 60–90, y 180–200) averages 67.7. That is 1.6 levels of difference across the entire frame. Same on the stone: top-left corner 88.0, bottom-left corner 88.9. Nothing gets darker anywhere.
+
+Underneath that, the ground is stamped. In one 130×140 sample of the mud field, the 16×16 block at (164,40) is *pixel-for-pixel identical* to the blocks at (116,88), (164,88), (212,88), (116,136) and (212,136) — six exact copies of one tile in a single patch, on an obvious 16px lattice; 75 identical block pairs in that patch overall.
+
+Then the seam: at y=216, a 1px rule of flat rgb(124,124,124) runs the **full 384px width** of the frame where mud meets stone. The mud immediately above it is luminance 65; the rule is 119. It's the highlight lip off a wall tile, drawn where there is no wall — and the proof is that the mud's *vertical* boundaries (x≈50 and x≈258) get no lip at all, because the tileset only has the horizontal piece. Same rule repeats at y=263.
+
+Two camera angles in one frame: the floor and walls are orthographic top-down, but the chests at (100,0)–(160,90) show a lid top *and* a front face, and the two barrels at y≈190–215 show a top ellipse *and* a cylindrical side. Both props are drawn from a ~45° south view sitting on a straight-down floor. The chests are also duplicates of each other, and there's a ghost band of lighter mud immediately under the lower one at y≈155 — a leftover rectangle with no object attached to it.
+
+The water at x 248–344, y 0–190 is an axis-aligned rectangle. Hard 90° corners, flat teal, no shoreline, no lip, no shading at the edge, terminating against the mud on a straight vertical cut. It reads as an untextured collision box.
+
+FLAGGED: 1, 3
+
+The rest of 4's problems are real but quiet. 3's is not: 298 pixels in image 3 sit above luminance 238, and every one of them falls inside x 389–426, y 467–504 — exactly the character sprite's bounding box. Images 2 and 4 have zero pixels above 238. The player character is the only clipped object in the frame, and the shield takes it worst: in 3 the shield is a single near-white cream disc where 4 has body, rim and boss as three separate values. 3 also dissolves the wall run above the figure — the timber beam at y≈425 and the vertical post at x≈390 that read clearly in 2 and 4 are gone, flattened into an undifferentiated brown haze from y≈440 down, with the wall base bleeding into the floor as a soft gradient instead of an edge.
+
+SHIP: NONE
+
+FLIP 4:
+- The character carries no light. The sprite has a raised sword in one hand and a round shield in the other, and nothing that emits. Meanwhile the 41px-smoothed lighting peak sits at (342,499) — about two tiles to the character's left — while the sprite centre is at (408,486). Put a lantern, a wick or a burning brand in the sprite's hand and move the emitter origin onto it, so the brightest point of the frame is attached to an object.
+- Redraw the wall's top surface (y 385–425 across the run). It is a soft airbrushed brown mottle with no stone divisions, no course lines and no joints, sitting 20px above floor masonry drawn as crisp rectangular slabs. Two rendering languages touching. Give the wall top the same joint vocabulary as the floor at reduced contrast.
+- The timber beam at y≈425–432 is a flat 6px bar of one value running ~700px with perfectly straight edges and no ends. Where the vertical post at x≈388 crosses it there is no lashing, no overlap and no driven pin — two rectangles on the same layer. Break the beam's value across its length, and detail the crossing as an actual joint.
+- Wall-base to floor separation collapses directly above the character: measured over x 380–420, the wall band (y 400–432) averages 91.0 and the floor below (y 448–468) averages 105.1 — 14 levels apart. That's the least-separated point in the whole run and it's the point the eye goes to. The only thing dividing them is a ragged 1–3px dark fringe that thins out to nothing between x≈490 and x≈550.
+- The floor carries free-floating joint stubs that start and stop in the middle of a slab face and connect to nothing — a vertical bar at (622,485)–(622,500), another at (680,555)–(680,570), a horizontal one at (588,600). They're the same value and weight as real joints, so the eye can't sort joint from mark. Either terminate them at another joint or drop their weight.
+- The diagonal three-stroke scratch motif appears at (570,527), (570,565) and (590,595) — the same mark, same 45° angle, same ~4px stroke spacing, three times inside a 70px vertical span. Vary the angle and stroke count, or thin them out.
+- The prop at x 300–420, y 640–712 casts nothing. Floor luminance below it (41.5), left of it (65.2) and right of it (96.0) sit on a clean distance falloff curve with no occlusion term. It's the only solid object standing between the lamp and the dark, and it doesn't interrupt the light — so it reads as pasted onto the floor rather than standing on it.
+
+FLIP 3:
+- Everything in FLIP 4 (shared plate).
+- Clamp the sprite's lighting multiplier. 298 pixels of the character are above luminance 238 and the shield has collapsed to one flat cream value — the rim, boss ring and body are indistinguishable. Cap sprite output at the level 2 and 4 use (max 208) so the shield keeps its three-value read.
+- Restore the wall structure above the figure. The beam at y≈425 and the post at x≈390 have been erased into a brown haze; the wall's bottom edge is now a soft gradient into the floor instead of a line. Apply the light to the wall's texture without lifting its shadow values — the dark structural marks need to stay dark at every light level.
+
+FLIP 2:
+- Everything in FLIP 4 (shared plate).
+- Pull back the near-field light exposure. In the hot zone (x 240–480, y 455–600) the mean local contrast is 10.42 against 4's 15.36 at the same location — a third of the floor detail is gone, and it's gone precisely where the player is looking. The slab joints behind and to the left of the character have flattened into an unbroken cream field; individual slabs are no longer countable within about a 4×3 tile area. The falloff curve is too flat at the top: it should start descending closer to the source rather than holding near-peak out to d≈120.
+
+The shared plate is doing most of the work here, and the thing separating these three is one exposure curve. Get that curve right once — cap it below clipping, start the descent earlier, and anchor its origin to an object the character is actually holding — and 4 stops needing a qualifier. The wall-top texture is the next real cost after that; it's the largest lit surface in frame and it's the only one that doesn't look drawn.
+
+*Model: Claude Opus 5 (1M context).*

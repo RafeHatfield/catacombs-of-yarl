@@ -1,0 +1,48 @@
+RANK: 1 > 2 > 4 > 3
+
+BEST: 1
+BEST_WHY: The floor under the figure is the most convincingly cut stone in the set. In the three rows below the figure (y≈500–620) individual flags differ in value — a paler slab at (340–430, 520–545), a darker one at (400–560, 575–600) — and the joints are 1–2px dark lines with occasional chipped corners, so the field reads as laid stone rather than a stamped grid. The whole frame sits on one warm brown value ramp with the figure the only saturated element, and the light falloff is smooth with no banding. The brick face band (y≈390–420) has bricks of different widths with joints that vary in darkness along the run. Lighting respects the walls: the corridor at x=375–435 stays lit up to y≈230 while the wall tops beside it stay dark, which reads as an occluded light rather than a vignette.
+
+WORST: 3
+WORST_WHY: Every surface is a fill. The pool at (250–345, 0–190) shows a visible honeycomb/hex repeat cell across its whole area. The dirt floor (70–250 × 0–215) is a uniform red-brown speckle with a faint darker grid where the tile repeats. The grey stone is a perfectly regular 1px joint grid with no variation over 8+ tiles. There is no light falloff at all — the grey at (0,0) and the grey at (380,280) are the same value — so the frame is flat edge to edge. The white scatter at (205–235, 110–130) is loose 1px pixels with no silhouette; the blue flecks at (185,155), (130,25) read as stray pixels. Crates at (65–95, 0–70) and barrels at (110–190, 195–220) are drawn side-on (visible front slats, barrel bodies) on a straight-down grid. Lilypads and mint moss blobs in an administered underworld are a tone miss on top of the craft misses. It reads as the free one.
+
+FLAGGED: 2, 3, 4
+
+SHIP: NONE
+
+FLIP 1:
+- The brick face band (y≈390–420) is separated from the floor's top edge (y≈455) by a ~35px strip of the same blurred cloud texture as the wall top, so the face floats in the wall mass instead of meeting the floor. Move the face down so its bottom row sits on the floor edge, or draw that strip as a second brick course.
+- Wall-top surface everywhere above the brick band (e.g. x=50–370, y=80–390) is a soft blotchy noise fill with no pixel structure — it reads as mist, not unlit stone. Replace with a hard-pixel flagstone/rubble top at the same pixel density as the floor, joints at low contrast so it stays dark but reads solid.
+- Cracks (the arc from (0,560) to (350,510); the curve (620,690)–(750,640)) are 1px anti-aliased smooth curves laid over the stones, crossing joints without breaking and without altering the stone shading. Redraw as pixel-stepped lines confined to individual stones, with a 1px lighter edge on one side so they read as splits.
+- The floor hatching is one diagonal stroke set repeated at the same angle on most stones (clear in the rows below the figure). Add 3–4 hatch variants with different orientation/density so the repeat is invisible at play size.
+- Corridor side walls at x=375 and x=435 (y=80–455) are hard vertical cuts of cloud texture against the corridor floor with no edge course. Add a 4–6px coping/edge along the corridor so the wall mass has an edge.
+
+FLIP 2:
+- Floor stones within ~150px of the figure (the 3×3 around (400,490)) clip to near-white and the hatching blows out. Cap the lit floor value below the figure's skin highlight so the light doesn't clip.
+- Floor stone texture is a dense pencil-scribble hatch with stroke direction randomised per stone (see (480–560, 520–600)); at play size it reads as noise. Replace with 2–3 restrained hatch variants with a consistent stroke direction.
+- Thick 4–6px black bars at stone corners (e.g. ~(325,520), (390,610), (550,555)) are heavier than the joints and read as artifacts. Make joints a uniform 1–2px dark line; reserve heavy marks for actual chips.
+- Wall-top surface (x=120–500, y=70–135; the band y=390–420 left of the corridor) is a blurred cloud/noise fill. Redraw as hard-pixel stone top at the same density as the floor.
+- The 2×2 darker block at (310–380, 645–715) is a brown rectangle with horizontal lines and no readable identity — hatch, grate, or hole. Give it an edge lip and interior detail so it reads as one specific thing.
+- Cracks (the long curve from (240,700) up to (400,510) and across to (560,470)) are anti-aliased vector lines that pass over stones unchanged. Pixel-step them and confine each segment to a stone.
+- The corridor at x=505–555, y=70–420 has cloud texture directly abutting the corridor floor on both sides with no edge course. Add a coping/edge.
+- The lower-left region (x=50–185, y=700–830) is a distinct grey rectangle of hatched stone with a hard straight edge against black at x=185 — it reads as a texture seam, not a wall. Give it a wall face or push it under the fog.
+
+FLIP 4:
+- Everything in FLIP 2 (same map, same floor and wall textures).
+- The fire pit at (575–620, 530–575) is drawn burning (orange/yellow flame) but casts nothing on the surrounding floor, which stays at the ambient falloff value. Either give it its own falloff or draw it dead (embers/ash) to honour the "only light" rule.
+- The timber props — plank stacks at (190–300, 475–520) and (380–500, 590–640), the post at (260–300, 540–640) — use thick 1px black outlines and full-saturation orange with no darkening from the light, while the floor has no outlines at all. Drop outlines to a dark-brown 1px, desaturate toward the floor ramp, and multiply the props by the same light falloff as the floor.
+- The standing post at (260–300, 540–640) is drawn side-on (visible shaft with a plinth at the bottom) on a straight-down grid. Redraw as seen from above (square/round top with a short shadow), or lay it flat as a beam.
+- The lower plank pile at (380–500, 590–640) has planks crossing at an angle with a visible side face in 3/4 view. Redraw as flat top-down planks with only the top face showing.
+
+FLIP 3:
+- No light falloff; the frame is evenly lit edge to edge. Apply radial darkening from the figure at (225,10).
+- The pool at (250–345, 0–190) shows a honeycomb/hex repeat cell across its whole area. Replace with drawn water with no visible repeat, a stone edge lip, and darker value toward the middle.
+- The dirt floor (70–250 × 0–215) is a uniform red-brown speckle noise fill with a faint darker grid where tiles repeat. Redraw with larger-scale variation (wear paths, patches) so tile boundaries aren't visible.
+- The white scatter at (205–235, 110–130) is loose 1px pixels with no silhouette. Draw it as a legible object (bones, spilled grain) with a readable outline.
+- Blue 1–3px flecks scattered across the dirt (e.g. (185,155), (130,25), (90,15)) read as stray pixels. Remove, or enlarge into something identifiable.
+- Crates at (65–95, 0–70) (yellow top over dark front slats) and barrels at (110–190, 195–220) are side-on/3/4 objects on a straight-down grid. Redraw from above.
+- Grey stone joints are a perfectly regular 1px grid with zero variation. Vary joint thickness, offset courses, and add a few broken or chipped stones.
+- Moss blobs (e.g. (30,60), (335,150), (35,215)) are one soft mint shape repeated. Vary the shape and let moss sit in joints rather than centred on tiles.
+- The ladder at (28–36, 125–160) sits against the wall face with no shadow or contact with the floor; give it a 1px contact shadow on the floor and a darker base rung.
+
+Model: Opus 5 (1M context)

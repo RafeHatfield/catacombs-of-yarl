@@ -148,6 +148,31 @@ public sealed partial class ReviewRigPanel : VBoxContainer
                () => $"{get() + 1}/{count}");
     }
 
+    /// <summary>
+    /// The cast-shadows rows, for Rafe's walk: shadows on/off (the perf A/B on one build and a
+    /// walk control), softness (a ladder from a hard edge to soft), and the fire's flicker
+    /// toggle — present, default OFF, and NOT the builder's to decide (§9.2 vs the tended
+    /// exception; Rafe rules at the gate with both states in hand).
+    /// </summary>
+    public void AddShadowRows()
+    {
+        if (_body == null) return;
+        AddRow(_body, "shadows", 1f,
+               d => _rig.ShadowsEnabled = !_rig.ShadowsEnabled,
+               () => _rig.ShadowsEnabled ? "on" : "off");
+        AddRow(_body, "softness", ReviewLighting.SoftnessStep,
+               d => _rig.ShadowSoftness += d, () => $"{_rig.ShadowSoftness:0.0}");
+        AddRow(_body, "darkness", ReviewLighting.DarknessStep,
+               d => _rig.ShadowDarkness += d, () => $"{_rig.ShadowDarkness:0.0}");
+        if (_rig.FireLightCount > 0)
+            AddRow(_body, "fire", ReviewLighting.FireStep,
+                   d => _rig.FireEnergy += d, () => $"{_rig.FireEnergy:0.0}");
+        if (_rig.FireLightCount > 0)
+            AddRow(_body, "flicker", 1f,
+                   d => _rig.FireFlicker = !_rig.FireFlicker,
+                   () => _rig.FireFlicker ? "on" : "off");
+    }
+
     private Label AddRow(Control parent, string name, float step,
                          System.Action<float> nudge, System.Func<string> read)
     {
