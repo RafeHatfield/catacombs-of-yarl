@@ -29,3 +29,9 @@ picture; the critic runs once, last, on the frozen tree.
   zero. The next tool is Xcode's GPU frame capture, outside this queue.
 - Evidence: `tools/cast_shadows/evidence/headroom_boot.log`, `headroom_install.log`.
   Build `headroom` (SKIPPED-REVIEW, vsync off, own bundle id) stays on the phone for the record.
+
+### 4. Fire knobs — DONE (exposed, not ruled)
+- Rig panel gains `fire r` (reach, 1.0–8.0 tiles, step 0.5; rebuilds the fire's falloff texture)
+  and `fire tint` (a ladder of seven warm hues from `ff6a1e` to `ffd4a0`, `ff8a3c` at 1/7 as
+  today's). Energy stays at Rafe's 1.6 mark. The settings line now carries `fire_radius` and
+  `fire_tint` so a MARK WALK records them. Nothing ruled.

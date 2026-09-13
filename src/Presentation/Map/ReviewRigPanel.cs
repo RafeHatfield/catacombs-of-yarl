@@ -165,8 +165,16 @@ public sealed partial class ReviewRigPanel : VBoxContainer
         AddRow(_body, "darkness", ReviewLighting.DarknessStep,
                d => _rig.ShadowDarkness += d, () => $"{_rig.ShadowDarkness:0.0}");
         if (_rig.FireLightCount > 0)
+        {
             AddRow(_body, "fire", ReviewLighting.FireStep,
                    d => _rig.FireEnergy += d, () => $"{_rig.FireEnergy:0.0}");
+            // reach and tint — PLACEHOLDER until walked; exposed, not ruled (queue item 4)
+            AddRow(_body, "fire r", ReviewLighting.FireRadiusStep,
+                   d => _rig.FireRadiusTiles += d, () => $"{_rig.FireRadiusTiles:0.0} tiles");
+            AddRow(_body, "fire tint", 1f,
+                   d => _rig.FireTintIndex += (int)d,
+                   () => $"{_rig.FireTintIndex + 1}/{ReviewLighting.FireTints.Length} {_rig.FireTint}");
+        }
         if (_rig.FireLightCount > 0)
             AddRow(_body, "flicker", 1f,
                    d => _rig.FireFlicker = !_rig.FireFlicker,

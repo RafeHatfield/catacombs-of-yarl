@@ -356,6 +356,9 @@ public sealed class ReviewLighting
                 ShadowItemCullMask = GroundLightMask,
             };
             l.SetMeta("base_energy", p.Light.Energy);
+            l.SetMeta("radius_tiles", p.Light.RadiusTiles);
+            int ti = System.Array.IndexOf(FireTints, p.Light.Color.ToLowerInvariant());
+            l.SetMeta("tint_index", ti < 0 ? 0 : ti);
             gameView.AddChild(l);
             _lights.Add(l);
             _fireLights.Add(l);
@@ -457,6 +460,41 @@ public sealed class ReviewLighting
     /// and energy so the barricade beside it throws a shadow away from it." Scales every fire
     /// light's base; the flicker rides on top. Rafe's to set; PLACEHOLDER until he does.</summary>
     public const float MinFire = 0f, MaxFire = 4f, FireStep = 0.1f;
+
+    // THE FIRE'S REMAINING PLACEHOLDERS, EXPOSED FOR THE WALK (overnight queue, 2026-09-13):
+    // reach and tint. Energy 1.6 is Rafe's mark; reach 4.0 rode with it unmarked, and the tint
+    // (ff8a3c) has never been walked at all. Both are knobs now so the next walk can set them;
+    // nothing here rules them. The tint is a LADDER of warm hues rather than three channel
+    // sliders — a walk sets a colour by choosing, not by mixing.
+    public const float MinFireRadius = 1.0f, MaxFireRadius = 8.0f, FireRadiusStep = 0.5f;
+    public static readonly string[] FireTints =
+        { "ff8a3c", "ff7a28", "ff6a1e", "ff9a4c", "ffb066", "ffc890", "ffd4a0" };
+
+    public float FireRadiusTiles
+    {
+        get => _fireLights.Count > 0 ? (float)_fireLights[0].GetMeta("radius_tiles") : 0f;
+        set
+        {
+            float v = Mathf.Clamp(value, MinFireRadius, MaxFireRadius);
+            foreach (var l in _fireLights)
+            {
+                l.SetMeta("radius_tiles", v);
+                int size = Mathf.Max(Mathf.RoundToInt(v * Mathf.Max(_tileW, _tileH) * 2f), 2);
+                l.Texture = BuildRadialFalloff(size, 1.0f);
+            }
+        }
+    }
+
+    public int FireTintIndex
+    {
+        get => _fireLights.Count > 0 ? (int)_fireLights[0].GetMeta("tint_index") : 0;
+        set
+        {
+            int i = ((value % FireTints.Length) + FireTints.Length) % FireTints.Length;
+            foreach (var l in _fireLights) { l.SetMeta("tint_index", i); l.Color = new Color(FireTints[i]); }
+        }
+    }
+    public string FireTint => _fireLights.Count > 0 ? FireTints[FireTintIndex] : "-";
     public float FireEnergy
     {
         get => _fireLights.Count > 0 ? (float)_fireLights[0].GetMeta("base_energy") : 0f;
@@ -662,5 +700,6 @@ public sealed class ReviewLighting
            $"energy={_p.Energy:0.###} " +
            $"shadows={(_shadowsEnabled ? "on" : "off")}({_occluderMode}) softness={_shadowSoftness:0.#} " +
            $"darkness={_shadowDarkness:0.#} " +
-           $"fire_lights={_fireLights.Count} fire_energy={FireEnergy:0.##} flicker={(_fireFlicker ? "on" : "off")}";
+           $"fire_lights={_fireLights.Count} fire_energy={FireEnergy:0.##} fire_radius={FireRadiusTiles:0.#} " +
+           $"fire_tint={FireTint} flicker={(_fireFlicker ? "on" : "off")}";
 }
