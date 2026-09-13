@@ -91,3 +91,27 @@ picture; the critic runs once, last, on the frozen tree.
 - Sorted at +5 (a wall-top prop's slot): at +1 it drew under the east floor cell's overlay
   children and was not in the frame at all — found by looking, not by the counter.
 - `Tier1BoundaryWall` (`Tier1EastFace`, reported as `east_faces=N`).
+
+### Frame critic — round 1, lane `art/queue-2026-09-13`: INSTALL-LATEST (five seats)
+- All three shadowed plants dealt and caught; above the reference in 2 of 5, not below in 4 of 5;
+  flagged by 3. Build id `334727fdfd7c`, commit `00596c72`. `CRITIC-VERDICT.json` and
+  `history/r001-art_queue-2026-09-13.json` on disk.
+- Flip list (6 items), NOT YET DISPOSED: the Λ-frame "straddles the face band and sits on the cap
+  — reads as floating" (that is #212's own subject and the first thing to read on the walk); the
+  X-frame wants a contact shadow (#207); a floor hotspot (#184); "redraw the slab from above"
+  (§3.2 CLOSED); the right-column falloff and the face-band repeat (the reference's standing
+  items, #202/#197).
+
+## ⏸ PAUSED HERE (Rafe closed the laptop) — say "continue" to resume
+
+Resume, in order, from the worktree `.claude/worktrees/queue` on branch `art/queue-2026-09-13`:
+1. Dispose the six flips by citation into `CRITIC-VERDICT.json` (and the history copy); verify
+   with `critic_gate.check_dispositions`. The verdict is excluded from the build id, so the tree
+   stays frozen.
+2. Install-latest — the gated build, no override:
+   `TIER0_SCENE=res://src/Presentation/assets/tier0_harness/scenes/tier1_props_review.json TIER1_OCCLUDERS=all TIER1_SHADOW_SOFTNESS=12.0 TIER1_SHADOW_DARKNESS=0.8 TIER1_FIRE_FLICKER=1 TIER1_VOID_RING=0 tools/tier0_harness/build_review_app.sh`
+   then `verify_on_device.sh` with the same `TIER0_SCENE`. Phone must be unlocked.
+3. Commit the verdict, dispositions and device logs; push; open the PR (base `main`) naming the
+   verdict; then Rafe walks — the Λ-frame against the wall (#212) is the first thing to look at.
+4. Do NOT re-run the critic before installing: refreshing a stale verdict trips the no-change
+   STOP and the tree has not moved.
