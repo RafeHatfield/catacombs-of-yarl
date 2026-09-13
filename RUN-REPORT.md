@@ -77,3 +77,17 @@ picture; the critic runs once, last, on the frozen tree.
 - Not done, named: where a prop's base sits in a cell that is NOT against a wall stays at the
   §12.2 render anchor (4 px above the cell's south edge); a base-line rule for open floor is
   #212's second half and would need a walk.
+
+### 3. #211 wall ends, corners, pillars — DONE
+- **Where:** a wall cell with floor to its east that is not a north–south run (north and south
+  both wall). That is the east end of an E–W run, a corner, a pillar, and the corridor mouth's
+  jamb — the "wall face band simply cut where the corridor passes through" that r002's seat
+  flagged. Continuous runs stay two-plane (§3 walls). 5 east faces in the props room.
+- **Geometry (§3.2, ½ per axis):** the block is a cell deep, so the run is 16 native right and
+  16 up; the parallelogram hangs off the reveal's right edge, top-right corner on the cap's back
+  edge, bottom-left on the face's foot. Each column samples one column of the cell's OWN face, so
+  the courses recede diagonally — a side, not a stretched front. Value 0.75 of the face, a 1-px
+  seam at the arris (§12.1 form), matching the ½-depth sides the landed props carry.
+- Sorted at +5 (a wall-top prop's slot): at +1 it drew under the east floor cell's overlay
+  children and was not in the frame at all — found by looking, not by the counter.
+- `Tier1BoundaryWall` (`Tier1EastFace`, reported as `east_faces=N`).
