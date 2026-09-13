@@ -133,6 +133,12 @@ public sealed class ReviewBuildMarker
     ///
     /// Null means "not stated in the marker", and the renderer's own defaults apply.
     /// </summary>
+    /// <summary>Cast shadows: occluder cull mode ("none" | "cw" | "ccw" | "all"), softness, flicker.
+    /// Mirrors --occluders / --shadow-softness / --fire-flicker for the handset.</summary>
+    public string? Occluders { get; private init; }
+    public float? ShadowSoftness { get; private init; }
+    public float? ShadowDarkness { get; private init; }
+    public bool? FireFlicker { get; private init; }
     public int? TileSize { get; private init; }
     public float? TileScale { get; private init; }
 
@@ -208,6 +214,17 @@ public sealed class ReviewBuildMarker
                 BuiltAt = root.TryGetProperty("builtAt", out var ba) ? ba.GetString() : null,
                 ReviewStatus = root.TryGetProperty("reviewStatus", out var rs)
                             ? rs.GetString() : null,
+                Occluders = root.TryGetProperty("occluders", out var oc) ? oc.GetString() : null,
+                ShadowSoftness = root.TryGetProperty("shadowSoftness", out var ss)
+                                 && ss.ValueKind == System.Text.Json.JsonValueKind.Number
+                               ? (float)ss.GetDouble() : (float?)null,
+                ShadowDarkness = root.TryGetProperty("shadowDarkness", out var sd)
+                                 && sd.ValueKind == System.Text.Json.JsonValueKind.Number
+                               ? (float)sd.GetDouble() : (float?)null,
+                FireFlicker = root.TryGetProperty("fireFlicker", out var ff)
+                              && (ff.ValueKind == System.Text.Json.JsonValueKind.True
+                                  || ff.ValueKind == System.Text.Json.JsonValueKind.False)
+                            ? ff.GetBoolean() : (bool?)null,
                 TileSize  = root.TryGetProperty("tileSize", out var ts)
                             ? ts.GetInt32() : (int?)null,
                 TileScale = root.TryGetProperty("tileScale", out var sc)

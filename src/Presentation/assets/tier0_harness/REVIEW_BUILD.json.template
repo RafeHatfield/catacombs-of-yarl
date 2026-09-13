@@ -30,7 +30,8 @@
     "  ambientLevel  SCALAR on the ambient hue, not a colour: 1a1a22 x 0.70 -> #121218",
     "",
     "RULED FOR THE BOUNDARY AND NOTHING ELSE. Every other region derives its own at its own",
-    "gate; copying these into one would be conformance to a neighbouring region's answer."
+    "gate; copying these into one would be conformance to a neighbouring region's answer.",
+    "2026-09-13: the light values below are RE-RATIFIED WITH SHADOWS — held on the shadowed walk — and the shadow keys (occluders, shadowSoftness, shadowDarkness, fireFlicker, voidRing 0) were SET there. §6.2's live table."
   ],
   "_walk": [
     "WHICH WALK THIS BUILD IS FOR, and it is asserted before the build may install.",
@@ -50,7 +51,6 @@
     "A walk that names requirements it does not carry REFUSES TO INSTALL and says which."
   ],
   "walk": "rig-energy",
-
   "_scene": [
     "THE COMBINED ROOM, not the tier-0 corridor junction, and this is the second half of the",
     "2026-09-05 defect. The corridor junction is a programmer-art scene lit through the STUB",
@@ -63,7 +63,6 @@
   ],
   "scene": "res://src/Presentation/assets/tier0_harness/scenes/tier1_combined_review.json",
   "themeConfig": "res://src/Presentation/assets/tier1_ashlar/tile_themes_tier1_ashlar.yaml",
-
   "_families": [
     "EVERY ONE OF THESE IS LOAD-BEARING and the failure modes differ - the same list the desktop",
     "capture scripts carry, for the same reasons, because the device build must show the same",
@@ -82,29 +81,18 @@
   "boundaryWall": "res://src/Presentation/assets/tier1_walls/MANIFEST.json",
   "wallBindings": "res://src/Presentation/assets/tier1_bindings/MANIFEST.json",
   "wallCap": "res://src/Presentation/assets/tier1_cap/MANIFEST.json",
-
   "_voidRing": [
-    "THE FLAT-DARK FALLBACK, matching every desktop capture of this room.",
-    "",
-    "§12.1a RULED the void dark by OCCLUSION and the wall manifest carries void_ring 0 for it,",
-    "but that ruling's implementation is recorded-outstanding in the clause itself: at 0 the lamp",
-    "lights 192 cells of solid rock and the room has no outside. Every capture the walk compares",
-    "against therefore runs --void-ring 1 and says so in its log.",
-    "",
-    "Set here rather than left null because the handset has no command line, and a device room",
-    "with no outside is not obviously wrong in the hand - which makes it worse than magenta, not",
-    "better. The departure from a ruled manifest value is declared, and the engine echoes it."
+    "RE-RATIFIED 0 (Rafe, 2026-09-13): the void is dark by OCCLUSION now — the occluder pass shipped in the cast-shadows round and the 2026-09-05 flat-dark fallback (1) is retired. A ring under an occluded void would be the outline §12.1 forbids, laid twice."
   ],
-  "voidRing": 1,
+  "voidRing": 0,
   "light": {
     "ambient": "1a1a22",
-    "ambientLevel": 1.50,
+    "ambientLevel": 1.5,
     "color": "ffb066",
     "energy": 1.6,
     "radiusTiles": 6.0,
-    "falloff": 1.00
+    "falloff": 1.0
   },
-
   "_floorOverlays": [
     "ART-BIBLE-v0 §8.3's incident overlays and §8.2.1's trodden channel, as a res:// path to a",
     "floor family's MANIFEST.json. Absent, the scene draws base tiles only — which is what every",
@@ -119,7 +107,6 @@
     "no incident at all cannot be mistaken for a floor that simply has none (LOOP-PROCESS §4.2)."
   ],
   "floorOverlays": "res://src/Presentation/assets/tier1_floors/MANIFEST.json",
-
   "_grid": [
     "Tile size and integer scale, mirroring --tile-size / --tile-scale. Present for the same",
     "reason the light values are: an iOS app receives no command line, so without these the",
@@ -134,7 +121,6 @@
   ],
   "tileSize": 32,
   "tileScale": 2.0,
-
   "_reviewStatus": [
     "WHAT THIS BUILD WAS ALLOWED PAST. Stamped by build_review_app.sh, never authored here.",
     "",
@@ -147,5 +133,12 @@
     "measurement build as a gate build. An override nobody can see from the phone is the same as",
     "no gate at all."
   ],
-  "reviewStatus": null
+  "reviewStatus": null,
+  "occluders": "all",
+  "shadowSoftness": 12.0,
+  "shadowDarkness": 0.8,
+  "fireFlicker": true,
+  "_shadows": [
+    "CAST SHADOWS — RE-RATIFIED WITH THE LIGHT (Rafe, shadow walk, 2026-09-13): occluders all, softness 12.0, darkness 0.8, flicker ON. Mirrors --occluders / --shadow-softness / --shadow-darkness / --fire-flicker; the engine echoes what it got. The fire's own light lives on its prop in the scene spec (energy 1.6, reach 4.0 tiles)."
+  ]
 }

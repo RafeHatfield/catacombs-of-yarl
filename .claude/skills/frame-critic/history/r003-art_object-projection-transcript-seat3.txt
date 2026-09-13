@@ -1,0 +1,46 @@
+RANK: 3 > 2 > 4 > 1
+
+BEST: 3
+BEST_WHY: The lit floor is genuinely drawn rather than tiled. Between the figure (~x400,y490) and the sunken dark square (~x310–380,y640–710) the blocks change size — small near-square blocks upper-left, long ashlar courses lower-right — and the joints between them vary in weight and darkness along one course rather than repeating. The long diagonal crack running from ~x180,y560 down through ~x420,y620 crosses block joints, forks, and thins as it goes, so it reads as damage to the floor rather than a decal on top of it. Each block carries its own 1px hatch grain in its own direction. The top wall band (y≈425–440) carries a dark horizontal rail with unevenly spaced vertical pins across x185–505 and x570–750 — that's the orc-repair fiction rendered as a physical thing, not as a caption. And with no props, 3 carries none of the integration failures that sink 1 and 2.
+
+WORST: 1
+WORST_WHY: The props are placeholders in four different projections dropped on a top-down floor. The orange block at ~x265–300,y545–620 is a three-flat-shade box with a lit top face and a side face — an oblique cube, not a top-down anything, and it reads as an untextured stand-in. The bench at ~x390–490,y590–630 is oblique from below; the barrel at ~x585–615,y590–630 is a side elevation with an elliptical top; the chest (~x640–690,y465–500) and shelf (~x705–750,y465–500) are straight front views. None of them casts a contact shadow, and none of them responds to the light: the chest sits in the dim zone at the same tangerine saturation as the block in the mid-light. Their palette (saturated orange, hard black outline) is a different game from the muted sandstone under them.
+
+FLAGGED: 1, 2, 4
+
+SHIP: NONE
+
+FLIP 1:
+- Redraw the orange block, bench, barrel, chest and shelf in a single projection that matches the floor (straight top-down, or one consistent slight-oblique) — currently five props, four projections.
+- Replace the flat three-shade orange block at ~x265–300,y545–620 with a textured object (planked crate, stone block, or remove it); as drawn it is a placeholder cube.
+- Desaturate the prop palette to sit within the floor's value/hue range; the tangerine reads as a foreign sprite sheet.
+- Multiply every prop by the light falloff so the chest and shelf in the dim right zone (~x640–750,y465–500) are as dark as the floor under them.
+- Give each prop a contact shadow on the floor; none of them touches the ground.
+- Fix the base-scene items listed under FLIP 3.
+
+FLIP 2:
+- The brazier at ~x575–625,y525–580 has a lit fire in it and emits no light: the floor at its rim is exactly as dim as the floor two tiles away. Either add a second light source with its own falloff or remove the flame.
+- The pale stone post at ~x255–300,y540–635 is a side elevation (vertical shaft with a base cap) on a top-down floor; redraw it top-down as a footprint with a cast shadow, or drop it.
+- The lumber stack (~x190–305,y475–520) and broken planks (~x385–495,y590–645) are oblique from below; redraw to the floor's projection and multiply by the light falloff — the lumber in the mid-light is currently at full saturation.
+- Add contact shadows under all four props.
+- Fix the base-scene items listed under FLIP 3.
+
+FLIP 3:
+- The figure sprite is drawn at 2× pixel scale while the floor's hatch grain and joints are 1px; the sprite's pixels are visibly twice as big as everything under it. Bring the sprite to the floor's native resolution (or the floor to the sprite's).
+- The tile directly under the figure (~x385–440,y470–520) is blown to near-white; the joints and grain vanish inside it. Cap the light's peak so the floor texture stays legible at the centre.
+- The sprite's cyan/orange palette is not tinted by the warm light and has no shadow — it sits on the floor like a sticker. Tint the sprite with the light colour and add a contact shadow.
+- The top wall's upper surface (~y390–425, x185–505) and the left wall's surface (~x120–190, y400–900) are a soft, blurred mottle that bleeds onto the floor along the wall edge (~x180–230,y500–700). Rebuild those surfaces at the floor's pixel crispness and give the wall a hard edge against the floor.
+- The wall's top surface and the dim floor sit at the same value, so at the right edge (~x700–750,y500–900) and the lower-left (~x60–180,y690–900) wall and floor merge; separate them by value, not just texture.
+- The dark sunken square at ~x310–380,y640–710 has fuzzy edges and no rim or depth cue; it reads as a texture hole. Give it a lip, a shadow on its inner north face, or remove it.
+
+FLIP 4:
+- The pool (~x250–343, y0–192) stops at a hard straight line against the dirt with no bank, rim or edge tile; add shoreline transition tiles on all three visible sides.
+- The pool's water is a uniform hex/scale repeat that reads as chain mail; break the repeat and add an edge darkening.
+- The teal moss blobs at ~x15–45,y55–85, ~x15–40,y210–235 and ~x355–384,y150–175 are the same soft semi-transparent stamp reused and rotated, laid over the mortar joints without respecting them; redraw as pixel-level decals that sit within or across specific blocks.
+- The dirt floor is a flat brown noise fill with red speckle and stray blue specks (~x125,y45; ~x185,y155) and no structure; give it worn paths, flagstones, or directional grain.
+- The grey wall tops are all one value with a 1px mortar line and a repeated crack; vary the block value and break the repeat.
+- Nothing in the frame is lit. The fiction says the figure carries the only light and the frame darkens away from it; add a light falloff from the figure at ~x210–235,y0–25, or the frame will always read as the flat, free game.
+- The barrels (~x115–145,y195–215; ~x160–190,y195–215) cast no shadow while the figure does; add one.
+
+---
+Models used: Claude Opus 5 (1M context).

@@ -1,0 +1,68 @@
+== FRAME CRITIC GATE
+   verdict:  INSTALL-LATEST   lane art/object-projection round 4   2026-09-12T14:26:22
+   build:    80258d630850  (+dirty)
+
+   INSTALL-LATEST — non-regression against the seeded reference.
+     panel: not below it in 3 of 5 seats (above in 0); flagged by 5.
+     item exit MET: every object stands in space the same way, at the projection Rafe ruled on
+       measured: PROJECTION HOLD (silhouette IoU of the landed generation against its pro
+     Outstanding items, each disposed:
+     CLOSED         The pale block at (~265–300, 540–640) is drawn in side elevation — a s
+                    cites §3.2
+                    Rafe: Object projection RULED (Rafe, on device, round two, 2026-09-12): 
+     ROUTED-ALREADY The orange crate at (~195–300, 475–515) shows its front face (3/4 view
+                    -> props
+                    cites #204
+                    measured: Two halves. The PROJECTION half ('shows its front face, redraw top
+     ROUTED-ALREADY The bound timber at (~380–500, 590–640) is oblique, not top-down, and 
+                    -> props
+                    cites #204
+                    measured: Same item, the other barricade. 'Oblique, not top-down' is §3.2 as
+     ROUTED-ALREADY None of the three props has a contact shadow or ambient occlusion wher
+                    -> props
+                    cites #207
+                    measured: #207 item 1 verbatim — 'All four currently float' — now from a fou
+     ROUTED-ALREADY The ember pile at (~580–620, 525–570) glows orange but casts nothing o
+                    -> props
+                    cites #205
+                    measured: The SEVENTH round to measure the fire emitting nothing. Deliberate
+     CLOSED         The figure at (~395–430, 465–515) carries a sword and shield and no la
+                    cites §6.2
+                    Rafe: hooded lamp + ambient floor -> refused §13.4.1. — Rafe, 2026-09-07
+     ROUTED-ALREADY The figure is rendered at ~3 screen px per sprite pixel with clean out
+                    -> hero
+                    cites #183
+                    measured: #183's subject — how the hero sits in the delivered frame against 
+     ROUTED-ALREADY Same base-scene fixes as FLIP 4 below.
+                    -> walls
+                    cites #202
+                    measured: The base scene is the approved reference's own (the seat says so: 
+   plant:    props-unrecognizable.png — caught
+   GATE OPEN — a blind seat would ship this exact frame.
+DEVICE GATE PRECONDITIONS — round 33, standing capture r24_onroute
+
+  ~  1. round VALID                 no seat round        (advisory: demoted)
+  ~  2. diagnostic seat's axis      not recorded         (advisory: demoted)
+  ~  3. comparative seat            no approved capture  (advisory: demoted;
+                                       the frame-critic runs a three-frame deck)
+  4. every ruled fix present        ok (11 checked)
+  ~  grid-coincidence               ok                    (advisory)
+  ~  shipped-path                   ok                    (advisory)
+
+PRECONDITIONS OK — every ruled fix is in this build. The frame-critic's PASS is what
+opened the gate; this file only checked that the artefact carries what was ruled.
+== scene override: res://src/Presentation/assets/tier0_harness/scenes/tier1_props_review.json
+== WALK PRECONDITIONS — marker src/Presentation/assets/tier0_harness/REVIEW_BUILD.json
+   walk: rig-energy — the §6.2.1 / Ruling 56 rig pass
+   requirements present. This says the walk CAN BE PERFORMED, and nothing about
+   whether the picture is any good — that is the frame critic's question.
+== build identity: commit=80258d6308502383fb62bcdf52d08b77b8efab3e+dirty built=2026-09-12T21:28:30Z
+== marker written: REVIEW_BUILD.json
+== grid: tile 32 at x2.0
+== bundle id: com.rafehatfield.catacombsofyarl.tier0   name: YARL Tier0
+== export (--export-debug, preset 'iOS') from /Users/rafehatfield/development/c-yarl/.claude/worktrees/object-projection
+== xcodebuild (Debug, scheme 'CatacombsOfYarl')
+   built: YARL Tier0  (com.rafehatfield.catacombsofyarl.tier0)  [C#: CatacombsOfYarl.Presentation.framework]
+== devicectl install -> 5DB969FF-269C-5A8A-86EB-99EC9FF22397
+   installed.
+== marker removed (a leftover would silently make the next build a review build)

@@ -1,0 +1,140 @@
+{
+ "candidate": "OL",
+ "archetype": "barrel",
+ "job_id": "0d9ee81b-3793-422b-bf12-e1b27f3396ef",
+ "template": {
+  "symmetry": 0.8883,
+  "shear": -0.0918,
+  "opaque": 0.6438
+ },
+ "ordered": [
+  {
+   "index": 13,
+   "url": "https://api.pixellab.ai/mcp/images/0d9ee81b-3793-422b-bf12-e1b27f3396ef/download?index=13",
+   "distance": 0.1409,
+   "symmetry": 0.9582,
+   "shear": 0.0142,
+   "opaque": 0.675
+  },
+  {
+   "index": 5,
+   "url": "https://api.pixellab.ai/mcp/images/0d9ee81b-3793-422b-bf12-e1b27f3396ef/download?index=5",
+   "distance": 0.147,
+   "symmetry": 0.9985,
+   "shear": 0.0,
+   "opaque": 0.6699
+  },
+  {
+   "index": 0,
+   "url": "https://api.pixellab.ai/mcp/images/0d9ee81b-3793-422b-bf12-e1b27f3396ef/download?index=0",
+   "distance": 0.1473,
+   "symmetry": 0.9993,
+   "shear": 0.0,
+   "opaque": 0.6633
+  },
+  {
+   "index": 1,
+   "url": "https://api.pixellab.ai/mcp/images/0d9ee81b-3793-422b-bf12-e1b27f3396ef/download?index=1",
+   "distance": 0.1473,
+   "symmetry": 0.9993,
+   "shear": 0.0,
+   "opaque": 0.6633
+  },
+  {
+   "index": 2,
+   "url": "https://api.pixellab.ai/mcp/images/0d9ee81b-3793-422b-bf12-e1b27f3396ef/download?index=2",
+   "distance": 0.1477,
+   "symmetry": 1.0,
+   "shear": 0.0,
+   "opaque": 0.6636
+  },
+  {
+   "index": 3,
+   "url": "https://api.pixellab.ai/mcp/images/0d9ee81b-3793-422b-bf12-e1b27f3396ef/download?index=3",
+   "distance": 0.1477,
+   "symmetry": 1.0,
+   "shear": 0.0,
+   "opaque": 0.667
+  },
+  {
+   "index": 6,
+   "url": "https://api.pixellab.ai/mcp/images/0d9ee81b-3793-422b-bf12-e1b27f3396ef/download?index=6",
+   "distance": 0.1477,
+   "symmetry": 1.0,
+   "shear": 0.0,
+   "opaque": 0.6709
+  },
+  {
+   "index": 7,
+   "url": "https://api.pixellab.ai/mcp/images/0d9ee81b-3793-422b-bf12-e1b27f3396ef/download?index=7",
+   "distance": 0.1477,
+   "symmetry": 1.0,
+   "shear": 0.0,
+   "opaque": 0.6704
+  },
+  {
+   "index": 9,
+   "url": "https://api.pixellab.ai/mcp/images/0d9ee81b-3793-422b-bf12-e1b27f3396ef/download?index=9",
+   "distance": 0.1477,
+   "symmetry": 1.0,
+   "shear": 0.0,
+   "opaque": 0.6714
+  },
+  {
+   "index": 10,
+   "url": "https://api.pixellab.ai/mcp/images/0d9ee81b-3793-422b-bf12-e1b27f3396ef/download?index=10",
+   "distance": 0.1477,
+   "symmetry": 1.0,
+   "shear": 0.0,
+   "opaque": 0.6714
+  },
+  {
+   "index": 11,
+   "url": "https://api.pixellab.ai/mcp/images/0d9ee81b-3793-422b-bf12-e1b27f3396ef/download?index=11",
+   "distance": 0.1477,
+   "symmetry": 1.0,
+   "shear": 0.0,
+   "opaque": 0.6714
+  },
+  {
+   "index": 12,
+   "url": "https://api.pixellab.ai/mcp/images/0d9ee81b-3793-422b-bf12-e1b27f3396ef/download?index=12",
+   "distance": 0.1477,
+   "symmetry": 1.0,
+   "shear": 0.0,
+   "opaque": 0.6719
+  },
+  {
+   "index": 14,
+   "url": "https://api.pixellab.ai/mcp/images/0d9ee81b-3793-422b-bf12-e1b27f3396ef/download?index=14",
+   "distance": 0.1477,
+   "symmetry": 1.0,
+   "shear": 0.0,
+   "opaque": 0.6719
+  },
+  {
+   "index": 15,
+   "url": "https://api.pixellab.ai/mcp/images/0d9ee81b-3793-422b-bf12-e1b27f3396ef/download?index=15",
+   "distance": 0.1477,
+   "symmetry": 1.0,
+   "shear": 0.0,
+   "opaque": 0.6719
+  },
+  {
+   "index": 4,
+   "url": "https://api.pixellab.ai/mcp/images/0d9ee81b-3793-422b-bf12-e1b27f3396ef/download?index=4",
+   "distance": 0.1497,
+   "symmetry": 0.9993,
+   "shear": 0.0024,
+   "opaque": 0.6697
+  },
+  {
+   "index": 8,
+   "url": "https://api.pixellab.ai/mcp/images/0d9ee81b-3793-422b-bf12-e1b27f3396ef/download?index=8",
+   "distance": 0.1497,
+   "symmetry": 0.9993,
+   "shear": 0.0024,
+   "opaque": 0.6707
+  }
+ ]
+}

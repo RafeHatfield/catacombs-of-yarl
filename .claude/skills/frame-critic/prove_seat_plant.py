@@ -80,7 +80,50 @@ def case(name, got, want):
     print("%-4s %-58s -> %s" % ("PASS" if got == want else "FAIL", name, got))
 
 
+def slot_bookkeeping():
+    """THE 2026-09-12 MISLABEL, REPRODUCED AGAINST THE REAL CODE (LOOP-PROCESS §1.1.5).
+
+    Round 1 of lane art/object-projection: deck slot 4 = plant, slot 1 = build; the seat ranked
+    2 > 1 > 4 > 3 and flagged 1, 3, 4 — the plant WAS flagged, the record said caught=True, and
+    the runner still voided on "slot 1" because the seat-level term read sd["caught"] before
+    any seat had been scored. Three cases, all driving frame_critic's own functions:
+
+      A  the round-1 ballot, SCORED   -> zero live misses (the round is valid)
+      B  the same ballot, UNSCORED    -> live_misses() REFUSES (the old code counted it a miss)
+      C  a scored ballot that really missed (plant shipped, unflagged) -> one miss
+    """
+    import os, sys, json
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import frame_critic as fc
+    ballot = ("RANK: 2 > 1 > 4 > 3\nSHIP: NONE\nFLAGGED: 1, 3, 4\n"
+              "WORST: 3\nWORST_WHY: flat.\nBEST: 2\nBEST_WHY: masonry.\n")
+    morgue = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                         "morgue", "MORGUE.json")))
+    live = {"file": "cement-cap.png"}
+    seat = dict(seat=1, text=ballot, mapping={str(i): {} for i in range(1, 5)},
+                slots=dict(plant=4, build=1, bar=3, approved=2), plant=live)
+    n0 = len(CASES)
+    # B first: an UNSCORED seat must be refused, never counted
+    try:
+        fc.live_misses([dict(seat)], morgue)
+        case("B unscored seat is refused (old code: counted as a miss)", "counted", "refused")
+    except RuntimeError:
+        case("B unscored seat is refused (old code: counted as a miss)", "refused", "refused")
+    err = fc.score_seat(seat)
+    case("A round-1 ballot parses", err, None)
+    case("A round-1 plant (deck slot 4, flagged) is CAUGHT", seat["caught"], True)
+    case("A round-1 live misses", fc.live_misses([seat], morgue), [])
+    missed = dict(seat, text="RANK: 4 > 2 > 1 > 3\nSHIP: 4\nFLAGGED: 3\nWORST: 3\nWORST_WHY: x.\n"
+                             "BEST: 4\nBEST_WHY: y.\n")
+    fc.score_seat(missed)
+    case("C a shipped, unflagged plant IS a miss", fc.live_misses([missed], morgue), [0])
+    return all(got == want for _, got, want in CASES[n0:])
+
+
 def main():
+    if not slot_bookkeeping():
+        print("*** the slot bookkeeping control FAILED")
+        return 1
     print("PROVE — the seat-level plant term (ruled 2026-09-11)\n")
 
     # ── the three the ruling names ───────────────────────────────────────────────────────────

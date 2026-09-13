@@ -57,8 +57,15 @@ SWAP_FLOOR_MB = 200           # not what killed the rounds; still a real way to 
 
 
 def swap_free_mb():
+    """NaN when swap is UNALLOCATED, not zero. After a restart macOS reports
+    `total = 0.00M used = 0.00M free = 0.00M` until it first needs a swapfile; that is the
+    machine's healthiest state, and reading its 0MB free as EXHAUSTED refused every capture and
+    seat on 2026-09-12 with 76% of memory free. Exhaustion is free -> 0 with total > 0."""
     out = subprocess.run(["sysctl", "vm.swapusage"], capture_output=True, text=True).stdout
+    t = re.search(r"total = ([\d.]+)M", out)
     m = re.search(r"free = ([\d.]+)M", out)
+    if t and float(t.group(1)) == 0.0:
+        return float("nan")
     return float(m.group(1)) if m else float("nan")
 
 

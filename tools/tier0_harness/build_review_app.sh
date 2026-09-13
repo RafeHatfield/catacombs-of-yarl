@@ -251,6 +251,42 @@ with open(path, "w") as f:
 PY
   echo "== void candidate (STARTING POSITION ONLY, the panel switches it): $TIER1_VOID"
 fi
+# TIER1_VOID_RING — the void ring the handset runs. The template carries the 2026-09-05 interim
+# fallback (1); a shadow build runs 0, because the void is dark by occlusion now (§12.1a) and a
+# ring under it would be the outline the clause forbids, laid twice.
+if [ -n "${TIER1_VOID_RING:-}" ]; then
+  python3 - "$MARKER" "$TIER1_VOID_RING" <<'PY'
+import json, sys
+path, ring = sys.argv[1], sys.argv[2]
+with open(path) as f:
+    d = json.load(f)
+d["voidRing"] = int(ring)
+with open(path, "w") as f:
+    json.dump(d, f, indent=2)
+PY
+  echo "== void ring: $TIER1_VOID_RING (marker; the manifest's ruled 0 is what a shadow build runs)"
+fi
+
+# TIER1_OCCLUDERS / TIER1_SHADOW_SOFTNESS / TIER1_FIRE_FLICKER — the cast-shadows round's knobs,
+# mirroring --occluders / --shadow-softness / --fire-flicker for a handset that has no command
+# line. Omit them and the build has NO occluders (the marker's default), which is every build
+# before the round; a shadow build must say so, and the engine echoes what it got.
+if [ -n "${TIER1_OCCLUDERS:-}" ]; then
+  python3 - "$MARKER" "$TIER1_OCCLUDERS" "${TIER1_SHADOW_SOFTNESS:-12.0}" "${TIER1_FIRE_FLICKER:-1}" "${TIER1_SHADOW_DARKNESS:-0.8}" <<'PY'
+import json, sys
+path, occ, soft, flick, dark = sys.argv[1:6]
+with open(path) as f:
+    d = json.load(f)
+d["occluders"] = occ
+d["shadowSoftness"] = float(soft)
+d["shadowDarkness"] = float(dark)
+d["fireFlicker"] = flick == "1"
+with open(path, "w") as f:
+    json.dump(d, f, indent=2)
+PY
+  echo "== cast shadows: occluders=$TIER1_OCCLUDERS softness=${TIER1_SHADOW_SOFTNESS:-12.0} darkness=${TIER1_SHADOW_DARKNESS:-0.8} flicker=${TIER1_FIRE_FLICKER:-1}"
+fi
+
 # STAMP THE BUILD'S OWN IDENTITY INTO THE MARKER.
 #
 # LOOP-PROCESS §2.3: every evidence file records the commit hash of the code that produced it,

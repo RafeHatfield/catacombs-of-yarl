@@ -85,9 +85,33 @@ def case(name, got, want):
     print("%-4s %-62s guard=%s" % ("PASS" if got == want else "FAIL", name, got))
 
 
+def regime_cases(tmp):
+    """THE SEAT-BLIND AXIS — RULED (Rafe, 2026-09-12). Three seats missed live plants in one
+    round because the plants were captured UNSHADOWED against a SHADOWED build. A marker
+    naming `deck_regime` clears that — but only when the morgue's own tag disagrees with it.
+      R1  off-regime plants, marker names the deck regime      -> clears
+      R2  the same rounds, plants TAGGED FOR THE DECK'S REGIME  -> broken-judge (no clearance)
+      R3  the same rounds, plants UNTAGGED                      -> broken-judge (never excused)
+      R4  marker without deck_regime                            -> broken-judge
+    """
+    misses = [(True, "a.png"), (False, "b.png"), (True, "c.png"), (False, "a.png"), (False, "b.png")]
+    rounds = [void(1, misses), void(2, misses)]
+    marker = [{"lane": LANE, "guard": "broken-judge", "rounds_covered": [1, 2],
+               "ruling": "not a broken judge — a seat-blind axis (§13.2)", "deck_regime": "shadowed"}]
+    off = {"entries": [{"file": f, "regime": "unshadowed"} for f in ("a.png", "b.png", "c.png")]}
+    on = {"entries": [{"file": f, "regime": "shadowed"} for f in ("a.png", "b.png", "c.png")]}
+    untagged = {"entries": [{"file": f} for f in ("a.png", "b.png", "c.png")]}
+    case("R1 off-regime plants + deck_regime marker clears", guard_with(tmp, rounds, marker, off), None)
+    case("R2 on-regime plants: the same marker clears NOTHING", guard_with(tmp, rounds, marker, on), "broken-judge")
+    case("R3 untagged plants are never excused", guard_with(tmp, rounds, marker, untagged), "broken-judge")
+    no_regime = [dict(marker[0]) ]; no_regime[0].pop("deck_regime")
+    case("R4 marker without deck_regime clears nothing", guard_with(tmp, rounds, no_regime, off), "broken-judge")
+
+
 def main():
     print("PROVE — the broken-judge clearance, and that it can fail (§13.5)\n")
     tmp = tempfile.mkdtemp(prefix="judgeclear-")
+    regime_cases(tmp)
 
     # round 3 missed a RETIRED plant; round 4 missed a RETIRED plant. Both excusable.
     retired_both = [ok(1), ok(2),

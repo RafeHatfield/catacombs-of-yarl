@@ -126,8 +126,18 @@ light:
   energy: 1.6              # RE-RATIFIED 2026-09-06 — walked with a knob for the first time, held
   radius_tiles: 6.0        # RE-RATIFIED 2026-09-06. Reach in TILES.
   falloff: 1.00            # RE-RATIFIED 2026-09-06. Exponent on the radial ramp; 1.00 is identity.
-  status: RE-RATIFIED (Boundary only) — Rafe, 2026-09-06, on the corrected lamp (#174). Supersedes
-    Ruling 56's 2026-08-28 values, which are annotated superseded-by-re-ratification in §6.2.1.
+  # ── CAST SHADOWS — RE-RATIFIED WITH THE LIGHT VALUES (Rafe, shadow walk, 2026-09-13) ─────
+  # The lamp values above were HELD on the shadowed walk; these were SET. Required flags on
+  # every capture (--occluders / --shadow-softness / --shadow-darkness / --fire-flicker /
+  # --void-ring) and carried by the device marker. §6.2's live table; §12.1a.
+  occluders: all           # first surface exempt by mask, everything behind receives, every edge casts
+  void_ring: 0             # the void is dark by occlusion; the 2026-09-05 flat-dark fallback is retired
+  shadow_softness: 12.0    # "melts edges — no beams at 12". PCF13 shadow_filter_smooth, ladder to 64
+  shadow_darkness: 0.8     # leak rgb = 0.2 x the ambient's hue ratios: "cool dark, not grey"
+  fire_flicker: true       # RULED ON — "the tended fire is §9.2's exception"
+  fire: { energy: 1.6, radius_tiles: 4.0, color: "ff8a3c" }   # B-PROP-003 emits (#205); reach rode with the mark
+  status: RE-RATIFIED WITH SHADOWS (Boundary only) — Rafe, 2026-09-13, on the handset with the
+    occluder pass live. Supersedes the 2026-09-06 table (superseded-by-re-ratification, kept).
     Other regions derive their own at their own gate.
 
 scene:

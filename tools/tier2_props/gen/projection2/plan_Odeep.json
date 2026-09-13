@@ -1,0 +1,53 @@
+{
+ "wave": "projection2",
+ "candidate": "Odeep",
+ "props": [
+  {
+   "key": "Odeep_stone",
+   "w": 1,
+   "h": 2,
+   "ids": [
+    9871,
+    9872
+   ],
+   "url": "FILL-ME"
+  },
+  {
+   "key": "Odeep_chest",
+   "w": 1,
+   "h": 1,
+   "ids": [
+    9873
+   ],
+   "url": "FILL-ME"
+  },
+  {
+   "key": "Odeep_barrel",
+   "w": 1,
+   "h": 1,
+   "ids": [
+    9874
+   ],
+   "url": "FILL-ME"
+  },
+  {
+   "key": "Odeep_altar",
+   "w": 2,
+   "h": 1,
+   "ids": [
+    9875,
+    9876
+   ],
+   "url": "FILL-ME"
+  },
+  {
+   "key": "Odeep_rack",
+   "w": 1,
+   "h": 1,
+   "ids": [
+    9877
+   ],
+   "url": "FILL-ME"
+  }
+ ]
+}

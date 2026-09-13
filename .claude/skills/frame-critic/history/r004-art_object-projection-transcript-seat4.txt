@@ -1,0 +1,49 @@
+RANK: 4 > 3 > 2 > 1
+
+BEST: 4
+BEST_WHY: The floor. Blocks vary in width along a single course (the run at y≈500–530 goes wide slab, narrow, wide again between x≈380 and 560), joints vary in weight and are broken where blocks butt, and the long cracks cross multiple blocks and change direction at joints rather than being stamped inside a tile (the crack from x≈250,y≈580 rising to x≈520,y≈470; the arc at x≈580–700,y≈640–700). The recessed square at (310–380, 650–720) sits a full value step below its neighbours with a heavier lower edge, so it reads as sunk, not painted. The wall-base band at y≈415–450 has driven posts at irregular spacing (x≈300, 385, 450, 520), which is the one place the "repaired with pins and timber" fiction is actually drawn. Light falloff is continuous with no banding. There are no props, so nothing on the floor contradicts the floor.
+
+WORST: 1
+WORST_WHY: No light falloff at all — the frame is uniformly lit corner to corner, so the one thing the fiction requires is absent. The grey floor is a single tile stamped with a 1px grid: every tile in the column at x≈20–110 carries the same speckle in the same position. The dirt is a 48px repeat — the red-brown crack network at (100–150, 60–110) recurs at exact intervals across the whole room. The pond (x≈250–340) is a flat hex-honeycomb pattern fill with hard 1px vertical edges at x=250 and x=340, no bank, no shadow, no depth. Two identical chests at (60–100, 0–20) and (60–100, 48–70), two identical barrels at (120–150) and (165–190), y≈190–215, with no contact shadow under any of them. The moss is a flat teal shape with a 1px lighter rim. This is a tile-editor test, not a frame.
+
+FLAGGED: 1, 2, 3
+
+SHIP: NONE
+
+FLIP 1:
+- Add distance falloff from the orc at (220, 10); the frame currently has zero light gradient.
+- Replace the single grey floor tile with 4+ variants and randomise placement; every tile at x≈20–110 has the identical speckle in the identical spot.
+- Break the 48px dirt repeat: the crack network at (100–150, 60–110) recurs at fixed intervals; author 3–4 variants or a larger non-repeating patch.
+- Replace the honeycomb hex fill in the pond (x≈250–340) with a water surface that has value variation and no geometric pattern.
+- Give the pond an edge: it meets the dirt on a hard 1px vertical line at x=250 and x=340 with no bank, shadow or depth step.
+- Vary or remove the duplicate chest (60–100, 48–70) and duplicate barrel (165–190, 190–215); identical copies stacked side by side read as copy-paste.
+- Add contact shadows under chests, barrels and the orc; all of them float.
+- Moss (e.g. 20–45, 55–85): give it a darker under-tone and an irregular edge instead of a flat shape with a 1px lighter rim.
+- Bottom wall band (y≈205–288): one brick row repeated; vary brick widths and separate the cap/top surface from the face.
+
+FLIP 2:
+- The upright orange block at (265–300, 545–625) and the orange slab at (395–490, 590–635) are flat three-tone cuboids with no grain, end-grain, joint or wear; texture them as timber at the floor's pixel scale.
+- Give both of those objects and the barrel at (585–620, 590–635) contact shadows; all three float on the tiles.
+- Fix the projection: the tall block shows a lit top face and a full vertical side (oblique) on a straight-top-down floor; either draw it as a top-down footprint with a short shadow or lay it flat.
+- The barrel is drawn in 3/4 front view and the shelf at (705–750, 465–505) in front elevation; pick one projection for props and keep it.
+- Wall tops (120–500, 0–440 and 560–750, 0–440) are a soft screen-resolution noise fill with no masonry or rock structure; rebuild at the floor's pixel scale.
+- Remove the hard diagonal facet lines in the top-right wall top (approx 590–720, 80–300); they read as a mesh or lighting artifact.
+- The black rectangles at (120–440, 135–390) and (630–750, 135–390) have razor-sharp edges and read as unrendered regions, not solid rock; fill them or soften the edge so they read as unlit.
+- Quantise the radial light to the pixel grid or to value steps; the smooth screen-res gradient over 3px pixel art reads as a blur layer.
+
+FLIP 3:
+- The pale stele at (265–300, 540–635) is a flat beige cuboid with a single strap; add stone texture, chips and a contact shadow at the floor's pixel scale.
+- Crate/bed at (195–300, 478–515) is flat three-tone orange; add plank seams, grain and pin heads, and a contact shadow.
+- Crossed planks at (380–500, 585–640): keep the rope binding, add grain and end-grain, add a shadow.
+- Campfire at (575–620, 525–565): it is a second light source in a fiction with one. Either remove it, or make its pool use the same falloff curve and pixel scale as the carried light so the two don't read as different systems.
+- Same wall-top, facet-line, black-void and light-quantisation fixes as FLIP 2 — the base frame is identical.
+
+FLIP 4:
+- Wall tops (120–500, 0–440 and 560–750, 0–440): soft screen-resolution noise fill; rebuild with rock/cut-stone structure at the floor's pixel scale so they don't read as a filter over pixel art.
+- Remove the hard diagonal facet lines in the top-right wall top (approx 590–720, 80–300).
+- Black rectangles at (120–440, 135–390) and (630–750, 135–390): fill or soften so they read as unlit rock, not missing texture.
+- Quantise the radial light to the pixel grid or value steps; the smooth gradient over 3px art reads as a blur layer.
+- The vertical column at x≈500–560, y≈0–450 is drawn with a brick face in elevation on a straight-down camera; redraw it as a top surface consistent with the wall tops either side.
+- The hero at (390–430, 465–510) is a saturated cyan/orange palette on a desaturated cold frame; bring its palette into the frame's temperature or add a value pass so it sits in the same light as the floor.
+
+Models used: Opus 5 (1M context).

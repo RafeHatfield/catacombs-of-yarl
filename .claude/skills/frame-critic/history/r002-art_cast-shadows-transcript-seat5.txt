@@ -1,0 +1,45 @@
+RANK: 2 > 4 > 1 > 3
+
+BEST: 2
+BEST_WHY: The floor stonework and the lighting are doing real work. The long crack that starts under the crate at (200,510), runs under the figure and exits right at (540,470) crosses seven tile boundaries without a break or a repeat, so the floor reads as one slab that was cut, not as a stamped tile. Individual stones vary in width, tone and hatch density along a single course (compare the row at y≈560: a wide pale block, a narrow dark one, a mid one with heavy hatching). The wall run at y≈400–450 shows the driven pins as dark bars hanging off the cap at uneven spacing (x≈220, 300 doubled, 400, 440, 550 doubled), which is the orc-repair fiction rendered as a physical thing rather than a decal. The brazier at (595,545) is a second light source and the floor to its right (560–720, 480–600) actually warms toward it, with the carried lamp's cool-white pool and the brazier's orange pool blending where they overlap around (520,530) — a working multi-light system, not a vignette. Note: 2 and 4 are the same frame; a pixel diff shows they differ by at most 5/255 in the brazier flicker region and nowhere else. I rank 2 above 4 because I must, not because either is better made.
+
+WORST: 3
+WORST_WHY: It has no light. The figure at (220,10) carries nothing; the whole frame is uniformly lit edge to edge, so the one thing the fiction requires — darkness growing away from the carrier — is absent. The floor from x=55 to x=345 is a single tiling brown noise texture with rust-red speckle; its repeat is visible as identical splotch clusters, and it has saturated teal-blue paint splats scattered across it (at (65,15), (185,40), (245,80), (270,230), (320,250)) that correspond to nothing in a dry, cold, administered underworld. The pool at x=250–345, y=0–190 is a hard-edged rectangle of flat teal hex-pattern with bright green lily pads; it stops dead on the dirt with no bank, no edge tile, no darkening. The two chests at (65,5) and (65,50) are side-view sprites (a pale lid on top and a tall dark slatted front face below it) placed on a straight-top-down grid, so they stand up out of the floor. The grey floor tiles at left and bottom are identical 32px squares with a uniform 1px joint and a scatter of dust dots; the moss blobs at (30,60), (30,210), (370,160) are the same soft green stamp reused. This is a free tileset with its defaults left in.
+
+FLAGGED: 1, 2, 3, 4
+
+SHIP: NONE
+
+FLIP 1:
+- The chest at (640–690,465–505), the shelf at (705–750,465–510) and the barrel at (585–615,595–630) sit in the darkest part of the room at full saturation and full value; the floor under the chest is a deep blue-grey while the chest is bright orange. Multiply the prop sprites by the same light term the floor gets.
+- The tall orange block at (265–300,550–620) and the bench at (395–490,595–625) are untextured flat orange with a single lighter top face — they read as placeholder geometry. Give them wood grain, edge wear and an outline weight consistent with the barrel and chest, or cut them.
+- Two prop rendering languages are on the same floor: outlined pixel sprites (chest, barrel, shelf) and outline-free blocky slabs (block, bench). Pick one.
+- The bench and block show a front face as well as a top face — they are drawn at a 3/4 angle in a straight-top-down scene. Redraw them as top-down footprints with a drop shadow, not a side elevation.
+- The solid rock mass at top-left shows straight polygon edges: a diagonal from (255,0) to (130,270), a sharp corner at (400,170), and a large triangular facet at right from (660,390) up to (750,290). These are Voronoi cell boundaries showing through. Break every cell edge with irregular erosion or hide the mesh under the darkness entirely.
+- The figure sprite at (405,485) has a hard 1px black outline and flat saturated fills; the floor is soft, hatched and anti-aliased. Either add a matching outline treatment to props and wall caps or soften the figure's outline to sit in the same picture.
+- The wall cap band at y≈400–450 is one flat ochre value from x=185 to 490; the floor directly under it is nearly the same value in the lit zone. Darken the cap's top surface or add a cast-shadow row on the floor tiles beneath it.
+
+FLIP 2:
+- The cream block at (265–300,540–630) is an untextured pale slab with a single brown strap at its base; it is the brightest object in the frame after the lamp pool and reads as unfinished placeholder geometry. Texture it or cut it.
+- The plank stack at (190–300,480–515) is at full orange while the floor tiles under and left of it are dim blue-grey. Apply the floor's light term to the prop.
+- The log bundle at (390–500,590–640) is drawn at roughly 4px-per-pixel while the figure is at ~3px and the floor hatching at ~2px. Three pixel densities in one screen. Redraw the bundle and the plank stack at the figure's density.
+- The plank stack and the log bundle both show a side face and a top face (3/4 view) on a straight-top-down grid. Redraw as top-down footprints.
+- The rock mass at top-left shows straight Voronoi cell edges — diagonal from (255,0) to (130,270), corner at (400,170), triangular facet at right from (660,390) to (750,290). Erode or hide them.
+- The brazier at (595,545) casts light on the floor but its own bowl rim is an unlit ring of flat orange-brown pixels around a flame; the flame is a 5-colour blob. Give the bowl a lit inner rim and put the flame at the same rendering quality as the floor.
+- The figure sprite's hard black outline and flat fills clash with the soft hatched floor. Unify the outline treatment across figure, props and wall caps.
+
+FLIP 3:
+- There is no light falloff. Add a radial light term centred on the figure at (220,10) so the floor, walls and props darken with distance; the far bottom-right corner should be near black.
+- Replace the tiling brown dirt noise at x=55–345 with a floor that has visible structure (flags, packed stone, or at minimum a non-repeating dirt with directional wear). Remove the teal-blue paint splats at (65,15), (185,40), (245,80), (270,230), (320,250).
+- The pool at x=250–345, y=0–190 is a hard-edged rectangle. Add an edge tile row (bank, stone lip, or wet darkened dirt) on all four sides and drop the hex pattern and lily pads; still water in a cold administered underworld is dark and flat, not a garden pond.
+- The chests at (65,5) and (65,50) are side-view sprites (lid on top, tall slatted front below). Redraw as top-down lids with a short cast shadow.
+- The grey floor tiles at left (x=0–55) and bottom (y=215–260) are identical 32px squares with a uniform 1px joint. Vary joint width and tile tone along each course; add a second and third tile variant.
+- The moss stamp at (30,60), (30,210) and (370,160) is the same sprite three times at the same rotation. Add variants or bake it into the tile.
+- The wall at bottom (y≈260–288) is a single dark-grey brick course with no top-surface/face distinction. Draw a lit top surface band above the face so the wall has thickness.
+- The bone scatter at (215,115) is white pixels on brown with no shading or shadow; either render it as a proper sprite or remove it.
+- The whole palette (saturated teal, bright lily-pad green, warm brown) reads cheerful. Desaturate and cool the floor and water toward the grey of the stone tiles.
+
+FLIP 4:
+- Identical to FLIP 2. This is the same frame as 2 (pixel diff ≤5/255, confined to the brazier flicker at (357–750,309–791)); every item there applies here unchanged.
+
+Model used: Claude Opus 5 (1M context).

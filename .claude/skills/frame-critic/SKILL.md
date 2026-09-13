@@ -209,6 +209,25 @@ chroma had already been fixed, so the two frames differed on an axis the plant w
 the seat had no reason to rank the plant last, and the round voided **on the judge rather than on
 the art**. The right image for the wrong question is not a control.
 
+### Plants and the reference are captured under the deck's LIGHTING REGIME
+
+**LAW (Rafe, 2026-09-12).** *"Plants and reference are captured under the deck's lighting regime
+— scene, rig, AND shadow state; re-capture the object/wall plants shadowed before any critic
+round runs on this lane."*
+
+Round 1 of `art/cast-shadows` put a room with cast shadows into a deck whose plants and
+reference were all captured before shadows existed. Three of five seats ranked a culled,
+unshadowed frame above the build and flagged nothing in it. That was **not a broken judge — a
+seat-blind axis (§13.2)**: the seats compared exposure, not craft, because the only difference
+they could see was the light. A control lit differently from the build is not a control.
+
+So `docs/FRAME-CRITIC.json` names the deck's `regime`, every morgue entry carries the regime it
+was captured under, and the approved reference carries its own. `pick_plant` **refuses** an
+off-regime plant and the runner **refuses** an off-regime reference — before any seat is spent.
+A regime's first reference is seeded by Rafe's walk; there is no round before it. Off-regime
+misses in a covered round are excused by a `JUDGE-CLEARED.json` entry naming `deck_regime`, and
+only where the morgue's own tag disagrees with it (`prove_judge_clear.py` R1–R4).
+
 ### The morgue
 
 `morgue/` holds frames **Rafe personally culled at the device gate**, with his verbatim words and

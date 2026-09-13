@@ -1,0 +1,76 @@
+[
+  {
+    "key": "Odeep_stone",
+    "w": 1,
+    "h": 2,
+    "ids": [
+      9871,
+      9872
+    ],
+    "opaque_fraction": 0.4492,
+    "per_cell_opaque": [
+      0.3379,
+      0.5605
+    ],
+    "quantised_share": 0.8638,
+    "source": "FILL-ME"
+  },
+  {
+    "key": "Odeep_chest",
+    "w": 1,
+    "h": 1,
+    "ids": [
+      9873
+    ],
+    "opaque_fraction": 0.6445,
+    "per_cell_opaque": [
+      0.6445
+    ],
+    "quantised_share": 0.9443,
+    "source": "FILL-ME"
+  },
+  {
+    "key": "Odeep_barrel",
+    "w": 1,
+    "h": 1,
+    "ids": [
+      9874
+    ],
+    "opaque_fraction": 0.5713,
+    "per_cell_opaque": [
+      0.5713
+    ],
+    "quantised_share": 0.8008,
+    "source": "FILL-ME"
+  },
+  {
+    "key": "Odeep_altar",
+    "w": 2,
+    "h": 1,
+    "ids": [
+      9875,
+      9876
+    ],
+    "opaque_fraction": 0.5454,
+    "per_cell_opaque": [
+      0.5498,
+      0.541
+    ],
+    "quantised_share": 0.7944,
+    "source": "FILL-ME"
+  },
+  {
+    "key": "Odeep_rack",
+    "w": 1,
+    "h": 1,
+    "ids": [
+      9877
+    ],
+    "opaque_fraction": 0.8789,
+    "per_cell_opaque": [
+      0.8789
+    ],
+    "quantised_share": 0.8604,
+    "source": "FILL-ME"
+  }
+]

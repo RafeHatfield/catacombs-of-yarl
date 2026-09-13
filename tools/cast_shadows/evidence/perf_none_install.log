@@ -1,0 +1,50 @@
+== FRAME CRITIC GATE
+   verdict:  INSTALL-LATEST   lane art/object-projection round 4   2026-09-12T14:26:22
+   build:    fa091c770eb4  (+dirty)
+
+   THE VERDICT IS NOT ABOUT THIS BUILD.
+     verdict build_id  491b59d79e2e312c  (commit 80258d630850)
+     this working tree  ab02aa1eb7523031  (commit fa091c770eb4)
+
+   The build id folds in every tracked change and every untracked file, so a recomposed family moves it even when the commit does not. Something has changed since the seat looked.
+
+   Re-run the round:   .claude/skills/frame-critic/run_frame_critic.sh
+
+   YARL_SKIP_CRITIC=1 — INSTALLING ANYWAY.
+   The build is stamped SKIPPED-REVIEW and the phone will say so on screen.
+   Nothing walked on a SKIPPED-REVIEW build is a gate verdict.
+DEVICE GATE PRECONDITIONS — round 33, standing capture r24_onroute
+
+  ~  1. round VALID                 no seat round        (advisory: demoted)
+  ~  2. diagnostic seat's axis      not recorded         (advisory: demoted)
+  ~  3. comparative seat            no approved capture  (advisory: demoted;
+                                       the frame-critic runs a three-frame deck)
+  4. every ruled fix present        ok (11 checked)
+  ~  grid-coincidence               ok                    (advisory)
+  ~  shipped-path                   ok                    (advisory)
+
+PRECONDITIONS OK — every ruled fix is in this build. The frame-critic's PASS is what
+opened the gate; this file only checked that the artefact carries what was ruled.
+== scene override: res://src/Presentation/assets/tier0_harness/scenes/tier1_props_review.json
+== WALK PRECONDITIONS — marker src/Presentation/assets/tier0_harness/REVIEW_BUILD.json
+   walk: rig-energy — the §6.2.1 / Ruling 56 rig pass
+   requirements present. This says the walk CAN BE PERFORMED, and nothing about
+   whether the picture is any good — that is the frame critic's question.
+== cast shadows: occluders=none softness=1.0 flicker=0
+== build identity: commit=fa091c770eb4e2efae5df6e5cf051db11e28b53d+dirty built=2026-09-12T22:48:16Z
+== ⚠ SKIPPED-REVIEW — this build has no frame-critic PASS. The phone will say so.
+== marker written: REVIEW_BUILD.json
+== grid: tile 32 at x2.0
+== bundle id: com.rafehatfield.catacombsofyarl.perfnone   name: YARL perfnone
+== export (--export-debug, preset 'iOS') from /Users/rafehatfield/development/c-yarl/.claude/worktrees/cast-shadows
+== xcodebuild (Debug, scheme 'CatacombsOfYarl')
+   built: YARL perfnone  (com.rafehatfield.catacombsofyarl.perfnone)  [C#: CatacombsOfYarl.Presentation.framework]
+== devicectl install -> 5DB969FF-269C-5A8A-86EB-99EC9FF22397
+   install attempt 1 failed; retrying...
+   install attempt 2 failed; retrying...
+   install attempt 3 failed; retrying...
+ERROR: CoreDeviceService was unable to locate a device matching the requested device identifier. (DeviceIdentifier: ecid_577124226318366) (com.apple.dt.CoreDeviceError error 1011 (0x3F3))
+       DeviceIdentifier = ecid_577124226318366
+  (is the device unlocked and connected? list: xcrun devicectl list devices)
+FATAL: install failed after 3 attempts — see /Users/rafehatfield/development/c-yarl/.claude/worktrees/cast-shadows/.ios-build-perfnone/install.log
+== marker removed (a leftover would silently make the next build a review build)

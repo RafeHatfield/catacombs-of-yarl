@@ -1,0 +1,60 @@
+RANK: 3 > 4 > 2 > 1
+
+Note before the detail: 3 and 4 are the same frame. I diffed them pixel-for-pixel — the maximum per-pixel difference is 5/765 (dither noise, no region differs visibly), so their relative order is arbitrary. I've ordered them because the format requires it, not because one is better made. 2 is the same scene and engine with a different prop set.
+
+BEST: 3
+BEST_WHY: The north wall band (y≈425–455, full room width) is the one place in the deck where the fiction is actually drawn: a horizontal timber rail with driven vertical pins at irregular spacing, a lighter beam above a darker face, and the band is cut cleanly by the corridor opening at x≈500–560 rather than tiled through it. The floor flags vary in tone tile-to-tile within the lit area (compare the flags under the player at (390–430, 470–510) with those two tiles east) and the light falloff is a genuine gradient with a warm core and cool edge rather than a hard radius. The bound-logs prop at (385–500, 590–640) has a rope lashing drawn as a distinct element with its own shadow, which is the one prop that reads as "orc repair" rather than "dungeon dressing."
+
+WORST: 1
+WORST_WHY: It is a flat, unlit stamp sheet. There is no light source and no falloff anywhere in the 384×288 frame, so the premise isn't drawn at all. The water at (248–343, 0–192) is a flat green fill with a regular scale/hex pattern repeating at a fixed period, cut off in a hard straight-edged rectangle against the dirt with no bank, no shoreline, no depth change. The same moss splotch is stamped three times on the grey stone — top-left (~20–45, 55–85), bottom-left (~15–45, 200–230), right (~350–380, 150–180) — same silhouette. The two barrels at (125,205) and (175,205) are pixel-identical copies side by side; the two chest-and-crate stacks at (80,10) and (80,60) are likewise identical. The grey block tile used for the bottom wall top (0–384, 195–260) is the same tile used for the corridor floor at left (0–48, 0–100), so wall top and floor are indistinguishable. The "bones" at (215–235, 115–130) are a dozen loose white pixels.
+
+FLAGGED: 1, 2
+- 1: no lighting at all, identical duplicated props, hard-edged rectangular water — glance-obvious.
+- 2: the brazier at (600,550) sits inside a hard white ring, which reads as a debug light-source marker, and the three small red-orange "X" marks at (215,615), (405,612), (530,612) read as placement markers rather than objects. Both are visible at a glance in a frame that otherwise holds together.
+
+SHIP: NONE
+
+FLIP 1:
+- Add a light source at the figure (222,10) and darken the frame with distance from it; the current uniform lighting is the single largest thing marking it as unfinished.
+- Give the water at (248–343, 0–192) a bank: a 2–4px darker/shaded edge on the dirt side and a lighter shallow band on the water side, so the pool has an edge rather than a rectangle cut out of the floor.
+- Replace the regular scale/hex pattern in the water with an irregular surface (broken highlight lines that don't repeat every tile); the fixed period is visible at play size.
+- Draw at least two variants of the moss splotch and rotate/flip them; the same stamp at (20–45,55–85), (15–45,200–230) and (350–380,150–180) is recognisable as one asset.
+- Make the two barrels at (125,205) and (175,205) differ — one lid off, one banded differently, one shadow offset — same for the two chest/crate stacks at (80,10) and (80,60).
+- Separate the wall-top tile (0–384, 195–260) from the floor tile at (0–48, 0–100): darken the wall top by ~15% or give it a bevelled edge on the room side so a player can read wall from floor without the brick face.
+- Add a soft shadow under the wall top onto the brown floor along y≈190 and along x≈50 so the room floor reads as lower than the wall.
+- Replace the loose white pixels at (215–235,115–130) with a drawn bone cluster with an outline, or remove them.
+- The dirt floor's rust flecks tile visibly at 48px; overlay a second, lower-frequency dirt variation so the repeat isn't traceable.
+
+FLIP 2:
+- Remove the hard white ring around the brazier at (600,550); render its glow as the same soft falloff used for the figure's light, on the floor beneath it.
+- Replace the three small "X" props at (215,615), (405,612), (530,612) with props at the same scale as the figure and the north-wall band — bound timber, a rope coil, a stacked crate — or remove them; at their current 20px size and identical shape they read as markers.
+- Identify the small orange/white object at (343,545): at half the figure's size with no outline weight it reads as an unfinished sprite; draw it at the figure's line weight or remove it.
+- The crack line across the floor (e.g. the polyline from (190,600) rising to (500,470)) is drawn at 1px screen resolution over tiles drawn at 2px pixels; redraw the crack at the tile pixel scale so it doesn't sit on top of the art like an overlay.
+- The wall mass (left block 180–500, 90–400; right block 560–750, 70–390) is a cloudy noise fill crossed by long straight diagonal lines (e.g. (490,90)→(700,390)) — Voronoi-cell edges, not stone. Break those lines into shorter segments at tile pixel scale, and give the wall mass a drawn texture (stone courses, or rock with a consistent pixel grain).
+- The vertical corridor walls above the player (x≈440–500 and x≈560–630, y 90–390) have no face band while the north room wall does; either give north-south walls a matching edge treatment or drop the face band so the wall language is consistent.
+- The light falloff has visible diagonal striping on the floor south-west of the player (around (300–450, 560–620)) — ray bands radiating from the figure. Smooth or remove the ray effect; the streaks read as a shader artifact.
+- There are faint concentric ring marks on the floor at roughly (500–600, 500–560), west of the brazier; if these are intended wear, draw them at tile pixel scale; otherwise remove them.
+- The figure is flat, fully saturated and unaffected by the light, while everything under it is lit with a gradient; apply the light tint to the sprite so it belongs to the scene.
+
+FLIP 3:
+- The standing stone at (265–300, 540–640) is a smooth-shaded box with a lit left face and a shadowed right face and no pixel grain — it reads as a 3D primitive placed on pixel art. Redraw it at the tile pixel scale with the same line weight as the figure, keeping the rope strap.
+- The orange plank block at (190–305, 475–520) and the bound logs at (385–500, 590–640) are gradient-shaded with no outline, against a figure with a hard black outline and tiles at 2px pixels; pick one line-weight and resolution and bring the props to it.
+- The floor crack polyline (from (190,600) through the stone's tile to (500,470)) is 1px anti-aliased over 2px-pixel tiles; redraw it at tile resolution.
+- The wall mass (180–500, 90–400 and 560–750, 70–390) is noise fill with long straight diagonal Voronoi-style lines (e.g. (490,90)→(700,390)); break them into short segments at pixel scale and give the mass a drawn stone texture.
+- The north-south corridor walls at x≈440–500 and x≈560–630 have no face band while the east-west room wall at y≈425–455 does; make the wall treatment consistent.
+- Remove the diagonal ray striping in the falloff south-west of the player (around (300–450, 560–620)).
+- Apply the scene light to the figure sprite at (390–430, 460–510); it is currently unlit and reads as pasted on.
+- Fix the faint concentric ring marks on the floor west of the brazier (approx (500–600, 500–560)): draw them at tile scale as wear, or remove them.
+
+FLIP 4:
+- Identical frame to 3 (pixel diff ≤5/765, no visible region differs); apply every item in FLIP 3 to this frame.
+- Redraw the standing stone at (265–300, 540–640) at tile pixel scale with the figure's line weight.
+- Bring the plank block (190–305, 475–520) and bound logs (385–500, 590–640) to the tile resolution and outline weight.
+- Redraw the 1px floor crack polyline at tile resolution.
+- Replace the straight Voronoi lines in the wall mass with segmented, pixel-scale cracks over a drawn stone texture.
+- Give the north-south corridor walls the same edge treatment as the east-west face band, or remove the band.
+- Remove the diagonal ray striping in the light falloff south-west of the player.
+- Light the figure sprite with the scene light.
+- Draw or remove the concentric ring marks west of the brazier.
+
+Model: Opus 5 (1M context)

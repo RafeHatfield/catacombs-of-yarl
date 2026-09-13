@@ -1,0 +1,159 @@
+{
+ "name": "tier1_projection_C",
+ "_what": [
+  "OBJECT-PROJECTION RULING INSTRUMENT — one scene per candidate. NOT A PROPS PASS.",
+  "",
+  "C — THE CONTROL, the marker's current projection: skewed top, front face, and a narrow right side. ⚠ AGAINST-§3 for the same reason, and this is the point of the session — approving the marker alone would have ruled this for every object in the game, silently.",
+  "",
+  "Five archetypes, chosen to stress every case the game contains, in the ratified room on real floor and walls at the ratified rig. The placements are IDENTICAL across the three candidates so the only variable is the projection.",
+  "",
+  "  tall vertical   a standing stone      does its side read against the wall's, or fight it",
+  "  low horizontal  a chest               the classic oblique case; top-to-face ratio lives here",
+  "  round           a barrel              round objects expose projection cheats; no flat face to hide behind",
+  "  wide flat       an altar slab         mostly-top; tests whether the top truly shares the floor plane",
+  "  against a wall  a rack                Rafe's 'bookcase' instinct, asked directly",
+  "",
+  "⚠ IDS 9850-9870 ARE A RESERVED REVIEW BLOCK. They are referenced by these three scenes and nothing else: no props manifest lists them, no placer places them, no game scene names them. Nothing in this session enters the game's prop set — it is a ruling instrument, and the ruling is Rafe's, on device (§13.1/§13.2)."
+ ],
+ "width": 17,
+ "height": 21,
+ "player": {
+  "x": 6,
+  "y": 12
+ },
+ "carve": [
+  {
+   "x0": 3,
+   "y0": 12,
+   "x1": 13,
+   "y1": 14
+  },
+  {
+   "x0": 3,
+   "y0": 16,
+   "x1": 13,
+   "y1": 19
+  },
+  {
+   "x0": 3,
+   "y0": 15,
+   "x1": 4,
+   "y1": 15
+  },
+  {
+   "x0": 6,
+   "y0": 15,
+   "x1": 13,
+   "y1": 15
+  },
+  {
+   "x0": 8,
+   "y0": 6,
+   "x1": 8,
+   "y1": 11
+  },
+  {
+   "x0": 3,
+   "y0": 2,
+   "x1": 13,
+   "y1": 5
+  },
+  {
+   "x0": 1,
+   "y0": 16,
+   "x1": 2,
+   "y1": 17
+  }
+ ],
+ "legibility": [
+  {
+   "x": 5,
+   "y": 12,
+   "expect": "lit",
+   "why": "floor beside the station, well inside the radius",
+   "bound_lum": 0.100404,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound."
+  },
+  {
+   "x": 3,
+   "y": 14,
+   "expect": "lit",
+   "why": "the near corner of the room, still lit — and clear of every prop footprint",
+   "bound_lum": 0.100404,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound. ⚠ THIS PROBE MOVED, and its pass state is therefore NOT carried over. It was (4,14), which §12.2's re-authored barricade now covers — a legibility point standing on a prop measures the sprite and reports it as floor, which it had been doing in every gated props build. The BOUND IS UNTOUCHED at the ruled 0.100404: the bound is a property of the rig, not of the cell, so moving a probe does not license moving it. This cell has never been measured before and may legitimately fail; if it does, that is a finding about the scene, not a reason to loosen anything (LOOP-PROCESS §4.3)."
+  },
+  {
+   "x": 6,
+   "y": 15,
+   "expect": "lit",
+   "why": "the route ahead, where the floor's traffic systems show",
+   "bound_lum": 0.100404,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound."
+  },
+  {
+   "x": 11,
+   "y": 14,
+   "expect": "dark",
+   "why": "past the lamp's reach; the room must have an outside",
+   "bound_lum": 0.08367,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound."
+  },
+  {
+   "x": 8,
+   "y": 7,
+   "expect": "dark",
+   "why": "up the corridor, beyond the radius",
+   "bound_lum": 0.08367,
+   "bound_derivation": "ABSOLUTE delivered luminance (0..1). RULED (Rafe, 2026-09-07): the ratio-against-the-brightest-pixel bound this replaces was measured against a reference cell that CLIPPED at 255 — a ratio against the ceiling, not the scene. Derived as reference_lum_on_the_NULLED_build_at_the_ratified_rig (0.8367) x the retired ratio bound."
+  }
+ ],
+ "props": [
+  {
+   "tileId": 9864,
+   "x": 4,
+   "y": 13,
+   "blocks": true,
+   "why": "stone — C",
+   "w": 1,
+   "h": 2,
+   "layout": [
+    9864,
+    9865
+   ]
+  },
+  {
+   "tileId": 9866,
+   "x": 10,
+   "y": 12,
+   "blocks": true,
+   "why": "crate — C"
+  },
+  {
+   "tileId": 9867,
+   "x": 9,
+   "y": 14,
+   "blocks": true,
+   "why": "barrel — C"
+  },
+  {
+   "tileId": 9868,
+   "x": 6,
+   "y": 14,
+   "blocks": true,
+   "why": "altar — C",
+   "w": 2,
+   "h": 1,
+   "layout": [
+    9868,
+    9869
+   ]
+  },
+  {
+   "tileId": 9870,
+   "x": 11,
+   "y": 12,
+   "blocks": true,
+   "why": "rack — C"
+  }
+ ]
+}
