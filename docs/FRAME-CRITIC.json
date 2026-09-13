@@ -30,7 +30,11 @@
       "--occluders",
       "all",
       "--shadow-softness",
-      "1.0"
+      "12.0",
+      "--shadow-darkness",
+      "0.8",
+      "--fire-flicker",
+      "1"
     ],
     "frame": "tools/tier1_floors/evidence/combined.png",
     "log": "tools/tier1_floors/evidence/combined.log"
@@ -86,22 +90,26 @@
   },
   "approved_capture": {
     "path": ".claude/skills/frame-critic/approved/shadowed-2026-09-13.png",
-    "sha256": "702a845e839f2bbf2213c3248c3714b6b7f6d3431b0139c5604de856286e3947",
+    "sha256": "baaefba3a0e9e1e162188a74d9fa806ee5c51af3579be84627e0f93177f0d5ab",
     "regime": "shadowed",
-    "provisional": true,
-    "approved_by": "Rafe, shadow walk on the handset, 2026-09-13",
-    "verdict": "\"Props sit on the floor, the room has an outside — the round's two questions are answered yes.\" Marks: darkness 0.8, softness 8.0 (the knob's ceiling), flicker ON, void 1/3. \"Provisional reference — seeds the shadowed reference, re-marked after two fixes.\"",
-    "build": "4404b2c2 (§1.2.2a rig-gate walk, review=SKIPPED-REVIEW, occluders all, void ring 0)",
+    "approved_by": "Rafe, shadow walk MARKED on the handset, 2026-09-13",
+    "verdict": "\"Both fixes confirmed on device: the raised softness range melts edges (no beams at 12); the ambient-tinted leak reads as cool dark, not grey. The fire's cast shadow confirmed visible once the player's lamp isn't filling it. Props sit — yes; room has an outside — yes.\" Marks: energy 1.60, radius 6.0, falloff 1.00, ambient 1.50, void 1/3, shadows on, softness 12.0, darkness 0.8, fire 1.6, flicker ON.",
+    "build": "683af04f (§1.2.2a rig-gate walk, review=SKIPPED-REVIEW; captured from the same render tree at the marks — tools/cast_shadows/evidence/ratified.log)",
     "_what": [
-      "THE FIRST SHADOWED REFERENCE, and it is PROVISIONAL by Rafe's own word: it seeds the regime so",
-      "the judge has a bar to compare against, and it is re-marked after the walk's flips land",
-      "(softness range, tinted leak, fire reach). Captured from the WALKED commit (4404b2c2) at the",
-      "marked settings — not from the fixed tree — because a reference is the frame the human",
-      "approved, not the frame the builder made afterwards. tools/cast_shadows/evidence/walked_ref.log.",
-      "",
-      "LAW (Rafe, 2026-09-12): the reference is captured under the deck's lighting regime. The",
-      "unshadowed reference below is kept as that regime's bar; it is not this deck's."
+      "THE SHADOWED REFERENCE — re-ratified with the rig (§6.2's live table, 2026-09-13). Replaces the",
+      "provisional one seeded from walk 1, which is kept beside it and named below.",
+      "LAW (Rafe, 2026-09-12): the reference is captured under the deck's lighting regime; the",
+      "unshadowed reference is kept as that regime's bar and is not this deck's."
     ],
+    "supersedes": {
+      "path": ".claude/skills/frame-critic/approved/shadowed-2026-09-13-provisional.png",
+      "sha256": "702a845e839f2bbf2213c3248c3714b6b7f6d3431b0139c5604de856286e3947",
+      "why": "provisional by Rafe's word at walk 1; re-marked after the flips",
+      "regime": "shadowed",
+      "approved_by": "Rafe, shadow walk on the handset, 2026-09-13",
+      "verdict": "\"Props sit on the floor, the room has an outside — the round's two questions are answered yes.\" Marks: darkness 0.8, softness 8.0 (the knob's ceiling), flicker ON, void 1/3. \"Provisional reference — seeds the shadowed reference, re-marked after two fixes.\"",
+      "build": "4404b2c2 (§1.2.2a rig-gate walk, review=SKIPPED-REVIEW, occluders all, void ring 0)"
+    },
     "supersedes_for_regime_unshadowed": {
       "path": ".claude/skills/frame-critic/approved/combined-2026-09-09.png",
       "sha256": "42f6941bc10d00235a58a727dd79d5635f4ca2adcaa667e98e5c1ef9f25def54",
@@ -214,7 +222,7 @@
     ],
     "item": "CAST SHADOWS — the lamp meets the walls (§12.1a) and the objects (§3.2): one occluder mechanism, the fire attached as the second light (#205)",
     "claim": "the void is dark by occlusion (faces lit, unexcavated mass at ambient, no ring); the props cast shadows from the carried lamp and the fire, sit on the floor, and never self-shadow; shadow is the ambient, never black paint; softness and darkness are walk knobs; flicker present and OFF.",
-    "measured": "tools/cast_shadows/evidence, props room, ring 0, no occluders -> occluders (all): FACE 40.16 -> 39.61 and CAP 52.92 -> 52.92 — the r29 failure (37.90 -> 5.51) is closed; UNEXCAVATED 27.35 -> 12.50, the same rock at ambient (the ring's 2.58/5.23 was a darker material, which is what §12.1a forbids); FLOOR 62.90 -> 50.56 — three prop shadows and the wall mass where physics puts them. NO SELF-SHADOW: opaque sprite interiors delta +0.00 / +0.00 / +0.00 (marker, both barricades). PROPS SIT: the strip south of each base, lamp north, 74 -> 28, 86 -> 18, 84 -> 39. Softness ladder 0 hard, 2 ~10 native px; default 1.0. Darkness rgb-leak measured (0.7 -> unexcavated 25.85). Fire lit (fire_lights=1), its shadows on; flicker present, OFF. THE ROUTE PROBE MOVED (6,15)->(9,15), bound untouched: (6,15) is in the crossed barricade's shadow at every darkness (0.0686 vs 0.1004). SE PERF: two measurement builds compiled (perfnone/perfall); the handset was unavailable at install — the [Perf] windows are OWED before install-latest and a window past 16.7 ms is a STOP.",
+    "measured": "tools/cast_shadows/evidence, props room, ring 0, no occluders -> occluders (all): FACE 40.16 -> 39.61 and CAP 52.92 -> 52.92 — the r29 failure (37.90 -> 5.51) is closed; UNEXCAVATED 27.35 -> 12.50, the same rock at ambient (the ring's 2.58/5.23 was a darker material, which is what §12.1a forbids); FLOOR 62.90 -> 50.56 — three prop shadows and the wall mass where physics puts them. NO SELF-SHADOW: opaque sprite interiors delta +0.00 / +0.00 / +0.00 (marker, both barricades). PROPS SIT: the strip south of each base, lamp north, 74 -> 28, 86 -> 18, 84 -> 39. Softness ladder 0 hard, 2 ~10 native px; default 1.0. Darkness rgb-leak measured (0.7 -> unexcavated 25.85). Fire lit (fire_lights=1), its shadows on; flicker present, OFF. THE ROUTE PROBE MOVED (6,15)->(9,15), bound untouched: (6,15) is in the crossed barricade's shadow at every darkness (0.0686 vs 0.1004). SE PERF: 60 fps held — every steady 240-frame window 16.67 ms mean/p95/max with occluders and two lights, identical to the build without (vsync-locked; headroom unmeasured). RAFE'S WALKS (2026-09-13): walk 1 'props sit on the floor, the room has an outside — yes, yes'; three engine flips (softness ceiling 8 -> 64, leak tinted with the ambient hue, fire 0.9/2.5 -> 1.6/4.0) confirmed on the re-mark: 'the raised softness range melts edges (no beams at 12); the ambient-tinted leak reads as cool dark, not grey; the fire's cast shadow visible once the player's lamp isn't filling it.' Marks RATIFIED as required flags: shadows on, softness 12.0, darkness 0.8, fire 1.6, flicker ON, void 0. The reference is the ratified frame; the three plants were re-captured under this regime from their culled asset states.",
     "instrument": "tools/cast_shadows/measure_occlusion.py (face/cap/unexcavated/floor by cell class; prop base strip; opaque-sprite pixels); tools/cast_shadows/capture.sh; the device log's [Perf] windows",
     "met": true
   },
@@ -227,7 +235,7 @@
     "CAST-SHADOWS ROUND: the deck judges the room with shadows on walls AND objects in one frame, so the plant is drawn from both subjects — cement-cap (walls, construction), props-unrecognizable and objects-isometric (objects, construction). A list here means any-of."
   ],
   "_capture_note_shadows": [
-    "CAST-SHADOWS ROUND: --occluders all, softness 1.0 (the measured middle), and VOID RING 0 — the void is dark by occlusion now (§12.1a), so the flat-dark fallback the interim ruling licensed is not run. Every earlier combined capture ran ring 1; this is the round that retires it."
+    "RE-RATIFIED WITH SHADOWS (Rafe, 2026-09-13): occluders all, softness 12.0, darkness 0.8, flicker on, void ring 0 — §6.2's live table, required flags. Every capture on this lane runs them."
   ],
   "regime": "shadowed",
   "_regime": [

@@ -366,6 +366,63 @@
       "provenance": "docs/OBJECT-PROJECTION-RULING.md round one and Rafe's round-one verdict; the ruled projection is §3.2 (cabinet oblique, right, ½).",
       "seeded": "Rafe, ruling 2026-09-12: 'Seed two object plants from Rafe's culls'",
       "regime": "unshadowed"
+    },
+    {
+      "file": "objects-isometric-shadowed.png",
+      "surface": [
+        "combined"
+      ],
+      "axis": [
+        "construction"
+      ],
+      "subject": [
+        "objects"
+      ],
+      "regime": "shadowed",
+      "sha256": "0d8a922f00499b98a7d67cf3120e90b6af4c3998396b0a400c891737100302d0",
+      "source": "RE-CAPTURED under the shadowed regime (Rafe's law, 2026-09-12) from the culled asset state at f60ddb30 (7 files overlaid) through the engine at c13c584fec54, with the ratified shadow flags (occluders all, softness 12, darkness 0.8, fire lit, flicker on, void ring 0)",
+      "culled_by": "Rafe, device walk, 2026-09-11 (object-projection round one)",
+      "verbatim": "iso is clearly not a fit",
+      "defect": "THE OBJECTS ARE AT THE WRONG PROJECTION FOR THE FLOOR. Five archetypes drawn three-plane/dimetric on an orthogonal ground: they read as objects but do not sit on the floor; the diamond top fights the square grid the room is built on (§3). Materials and lighting are competent — the frame is wrong about how things stand in space, which is the object-construction question exactly, and a seat that would ship it over a §3.2-conformant build is soft on that question.",
+      "provenance": "the unshadowed entry objects-isometric.png is this cull's original frame; this is the same asset state under the deck's light"
+    },
+    {
+      "file": "cement-cap-shadowed.png",
+      "surface": [
+        "combined"
+      ],
+      "axis": [
+        "construction"
+      ],
+      "subject": [
+        "walls"
+      ],
+      "regime": "shadowed",
+      "sha256": "8dceb883cc015fd58201906af7f344295cfd978c79184e66f64399a83e3cd2ff",
+      "source": "RE-CAPTURED under the shadowed regime (Rafe's law, 2026-09-12) from the culled asset state at 431c140f (1191 files overlaid) through the engine at c13c584fec54, with the ratified shadow flags (occluders all, softness 12, darkness 0.8, fire lit, flicker on, void ring 0)",
+      "culled_by": "Rafe, device walk, 2026-09-03",
+      "verbatim": "caps are still grey and read as cement, not stone",
+      "defect": "the found-rock cap with no architecture in it. The cap is one smooth field: no slabs, no fractures, no tooling, so the largest surface in frame is a value with noise on it. Measured, its wall cells carry a 4.6% hard-edge share against the 10.7% of the last approved build - the cap pass more than halved the wall's drawn edges. This is the CONSTRUCTION plant: it is wrong about whether a mass is made of anything, and it is deliberately RIGHT about chroma, so a round judged on construction cannot pass by fixing colour.",
+      "provenance": "the unshadowed entry cement-cap.png is this cull's original frame; this is the same asset state under the deck's light"
+    },
+    {
+      "file": "props-unrecognizable-shadowed.png",
+      "surface": [
+        "combined"
+      ],
+      "axis": [
+        "construction"
+      ],
+      "subject": [
+        "objects"
+      ],
+      "regime": "shadowed",
+      "sha256": "92058239edf8ac4c57571556e95ebe333dc903f80761494a7d9cc2a788ae7371",
+      "source": "RE-CAPTURED under the shadowed regime (Rafe's law, 2026-09-12) from the culled asset state at cb344578~1 (6 files overlaid) through the engine at c13c584fec54, with the ratified shadow flags (occluders all, softness 12, darkness 0.8, fire lit, flicker on, void ring 0)",
+      "culled_by": "Rafe, device walk, 2026-09-10 (the §12.2 ruling)",
+      "verbatim": "small, unrecognizable except the fire; colouring quite good",
+      "defect": "THE OBJECTS CANNOT BE NAMED. Marker content 10x15 px in a 32 px cell — a fifth of the cell, twenty device pixels across; three cold seats offered 'a bottle or vial', 'a lantern or candle', 'an orange chest or crate' for the marker and 'sticks' for the barricade. Craft is not the defect (the colouring was approved in kind); SIZE is, and a seat that would ship it is soft on the one clause §12 has — names itself at 1x. This is the OBJECT construction plant: it is deliberately fine on value and chroma so a round judged on object craft cannot pass by fixing colour.",
+      "provenance": "the unshadowed entry props-unrecognizable.png is this cull's original frame; this is the same asset state under the deck's light"
     }
   ],
   "_regime": [

@@ -2871,7 +2871,7 @@ public partial class Main : Node
                 softArg != null && float.TryParse(softArg, System.Globalization.NumberStyles.Float,
                                                   System.Globalization.CultureInfo.InvariantCulture,
                                                   out float sf) ? sf
-                : marker?.ShadowSoftness ?? 8.0f;   // Rafe's shadow-walk mark (2026-09-13), on a ladder that now runs to 64
+                : marker?.ShadowSoftness ?? 12.0f;  // RE-RATIFIED (Rafe, 2026-09-13): "no beams at 12"
             string? dkArg = ReadStringArg("--shadow-darkness");
             if (dkArg != null && float.TryParse(dkArg, System.Globalization.NumberStyles.Float,
                                                 System.Globalization.CultureInfo.InvariantCulture,

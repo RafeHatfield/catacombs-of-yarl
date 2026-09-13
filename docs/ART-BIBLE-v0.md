@@ -811,7 +811,33 @@ menace with almost no gothic vocabulary.
 
 ~~Only the Boundary's values are derived at the pilot. The rest are PLACEHOLDER.~~
 
-> ### ⚠ RE-RATIFIED (Rafe, 2026-09-06) ON THE CORRECTED SINGLE-ARITHMETIC LAMP. THIS TABLE IS THE LIVE ONE.
+> ### ⚠ RE-RATIFIED WITH SHADOWS (Rafe, shadow walk on the handset, 2026-09-13). THIS TABLE IS THE LIVE ONE.
+>
+> The 2026-09-06 values were walked on a lamp that shone through rock (§12.1a). This is the walk
+> taken with the occluder pass live — the void dark by occlusion, the props casting from the
+> lamp, the orc fire lit as the second light — at gameplay distance, on the reference device.
+> Every light value was **held** and every shadow value **set**:
+>
+> | knob | 2026-09-06 | **re-ratified with shadows (2026-09-13)** | unit / note |
+> |---|---:|---:|---|
+> | radius | 6.0 | **6.0** | tiles — held |
+> | falloff | 1.00 | **1.00** | held at the identity, a third time |
+> | ambient level | 1.50 | **1.50** | held |
+> | energy | 1.6 | **1.6** | held |
+> | **shadows** | — | **on, occluders `all`** | §12.1a: first surface exempt by mask, everything behind receives, every edge casts |
+> | **void ring** | 1 (interim fallback) | **0** | the void is dark by occlusion; the fallback is retired |
+> | **softness** | — | **12.0** | `shadow_filter_smooth`, PCF13, on a ladder to 64. *"The raised softness range melts edges (no beams at 12)."* |
+> | **darkness** | — | **0.8** | leak `rgb = 0.2 × ambient hue ratios`. *"The ambient-tinted leak reads as cool dark, not grey."* |
+> | **fire** | — | **energy 1.6, reach 4.0 tiles, warm `ff8a3c`** | B-PROP-003 emits (#205). Reach was not a knob; it rides with the mark. |
+> | **flicker** | — | **ON** | *"the tended fire is §9.2's exception."* |
+>
+> **Two-light physics, confirmed on device:** the fire's cast shadow is visible once the
+> player's lamp isn't filling it. **BOUNDARY ONLY**, as before; landed in
+> `tools/tier0_harness/harness_config.yaml`, the device marker template and the critic's capture
+> command, **passed explicitly and required by the engine**. The 2026-09-06 table below is
+> **superseded-by-re-ratification** and kept as the record it is.
+>
+> ### ⚠ RE-RATIFIED (Rafe, 2026-09-06) ON THE CORRECTED SINGLE-ARITHMETIC LAMP — superseded-by-re-ratification 2026-09-13; kept as the record.
 >
 > Ruling 56's values below were walked against **a floor lit at energy 1.0 while the walls beside
 > it ran at 1.6** — `tier1_polish.gdshader` discarded `LIGHT_ENERGY` (#174), so the two planes
@@ -2315,6 +2341,12 @@ instrument was fine, the travel was a builder's guess:
 3. *"The fire glows but doesn't light its surroundings or cast; it needs real radius and
    energy."* 0.9 / 2.5 tiles → 1.6 / 4.0 tiles, a `fire` row on the panel, values PLACEHOLDER
    until marked. A "dark" probe 2.2 tiles from the fire had to move — a real fire lights it.
+
+**RE-MARKED (Rafe, 2026-09-13), both fixes confirmed on device:** softness 12.0 (*"melts
+edges — no beams at 12"*), darkness 0.8 (*"the ambient-tinted leak reads as cool dark, not
+grey"*), fire 1.6 with its cast shadow visible once the player's lamp isn't filling it. Ratified
+as required engine flags (§6.2's live table); this frame seeds the shadowed reference. Props sit
+— yes; the room has an outside — yes.
 
 **How, since the obvious mechanism was measured and did not survive.** A 2D occluder cannot
 say *light this cell's own surface and stop behind it*: a per-cell quad whose light-facing edges

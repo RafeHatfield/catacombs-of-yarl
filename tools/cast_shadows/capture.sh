@@ -8,10 +8,10 @@
 # tools/cast_shadows/evidence/<tag>.png + .log and prints the instrument's line.
 set -e
 cd "$(dirname "$0")/../.."
-TAG="$1"; OCC="${2:-none}"; SOFT="${3:-2.0}"; FLICK="${4:-0}"
+TAG="$1"; OCC="${2:-none}"; SOFT="${3:-12.0}"; FLICK="${4:-1}"
 SCENE="${5:-src/Presentation/assets/tier0_harness/scenes/tier1_props_review.json}"
-RING="${6:-1}"
-DARK="${7:-1.0}"
+RING="${6:-0}"
+DARK="${7:-0.8}"
 EV=tools/cast_shadows/evidence
 mkdir -p "$EV"
 /Applications/Godot_mono.app/Contents/MacOS/Godot --path "$PWD" --resolution 750x1334 --art-scene-capture \
