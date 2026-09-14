@@ -341,3 +341,25 @@ The occluder follows the shift (PropShift), so the Λ's cast shadow moved with i
 frame: the feet stand on the floor, the wall's foot line runs behind the legs, the apex stops
 below the cap's top. Deck: axis `grounding` + `wood-value`, subject objects, plant
 `lambda-on-the-cap` (one plant, five seats — correlated by construction, as the ruling asked).
+
+### ⛔ STOP — broken-judge (lane `art/lambda-212`, round 1). `STALL-REPORT.md`. Rafe's own clause: *"If a second round trips the guard, stop and bring me the plants, not the seats."*
+- Five seats, one plant (`lambda-on-the-cap`, the walked frame). **Seats 1, 2, 3 missed it** —
+  neither flagged nor ranked it last; seats 4 and 5 caught it. Rank data (not read, VOID): the
+  build was above the reference in 3 of 5 and not below in 5 of 5.
+- **The plant, not the seats.** `lambda-on-the-cap` is the walked frame: it differs from this
+  build by the Λ's 12-px shift, the removed cap band and the jamb's mask, and from the approved
+  reference by less. A control must be wrong at deck scale; a 12-px placement in a 750-px deck is
+  a fact two seats can see and three cannot, which is the definition of a plant that voids the
+  judge rather than the art (§1.2.1, the wall lane's round 5 — the same trap I named for
+  `jamb-hard-edge` and then walked into with this one because one queue seat had flagged the
+  Λ as a flip). The morgue holds no other grounding cull.
+- **What Rafe rules:** re-tag `lambda-on-the-cap` off the deck (`retired_as_control`, his words —
+  it stays as the record of the cull) and let the Λ round be judged on the objects' construction
+  axis with the two shadowed object plants that exist (`objects-isometric-shadowed`,
+  `props-unrecognizable-shadowed`), the grounding question going to his eye on the walk where a
+  12-px fact belongs; OR name a grounding cull the morgue lacks. Then `JUDGE-CLEARED.json` for
+  lane `art/lambda-212` round 1.
+- Round 3 (#207) is prepared and NOT run: candidate templates as a pending patch
+  (`tools/cast_shadows/evidence/lambda/patch_207_mesh_pending.py`), the driver
+  `tools/tier2_props/barricade_round3.py` (generate → land → restore), the judge
+  `cold_name_object.py` unproven. No seat of any judge runs past this STOP.
