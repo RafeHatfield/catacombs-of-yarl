@@ -375,3 +375,12 @@ below the cap's top. Deck: axis `grounding` + `wood-value`, subject objects, pla
   `props-unrecognizable-shadowed`, `lambda-in-the-face`. The fine fact (bottom row at foot + 12,
   zero cap pixels over the lower half) is the item exit's derived assertion.
 - LAW recorded: SKILL.md §4 "A plant must be resolvable at DECK SCALE"; bible §13.12 corollary.
+
+### Ruling 47 — `lambda-in-the-face` in the BUILD slot, five seats (lane `art/lambda-212-selftest` r001)
+Caught by **3 of 5** (seats 1, 3, 5 flagged it; seat 5 in the exact words — *"the wooden A-frame
+is standing on the rock top and overlaps the wall face band; it is a floor prop on an impassable
+surface"*). **Missed by 2**: seat 4 ranked it first and praised the "sawhorse at top-right"; seat 2
+ranked it first, saw the Λ "in the corridor where the floor is near-black" and wrote it as a
+lighting flip, not a flag. It can be caught, and it is flagged when it is; its catch rate (60 %)
+sits below the morgue's measured 89.5 %. Proceeding as ruled; if the round trips the guard on it,
+that is the plant and it comes back here.
