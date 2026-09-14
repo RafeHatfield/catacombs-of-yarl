@@ -1366,10 +1366,15 @@ def main():
                          "because its plant was mis-tagged. RULED (Rafe, 2026-09-08): a seat "
                          "voided by a mis-tagged plant is re-drawn, not the round; a correct "
                          "plant missed still voids.")
-    ap.add_argument("--seats", type=int, default=1,
+    # DEFAULT FIVE, NOT ONE. LAW (bible §13.13): a gate's binding term must never be a single
+    # sample; RULED five seats (Rafe, 2026-09-09). The default was 1 and it bit: lane
+    # art/jamb-211 r001 ran one seat by omission and wrote an INSTALL-LATEST nobody may install
+    # on. A default that contradicts the law is a trap for the next builder, so the law is the
+    # default; `--seats 1` is still available for a self-test that says so.
+    ap.add_argument("--seats", type=int, default=5,
                     help="how many INDEPENDENT blind seats judge this round. Ruled at 3 for a "
-                         "PASS-INSTALL vote (Rafe, 2026-09-08); higher values measure the "
-                         "comparator's own noise floor on unchanged bytes.")
+                         "PASS-INSTALL vote (Rafe, 2026-09-08), five since 2026-09-09; higher "
+                         "values measure the comparator's own noise floor on unchanged bytes.")
     ap.add_argument("--timeout", type=int, default=2400)
     # ── SHOWING THE GUARDS THEY CAN FIRE, WITHOUT REIMPLEMENTING THEM ────────────────────────
     # LOOP-PROCESS §4 / bible §13.5: no check's pass counts until it has demonstrated it can
