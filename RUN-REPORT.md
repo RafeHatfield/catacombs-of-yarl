@@ -120,15 +120,16 @@ picture; the critic runs once, last, on the frozen tree.
   darkness=0.8 flicker=1 void ring 0; identity `d764757e+dirty` (the dirt is the dispositions).
 - Exported, built, installed to the SE as `com.rafehatfield.catacombsofyarl.tier0` (two devicectl retries, then
   installed). Log: `tools/cast_shadows/evidence/queue_install/build.log`.
-- `verify_on_device.sh`: **launch refused — the handset was LOCKED** (`FBSOpenApplicationErrorDomain error 7`).
-  The install is on the phone; the launch-and-read-marker check is owed once it is unlocked. Log:
-  `tools/cast_shadows/evidence/queue_install/verify.log`.
+- `verify_on_device.sh`: first two runs refused — handset LOCKED. Third run (phone unlocked):
+  **VERIFIED ON DEVICE** — identity `d764757e+dirty review=GATED`, booted `tier1_props_review`, rig live,
+  `cap_bands_over_props=2 east_faces=5`, `shadows: mode=all wall_occluders=216 prop_occluders=3 fire_lights=1
+  softness=12 flicker=on`, steady window 60.0 fps / render_cpu 1.37 ms / GPU NO-INSTRUMENT. Logs:
+  `tools/cast_shadows/evidence/queue_install/{verify,DEVICE-tier1-boot}.log`.
 
 ### Handset housekeeping (not acted on — Rafe's call)
 Still installed beside Tier0: `projA projOL projOR projOdeep projW` (the §3.2 candidates; projOdeep is the walked
 one), `perfall perfnone headroom` (measurement builds, SKIPPED-REVIEW). All superseded by this install.
 
 ### Next
-1. Unlock the phone → re-run `TIER0_SCENE=… tools/tier0_harness/verify_on_device.sh --out tools/cast_shadows/evidence/queue_install`.
-2. Rafe walks: the Λ-frame against the north wall (#212) first; then the X-frame across the gap (#207); the east
+1. Rafe walks: the Λ-frame against the north wall (#212) first; then the X-frame across the gap (#207); the east
    faces on the corridor jamb, pillar and run ends (#211); the `fire r` / `fire tint` rows (#205, not ruled).
