@@ -904,7 +904,17 @@ def pick_plant(surface, morgue, exclude=(), axis=None, subject=None, regime=None
                 "plant cannot control an object deck. Seed a Rafe-culled frame tagged "
                 "subject=%r in\n  %s" % (subject, surface, subject, os.path.join(MORGUE, "MORGUE.json")))
     if axis:
-        on_axis = [e for e in entries if axis in (e.get("axis") or [axis])]
+        # ── A DECK MAY ASK ON MORE THAN ONE AXIS — "plants on both axes" (Rafe, 2026-09-13) ──
+        #
+        # The jamb round is judged on two things at once: the east face's CONSTRUCTION (is it a
+        # face or a flat quad) and the CAST EDGE beside it (is the wedge's boundary a shadow or a
+        # mask). One plant cannot be wrong on both without being wrong on everything, so the
+        # deck names both axes and the draw takes every entry wrong on EITHER. Dealt without
+        # replacement below, a five-seat panel then exercises both controls every round. A
+        # string is one axis, as before; an entry with no `axis` still answers any question.
+        axes = [axis] if isinstance(axis, str) else [a for a in axis if a]
+        on_axis = [e for e in entries
+                   if not e.get("axis") or any(a in e["axis"] for a in axes)]
         if on_axis:
             entries = on_axis
     if not entries:

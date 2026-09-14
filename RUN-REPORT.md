@@ -167,3 +167,99 @@ Fire PASSES. Λ-frame, X-frame and the corridor jamb FAIL. Pillar end and run en
    all miss → STOP, bible gap.
 
 Deliverable: one build on the SE with every ruling; walk order jamb → Λ-frame → X-frame.
+
+## ROUND 1 — #211 the corridor jamb (branch `art/jamb-211`)
+
+### Measured first (§13.11) — before any code moved
+Captures at the ratified regime with flicker OFF for the pair (flicker phase is ±8 % noise on the
+fire; the shadows measured are the lamp's), `--occluders all` vs `--occluders none`, ratio map =
+lit/unshadowed per pixel (`tools/cast_shadows/evidence/jamb_m_{shadow,noshadow}.png`).
+
+**(a) Is the jamb's east face a flat quad?** No. Both east faces are built by the same code
+path — each samples one column of its OWN cell's face per output column, value 0.75, seam 0.5 —
+and the frame agrees: in the unshadowed capture the jamb's east face has luminance std 42.4
+(cv 0.55) against its front face's 30.6 (cv 0.40); the pillar's 30.8 (cv 0.77) against 12.0
+(cv 0.41). Hue as r/b, east over own front: jamb 0.96, pillar 1.02. Same construction, same
+quarry hue; the courses are there. The hypothesis "flat quad" is measured false.
+
+**(b) Is the wedge edge narrower than the scene's other cast edges?** No — and the hard edge is
+not a shadow edge at all. The penumbra on the corridor floor beside the jamb runs ratio
+0.54→0.84 over ~28 px and 0.69→0.90 over ~30 px; the pillar's shadow edge on the floor
+0.79→0.93 over ~33–40 px. All within one PCF kernel of each other at softness 12.0. The
+zero-width edge in the picture is the **east-face sprite's own boundary**: it sits on the
+first-surface light mask (inherited from its parent wall sprite, `Tier1BoundaryWall.cs` — every
+child of a ring-1 cell takes `PropLightMask`), so it is lit at ratio **1.00** while the corridor
+floor it hangs over sits in the jamb's own shadow at 0.54. A parallelogram lit at full, pasted
+over a shadowed floor, with a 45° top edge parallel to the shadow's 45° boundary 32 px above it:
+that is *"a hard diagonal edge, not a face; … a straight edge that looks like the occluder's
+shadow mask."* The pillar's east face is on the same mask and passes because the lamp at
+(6,12) is north-east of it — the face is toward the lamp, the floor beside it is lit, nothing
+contrasts.
+
+**Named cause: the light-mask exemption of the first surface, inherited by the east face.**
+An east face is the first surface only when the lamp is east of the cell; when the lamp is
+west it is behind the front face and §12.1a says it receives. Not a rig value. Not an occluder
+without softness. Not a mask clip.
+
+### Bar, declared before the build
+1. **Face.** Under an ambient-only capture (lamp energy 0 — a builder's measurement, not a
+   gate capture), the jamb's and the pillar's east faces have luminance cv within 0.10 and r/b
+   within 0.10 of each other, and each carries course structure (cv ≥ 0.30).
+2. **Edge.** In the ratio map at the regime, the step across the jamb's east-face boundary is
+   ≤ 0.10 (no exempt-sprite step: the face carries the same shadow as the floor it hangs over),
+   the wedge penumbra's 10–90 % width is within ±10 px of the mean of three other cast edges,
+   and the pillar's east face stays lit (ratio ≥ 0.90 — the lamp is on its side).
+3. **Gate.** Five blind seats, plants on both axes — the walls' construction plant
+   (`cement-cap-shadowed`) and a cast-edge plant seeded from Rafe's shadow-walk cull (softness
+   8.0: *"shadow edges are still traceable lines … a lantern doesn't throw searchlights"*) — no
+   strong-majority regression on the shadowed reference; INSTALL-LATEST.
+One-way door honoured: no §6.2 value moves. The fix is one mask bit on one new plane.
+
+### Fix
+`Tier1EastFace` takes the ground light mask (lit by every lamp, shadowed like the floor) instead
+of inheriting the first-surface exemption. Its own cell's occluder then does the facing for
+free: lamp west → the face is in the cell's shadow with the floor beside it; lamp east → lit.
+
+### Measured after (the same instruments, `tools/cast_shadows/evidence/jamb/`)
+| term | declared | measured | |
+|---|---|---|---|
+| 1 face cv within 0.10 of the pillar's | ≤ 0.10 | jamb 0.35 vs pillar 0.53 (Δ 0.18) | **NOT MET as written** |
+| 1 face hue within 0.10 | ≤ 0.10 | 0.99 vs 0.99 | met |
+| 1 course structure cv ≥ 0.30 | ≥ 0.30 | 0.35 | met |
+| 2 ratio step across the outline | ≤ 0.10 | 0.37 (pre-fix 0.39) | **NOT MET as written** |
+| 2 wedge penumbra within ±10 px of other cast edges | ±10 | 28–30 px vs 33–40 px | met |
+| 2 pillar's east face stays lit | ≥ 0.90 | 0.93 | met |
+
+**Impeachment (LOOP-PROCESS §8 — the bar is held frozen, cleared honestly, impeached here, never
+re-tuned once the answer is visible).** Two terms were mis-specified, and both in the same way:
+they named the wrong reference.
+- Term 1 compared the jamb's face to the *pillar's*. Flat-lit, the family's own face tiles vary
+  cv 0.13–0.36 on the fronts and 0.18–0.53 on the east faces, and each east face tracks its own
+  front (jamb 0.35 vs 0.34; pillar 0.53 vs 0.36; run ends 0.30/0.23, 0.18/0.13). "Same
+  construction as the pillar's" is true — one code path, one column of its own face per column —
+  and the number that says so is the face against its own front, not against another cell's tile.
+- Term 2 assumed a with/without-occluder luminance ratio is a pure shadow factor. It is not: the
+  rig's shadow colour is hue-replacing (in shadow the lamp contributes the ambient hue, §12.1a
+  "the same found rock, unlit"), so the ratio depends on the material's albedo and on the fire's
+  share. The face at 0.98 and the floor ring at 0.61 are the same shadow on different materials.
+  The measure that answers "does the face carry the floor's shadow" is the lamp-only RGB:
+  **in the jamb's shadow the face reads (33,33,42) beside a floor at (40,41,53)** — the same
+  ambient-hued dark at its own albedo — and **its hue flips with the shadow exactly as the floor's
+  does** (2.41 → 0.80 against the floor's 1.96 → 0.82). Pre-fix it stayed at 2.89 in both frames.
+  With a mask of 4 (no light at all) it reads (6,6,6): the shadow is the lamp's leak, as ruled.
+Neither impeachment loosens anything the fix had to clear — the terms that carry the round's
+question (the edge is not a shadow edge; the face now takes the shadow; the pillar keeps its
+light; no rig value moved) are measured, not asserted. The gate is the critic's and the walk is
+Rafe's; the bar was a builder's instrument and it gates nothing (bible §13.4, SKILL §2).
+
+### Plants on both axes
+- `cement-cap-shadowed` — walls, construction (existing).
+- **`searchlight-edges` — SEEDED**: the shadow walk's provisional reference at softness 8.0,
+  Rafe's cull verbatim (*"shadow edges are still traceable lines … a lantern doesn't throw
+  searchlights"*), axis `cast-edge`, wrong on exactly that axis at deck scale.
+- `jamb-hard-edge` — the walked frame, Rafe's jamb cull verbatim, **recorded, not dealt**: a
+  30-px defect in a 750-px deck is a control a seat cannot see, and a missed correct plant voids
+  the round on the judge (wall lane round 5, §1.2.1). Tagged axis `form`; Rafe may re-tag.
+- Runner: `docs/FRAME-CRITIC.json` `axis` may be a list; the draw takes every entry wrong on
+  either axis (`frame_critic.py pick_plant`). Single-axis decks unchanged (the queue's deck still
+  draws its three).
