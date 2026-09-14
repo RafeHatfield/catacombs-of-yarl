@@ -384,3 +384,15 @@ ranked it first, saw the Λ "in the corridor where the floor is near-black" and 
 lighting flip, not a flag. It can be caught, and it is flagged when it is; its catch rate (60 %)
 sits below the morgue's measured 89.5 %. Proceeding as ruled; if the round trips the guard on it,
 that is the plant and it comes back here.
+
+### Round 2 — r002, five seats: **INSTALL-LATEST** (build `1ac9ad46bd15` at 47dd7e8f)
+- Plants dealt: objects-isometric ×2, props-unrecognizable ×1, lambda-in-the-face ×2. **Seat 2
+  missed `lambda-in-the-face`** — ballot discarded, slot re-drawn once (props-unrecognizable,
+  caught); seat 5 caught it. The guard did not trip; the grounding plant's live record is now
+  1 catch / 1 miss on top of the self-test's 3 / 2. Above the reference 1/5, not below 5/5.
+- Five flips disposed (`check_dispositions: none`). Flip 0 — a seat still reads the Λ as *"on top
+  of the wall cap … draw it overlapping the wall's face, not its top"* — is **PARKED** to the walk
+  with today's rulings quoted: the built law is measured (foot line between the legs, 12 px onto
+  the floor, nothing laid over it); a 64-px prop before a 32-px face overlaps the cap's near half
+  by geometry, and whether that reads as standing before the wall is Rafe's eye. Others: X-frame
+  placement → #207 (round 3), marker → #204, flat timber → #204, wall mass/beam → #202.
