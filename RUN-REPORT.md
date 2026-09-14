@@ -263,3 +263,53 @@ Rafe's; the bar was a builder's instrument and it gates nothing (bible §13.4, S
 - Runner: `docs/FRAME-CRITIC.json` `axis` may be a list; the draw takes every entry wrong on
   either axis (`frame_critic.py pick_plant`). Single-axis decks unchanged (the queue's deck still
   draws its three).
+
+### ⛔ STOP — broken-judge (lane `art/jamb-211`, round 3). The line is stopped. `STALL-REPORT.md`.
+- r001 and r002 on this lane ran ONE seat each — the runner's default was 1, contradicting §13.13;
+  both are on disk and are **not gate verdicts** (their INSTALL-LATEST lines in the stall report's
+  table are single-sample). The default is five now (90a65911).
+- r003, five seats, plants on both axes: seats 2, 3, 5 caught theirs; **seat 1 missed
+  `searchlight-edges`** (ranked it FIRST, above the approved frame, and flagged nothing in it);
+  **seat 4 missed `cement-cap-shadowed`** (ranked it 2nd, unflagged — a plant every seat has caught
+  since 2026-09-12). Two live-plant misses in one round is the broken-judge term; findings are not
+  read (`flip_list_withheld`). Rank data, for the record only: the build 3 of 4 in four seats,
+  not below the reference in 3 of 5.
+- **What Rafe rules:** (1) whether `searchlight-edges` (softness 8.0 against the reference's 12.0,
+  fire at 2.5 tiles) is a control a seat must catch at deck scale — two of three seats did, one
+  preferred it; if not, re-tag it (it stays, nothing is deleted) and the deck falls back to
+  `cement-cap-shadowed` alone on this subject; (2) clear the guard by added artifact
+  (`JUDGE-CLEARED.json`, lane `art/jamb-211`, rounds 1–3, the ruling verbatim) — a broken judge
+  cannot be cleared by a lane ruling, only by his word on the judge.
+- Nothing installs while this stands. Rounds 2 (#212) and 3 (#207) are MEASURED and their fixes
+  and bars are written below; neither has run a seat — "never run a further round past a broken
+  judge" (CLAUDE.md). The Λ-frame fix is a patch on disk (`scratchpad/patch_212.py`) waiting for
+  the judge; the X-frame's per-object cold-naming judge (`cold_name_object.py`) is written and
+  UNPROVEN (§13.5 — its `--expect FAIL` control on the walked frame has not run).
+
+## ROUND 2 — #212 the Λ-frame (measured, bar declared, NOT BUILT — judge stopped)
+**Measured** (flat-lit and regime captures under `tools/cast_shadows/evidence/jamb/`):
+- Base row: the sprite's bottom wood row at y 544 against the reveal foot at 546/547 — the
+  SPRITE is at the foot, as the report said. The eye was right anyway: §3.2's base parallelogram
+  rises ½·0.35·cell = 11 px up-right from that row (the footprint occluder draws exactly it), so the
+  whole footprint lay over the FACE. The feet were inside the wall; the eye put the prop on top of
+  it. Both sentences were true and they were about different rows.
+- Cap over the prop: `cap_bands_over_props=2` — the cap's upper half re-laid at the prop's z.
+  The law says never.
+- Albedo, flat-lit wood pixels: Λ (84,62,42) vs X (91,66,44); hue ratios 1.36/1.45 vs 1.38/1.49 —
+  one wood. At the regime Λ reads L 73, r/g 1.74 against X's 47, 1.63 because Λ is 1.4 tiles from
+  the fire (reach 4.0) and X is 6.3 — they are not under the same fire.
+**Bar (declared):** (1) the base parallelogram's FAR edge on the reveal-foot row — the sprite's
+bottom wood row at foot + 11 px (±1), on the floor cell; (2) zero cap pixels over the prop —
+no `Tier1CapBand` node, the apex rows read as wood; (3) one wood albedo, flat-lit ±10 per channel
+(met by construction, above); (4) plant `lambda-on-the-cap` (the walked frame, Rafe's cull
+verbatim, axes `grounding` + `wood-value`, subject objects — a seat flagged this defect unaided in
+the queue round, so it is deck-visible); five seats; INSTALL-LATEST.
+**Fix (patch on disk, not applied):** `shift = cell − margin − ReviewLighting.PropBaseRun(cell)`
+with `PropBaseDepth = 0.35` the one constant the occluder also uses; the cap-band re-lay removed.
+
+## ROUND 3 — #207 the X-frame (judge written, unproven; candidates not authored)
+Hypothesis to test: the X has no height. Judge: `cold_name_object.py` — one object located by the
+seat's own WHERE inside a box, ≥ 4 of 5 seats with an accept word and no refuse word; must FAIL on
+the walked frame first (§13.5). Candidates in order: crossed stakes with visible planted feet and
+the crossing lashed in wood-dark (bindings #208-blocked, flagged to the palette lock); the same
+taller than wide, gap edge to edge; a third recorded with why. All three miss → STOP, bible gap.
