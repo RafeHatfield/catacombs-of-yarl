@@ -133,3 +133,37 @@ one), `perfall perfnone headroom` (measurement builds, SKIPPED-REVIEW). All supe
 ### Next
 1. Rafe walks: the Λ-frame against the north wall (#212) first; then the X-frame across the gap (#207); the east
    faces on the corridor jamb, pillar and run ends (#211); the `fire r` / `fire tint` rows (#205, not ruled).
+
+## WALK VERDICTS (Rafe, on the handset, 2026-09-13 — build d764757e+dirty / commit 5c368c9d)
+
+Fire PASSES. Λ-frame, X-frame and the corridor jamb FAIL. Pillar end and run ends PASS.
+
+### 0. Housekeeping — folded into PR #214
+- **0a — was the walked build byte-for-byte a sha?** No. The handset reported `d764757e+dirty`:
+  the dirt was the six dispositions written into `CRITIC-VERDICT.json` after the verdict and before
+  the build (the verdict is outside the build id, so the gate matched; the identity line does not
+  exclude it). The walked pixels are 5c368c9d's — that commit added only the verdict, dispositions
+  and logs — but *"verdicts bind to a sha, never to +dirty"* is the law now: **the verdict is
+  committed BEFORE the build**, so the identity reads a clean sha. The reinstall from a commit is
+  the deliverable build below (one build carrying every ruling), not a second install of this one.
+- **0b — handset cleared.** Uninstalled `projA projOL projOR projOdeep projW perfall perfnone
+  headroom`. The SE now carries the shipped game and `tier0` only.
+- **0c — FIRE RULED.** *"the fire is good."* PLACEHOLDER stripped from `fire r` / `fire tint`;
+  ratified at the panel values — energy 1.6, reach 4.0 tiles, tint `ff8a3c`, flicker ON — and
+  recorded in §6.2's live table as required engine flags (a fire's `light` block states all three;
+  the engine supplies no default — `CorridorReviewSceneBuilder` throws on a missing one). #204
+  stays open as-is.
+- **0d — #211 partial.** Pillar end and run ends PASS: *"a wall turning a corner."* East face at
+  ½ depth RATIFIED for wall ends and pillars (§3.2). The corridor jamb is REOPENED — round 1.
+
+### Rounds owed, one PR each, in order (stacked on #214)
+1. **#211 corridor jamb** — measure first: jamb face structure/hue vs the pillar's east face;
+   wedge edge-gradient width vs three other cast edges (softness 12.0). Bar declared before
+   the round. One-way door: any §6.2 value → STOP.
+2. **#212 Λ-frame** — measure first: base row vs reveal-foot row at (9,12); cap pixels over the
+   prop's lower half; Λ albedo vs X albedo unlit. Bar: base==foot, zero cap over lower half, one
+   wood albedo.
+3. **#207 X-frame** — hypothesis: no height. Up to three candidates, blind cold naming judges;
+   all miss → STOP, bible gap.
+
+Deliverable: one build on the SE with every ruling; walk order jamb → Λ-frame → X-frame.

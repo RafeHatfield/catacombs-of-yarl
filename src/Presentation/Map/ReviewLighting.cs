@@ -461,14 +461,15 @@ public sealed class ReviewLighting
 
     /// <summary>The fire's energy, live — flip 3 of the shadow walk (#205): "it needs real radius
     /// and energy so the barricade beside it throws a shadow away from it." Scales every fire
-    /// light's base; the flicker rides on top. Rafe's to set; PLACEHOLDER until he does.</summary>
+    /// light's base; the flicker rides on top. RULED 1.6 (Rafe, props walk 2026-09-13: "the fire is
+    /// good"); the row stays so a walk can still compare, and a changed value is a re-ruling.</summary>
     public const float MinFire = 0f, MaxFire = 4f, FireStep = 0.1f;
 
-    // THE FIRE'S REMAINING PLACEHOLDERS, EXPOSED FOR THE WALK (overnight queue, 2026-09-13):
-    // reach and tint. Energy 1.6 is Rafe's mark; reach 4.0 rode with it unmarked, and the tint
-    // (ff8a3c) has never been walked at all. Both are knobs now so the next walk can set them;
-    // nothing here rules them. The tint is a LADDER of warm hues rather than three channel
-    // sliders — a walk sets a colour by choosing, not by mixing.
+    // REACH AND TINT — RULED (Rafe, props walk on the handset, 2026-09-13): "the fire is good."
+    // Exposed as knobs for that walk and ratified where they stood: reach 4.0 tiles, tint ff8a3c
+    // (§6.2's live table, required by the engine — the scene's `light` block states all three).
+    // The knobs stay so a walk can still compare; the tint is a LADDER of warm hues rather than
+    // three channel sliders — a walk sets a colour by choosing, not by mixing.
     public const float MinFireRadius = 1.0f, MaxFireRadius = 8.0f, FireRadiusStep = 0.5f;
     public static readonly string[] FireTints =
         { "ff8a3c", "ff7a28", "ff6a1e", "ff9a4c", "ffb066", "ffc890", "ffd4a0" };

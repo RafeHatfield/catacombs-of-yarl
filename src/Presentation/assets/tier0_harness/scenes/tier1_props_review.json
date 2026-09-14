@@ -159,7 +159,7 @@
     "color": "ff8a3c",
     "energy": 1.6,
     "radiusTiles": 4.0,
-    "_what": "B-PROP-003: the sprite receives, the ENGINE emits (#205). Warm, static, its own shadows. RAISED at the shadow walk (Rafe, 2026-09-13): 'the fire glows but doesn't light its surroundings or cast; it needs real radius and energy so the barricade beside it throws a shadow away from it' — 0.9 / 2.5 tiles -> 1.6 / 4.0 tiles, and the rig panel's `fire` row sets energy live. Values PLACEHOLDER until Rafe marks them; flicker is a panel toggle, default OFF (§9.2), unruled."
+    "_what": "B-PROP-003: the sprite receives, the ENGINE emits (#205). Warm, static, its own shadows. RAISED at the shadow walk (Rafe, 2026-09-13): 'the fire glows but doesn't light its surroundings or cast; it needs real radius and energy so the barricade beside it throws a shadow away from it' — 0.9 / 2.5 tiles -> 1.6 / 4.0 tiles, and the rig panel's `fire` row sets energy live. RULED at the props walk (Rafe, 2026-09-13): 'the fire is good' — energy 1.6, reach 4.0 tiles, tint ff8a3c, flicker ON (§9.2's tended exception). All three are required here; the engine supplies no default."
    }
   }
  ]

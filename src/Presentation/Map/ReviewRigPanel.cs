@@ -168,7 +168,7 @@ public sealed partial class ReviewRigPanel : VBoxContainer
         {
             AddRow(_body, "fire", ReviewLighting.FireStep,
                    d => _rig.FireEnergy += d, () => $"{_rig.FireEnergy:0.0}");
-            // reach and tint — PLACEHOLDER until walked; exposed, not ruled (queue item 4)
+            // reach and tint — RULED 4.0 tiles / ff8a3c (Rafe, props walk 2026-09-13: "the fire is good")
             AddRow(_body, "fire r", ReviewLighting.FireRadiusStep,
                    d => _rig.FireRadiusTiles += d, () => $"{_rig.FireRadiusTiles:0.0} tiles");
             AddRow(_body, "fire tint", 1f,
