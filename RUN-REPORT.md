@@ -102,16 +102,33 @@ picture; the critic runs once, last, on the frozen tree.
   (§3.2 CLOSED); the right-column falloff and the face-band repeat (the reference's standing
   items, #202/#197).
 
-## ⏸ PAUSED HERE (Rafe closed the laptop) — say "continue" to resume
+## ▶ RESUMED (Rafe typed "continue")
 
-Resume, in order, from the worktree `.claude/worktrees/queue` on branch `art/queue-2026-09-13`:
-1. Dispose the six flips by citation into `CRITIC-VERDICT.json` (and the history copy); verify
-   with `critic_gate.check_dispositions`. The verdict is excluded from the build id, so the tree
-   stays frozen.
-2. Install-latest — the gated build, no override:
-   `TIER0_SCENE=res://src/Presentation/assets/tier0_harness/scenes/tier1_props_review.json TIER1_OCCLUDERS=all TIER1_SHADOW_SOFTNESS=12.0 TIER1_SHADOW_DARKNESS=0.8 TIER1_FIRE_FLICKER=1 TIER1_VOID_RING=0 tools/tier0_harness/build_review_app.sh`
-   then `verify_on_device.sh` with the same `TIER0_SCENE`. Phone must be unlocked.
-3. Commit the verdict, dispositions and device logs; push; open the PR (base `main`) naming the
-   verdict; then Rafe walks — the Λ-frame against the wall (#212) is the first thing to look at.
-4. Do NOT re-run the critic before installing: refreshing a stale verdict trips the no-change
-   STOP and the tree has not moved.
+### Dispositions — six flips, every one cited, `critic_gate.check_dispositions` → problems: none
+| # | flip | state | cites | why |
+|---|---|---|---|---|
+| 0 | Λ-frame "straddles the face band, sits on the cap — floating" | **PARKED** | #212 | #212's own question, built this queue and not yet walked; Rafe's brief quoted. First thing on the walk. |
+| 1 | X-brace wants a contact shadow / grounding | ROUTED-ALREADY | #207 | "props float" is #207's first word; a painted contact shadow is §6.3's baked shadow — the engine's cast shadow follows the occluder. |
+| 2 | floor hotspot under the figure | ROUTED-ALREADY | #184 | the lamp at 1.60, held and ratified; the clamp is #184's lever. |
+| 3 | "redraw the slab from above" | CLOSED | §3.2 | the candidate rejected on the handset; the marker landed as "the standing stone". |
+| 4 | right column stays warm to the top | ROUTED-ALREADY | #205 | that column is the fire's wall; reach 4.0 tiles is PLACEHOLDER, now on the panel as `fire r` / `fire tint`, not ruled (item 4). |
+| 5 | face-band beam-and-pin repeat | **ROUTED** | #208 | the bindings family delivered at one ink at every station; per-segment variety is that item's term under §8.3.1. Routed by verified citation — Rafe audits at the walk. |
+
+### Install-latest — the gated build, no override
+- `critic_gate`: verdict INSTALL-LATEST, build id matched the tree (verdict + history excluded from the id), plant
+  caught, **GATE OPEN**. Walk preconditions ok (11 ruled fixes checked). Marker: occluders=all softness=12.0
+  darkness=0.8 flicker=1 void ring 0; identity `d764757e+dirty` (the dirt is the dispositions).
+- Exported, built, installed to the SE as `com.rafehatfield.catacombsofyarl.tier0` (two devicectl retries, then
+  installed). Log: `tools/cast_shadows/evidence/queue_install/build.log`.
+- `verify_on_device.sh`: **launch refused — the handset was LOCKED** (`FBSOpenApplicationErrorDomain error 7`).
+  The install is on the phone; the launch-and-read-marker check is owed once it is unlocked. Log:
+  `tools/cast_shadows/evidence/queue_install/verify.log`.
+
+### Handset housekeeping (not acted on — Rafe's call)
+Still installed beside Tier0: `projA projOL projOR projOdeep projW` (the §3.2 candidates; projOdeep is the walked
+one), `perfall perfnone headroom` (measurement builds, SKIPPED-REVIEW). All superseded by this install.
+
+### Next
+1. Unlock the phone → re-run `TIER0_SCENE=… tools/tier0_harness/verify_on_device.sh --out tools/cast_shadows/evidence/queue_install`.
+2. Rafe walks: the Λ-frame against the north wall (#212) first; then the X-frame across the gap (#207); the east
+   faces on the corridor jamb, pillar and run ends (#211); the `fire r` / `fire tint` rows (#205, not ruled).
