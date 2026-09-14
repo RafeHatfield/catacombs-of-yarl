@@ -184,7 +184,17 @@ def _apply_ruling_voids(verdicts):
                 v["verdict_on_disk"] = v.get("verdict")
                 v["verdict"] = "VOID"
                 v["voided_by_ruling"] = entry["ruling"]
+                # "count for nothing": not a VOID in the broken-judge streak either. It keeps
+                # its round number (numbering is derived from the count on disk) and drops out
+                # of every guard's and series' view via lane_rounds().
+                v["counts_for_nothing"] = True
     return verdicts
+
+
+def lane_rounds(hist, lane):
+    """The lane's rounds that COUNT — everything on disk for the lane, less the rounds a ruling
+    said count for nothing (still numbered, still in the diff, never read by a guard)."""
+    return [v for v in hist if lane_of(v) == lane and not v.get("counts_for_nothing")]
 
 
 def lane_of(v):
@@ -616,7 +626,7 @@ def guards(hist, lane, park=None, gate_path=None):
                     three above did not see something they should have, and that is worth
                     knowing.
     """
-    lane_hist = [v for v in hist if lane_of(v) == lane]
+    lane_hist = lane_rounds(hist, lane)
 
     # ── THE SERIES IS THE ITEM UNDER WORK — RULED (Rafe, 2026-09-08). ────────────────────────
     #
@@ -777,7 +787,7 @@ def guards(hist, lane, park=None, gate_path=None):
 
 def write_stall(name, why, hist, lane, cfg, out=None):
     out = out or STALL
-    lane_hist = [v for v in hist if lane_of(v) == lane]
+    lane_hist = lane_rounds(hist, lane)
     L = []
     L.append("# STALL REPORT — %s\n" % name)
     L.append("**The line has stopped and is not restarting itself.** LOOP-PROCESS §1.1.4 ruling "
@@ -2065,7 +2075,7 @@ def main():
         print("         carries no discrimination this round.")
 
     # ── the progress signal, and the whole series it belongs to ───────────────────────────────
-    lane_hist = [v for v in hist if lane_of(v) == lane]
+    lane_hist = lane_rounds(hist, lane)
     prior = [prog(v).get("rank_score") for v in readable(lane_hist)]
     prior = [s for s in prior if s is not None]
     best_before = max(prior) if prior else None
