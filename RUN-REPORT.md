@@ -313,3 +313,20 @@ seat's own WHERE inside a box, ≥ 4 of 5 seats with an accept word and no refus
 the walked frame first (§13.5). Candidates in order: crossed stakes with visible planted feet and
 the crossing lashed in wood-dark (bindings #208-blocked, flagged to the palette lock); the same
 taller than wide, gap edge to edge; a third recorded with why. All three miss → STOP, bible gap.
+
+### ▶ JUDGE RULING (Rafe, 2026-09-13) — cleared; the jamb round is INSTALL-LATEST
+- `JUDGE-CLEARED.json` written with his words: the plant stands (*"Edge width is the axis this
+  round judges. A seat that ranks the cull first is scoring its own taste, not the reference."*);
+  seats 1 and 4 re-drawn on the frozen r003 frame; the two one-seat rounds read as VOID and
+  **count for nothing** (runner: `rounds_voided` in the marker; still numbered, in no guard, no
+  series). Standing law kept: verdict committed before build; five seats never one; nothing deleted.
+- Runner: a re-draw the marker names by round and seat runs under the broken-judge guard it
+  answers — the first reading of "count for nothing" fed the voided rounds into the VOID streak
+  and fired the guard once more (2f49ce81 fixes it; `prove_gate.py` green).
+- **Re-draws:** seat 1 (searchlight-edges) CAUGHT; seat 4 (cement-cap-shadowed) CAUGHT — and put
+  the build FIRST, above the reference. r003 holds five caught ballots: above the reference 1/5,
+  not below 3/5 (majority), **INSTALL-LATEST**, build `7607dbdf11c6` at 2f49ce81.
+- Five flips disposed (`check_dispositions: none`): the pillar-as-orphan-tile → #193 (its sixth
+  seat); marker texture → #204 (it casts already, from its footprint); cracks across joints →
+  #194; "cut the brazier by half" → CLOSED, fire RULED today; "pixel-step the shadow edges" →
+  CLOSED, softness 12.0 ratified and the plant ruling names edge width as the axis.
