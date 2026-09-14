@@ -463,6 +463,26 @@
    "verbatim": "reads as a hard diagonal edge, not a face; the lit wedge in the corridor above it has a straight edge that looks like the occluder's shadow mask, not a surface",
    "defect": "THE CORRIDOR JAMB'S EAST FACE IS LIT WHATEVER THE LAMP DOES. The east face inherited the first-surface light-mask exemption, so with the lamp south-west of the jamb it sat at full light (59.7, r/b 2.89, unchanged with or without occluders) over a corridor floor in the jamb's own shadow (141 -> 85): a parallelogram pasted over a dark floor with a 45-degree top edge parallel to the shadow's boundary. Measured in tools/cast_shadows/evidence/jamb/. ⚠ RECORDED, NOT DEALT BY DEFAULT: the defect is ~30 px in a 750 px deck. A control a seat cannot see at deck scale voids the judge, not the art (the wall lane's round 5, LOOP-PROCESS §1.2.1), so this entry carries the axis 'form' and is drawn only by a deck that asks for it. Rafe may re-tag.",
    "provenance": "the frame the pillar end and run ends PASSED on ('a wall turning a corner'); only the corridor jamb was culled"
+  },
+  {
+   "file": "lambda-on-the-cap.png",
+   "surface": [
+    "combined"
+   ],
+   "axis": [
+    "grounding",
+    "wood-value"
+   ],
+   "subject": [
+    "objects"
+   ],
+   "regime": "shadowed",
+   "sha256": "6234e1107d6f730cc62c6b09cb155b433072dbb476b17d23153a06d1ccdeecb3",
+   "source": "the same bytes as jamb-hard-edge.png — the overnight queue's gated capture (build 334727fdfd7c, commit 00596c72), the frame Rafe walked as d764757e+dirty",
+   "culled_by": "Rafe, props walk on the handset, 2026-09-13 (#212)",
+   "verbatim": "feet land on the cap band, not below it; no reveal foot visible under it. Also brighter and more saturated than the X-frame under the same fire — reads as a placed object, not something the fire is finding",
+   "defect": "THE Λ-FRAME STANDS IN THE WALL. Its sprite's bottom row was put ON the reveal's foot line, so §3.2's base parallelogram (rising ½·depth up-right from that row — the occluder draws exactly it) lay over the face: the feet inside the wall, no floor under them, the wall's foot line hidden, and the cap's upper half re-laid over its apex. The eye put it on top of the wall. Two axes in one frame, both Rafe's: GROUNDING (feet on the cap, no reveal foot) and WOOD-VALUE (reads as a placed object). A blind seat had already flagged it unaided in the queue round ('reads as floating on top of the wall'), so it is visible at deck scale.",
+   "provenance": "walked frame; the pillar end, run ends and fire PASSED on it"
   }
  ],
  "_regime": [

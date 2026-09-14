@@ -330,3 +330,14 @@ taller than wide, gap edge to edge; a third recorded with why. All three miss �
   seat); marker texture → #204 (it casts already, from its footprint); cracks across joints →
   #194; "cut the brazier by half" → CLOSED, fire RULED today; "pixel-step the shadow edges" →
   CLOSED, softness 12.0 ratified and the plant ruling names edge width as the axis.
+
+### Round 2 — built and measured after (`tools/cast_shadows/evidence/lambda/`)
+| term | declared | measured | |
+|---|---|---|---|
+| 1 base far edge on the foot; sprite bottom at foot + 11 (±1) | 11.2 | bottom wood row 544 → 556 (+12, the run on the pixel grid) | met |
+| 2 zero cap pixels over the prop | 0 | no `Tier1CapBand` node; counter removed; apex over the cap's near half, visible | met |
+| 3 one wood albedo, flat-lit ±10/channel | ±10 | (84,62,42) vs (91,66,44) — no sprite pixel changed | met |
+The occluder follows the shift (PropShift), so the Λ's cast shadow moved with its feet. In the
+frame: the feet stand on the floor, the wall's foot line runs behind the legs, the apex stops
+below the cap's top. Deck: axis `grounding` + `wood-value`, subject objects, plant
+`lambda-on-the-cap` (one plant, five seats — correlated by construction, as the ruling asked).
