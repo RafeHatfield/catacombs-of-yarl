@@ -363,3 +363,15 @@ below the cap's top. Deck: axis `grounding` + `wood-value`, subject objects, pla
   (`tools/cast_shadows/evidence/lambda/patch_207_mesh_pending.py`), the driver
   `tools/tier2_props/barricade_round3.py` (generate → land → restore), the judge
   `cold_name_object.py` unproven. No seat of any judge runs past this STOP.
+
+### ▶ JUDGE RULING (Rafe, 2026-09-13, lane art/lambda-212 r001) — cleared; plant set rebuilt
+- `lambda-on-the-cap` **retired as a control** by his word (stays as the walked record).
+- `lambda-in-the-face` **drawn to his words**: the built law's frame at the regime with the Λ
+  raised 27 px from the law's placement (one temporary edit, reverted, recorded in the entry's
+  `source`) — feet ~18 px up the face, no foot line between the legs. Axis `grounding`, subject
+  objects, regime shadowed. Ruling 47: self-test before its round counts.
+- `JUDGE-CLEARED.json` entry for lane art/lambda-212 r001; guards clear (`--check-guards`).
+- Deck: axis `grounding` + `construction`, subject objects → draws `objects-isometric-shadowed`,
+  `props-unrecognizable-shadowed`, `lambda-in-the-face`. The fine fact (bottom row at foot + 12,
+  zero cap pixels over the lower half) is the item exit's derived assertion.
+- LAW recorded: SKILL.md §4 "A plant must be resolvable at DECK SCALE"; bible §13.12 corollary.
