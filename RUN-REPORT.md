@@ -396,3 +396,9 @@ that is the plant and it comes back here.
   the floor, nothing laid over it); a 64-px prop before a 32-px face overlaps the cap's near half
   by geometry, and whether that reads as standing before the wall is Rafe's eye. Others: X-frame
   placement → #207 (round 3), marker → #204, flat timber → #204, wall mass/beam → #202.
+- ⚠ Bookkeeping wart, recorded: the round's build id (`1ac9ad46bd15`) was computed before the
+  X-frame judge's control file (`tools/cast_shadows/evidence/xframe/judge_control_walked.json`)
+  was written into the tree during the panel — the tree id is now `9e28c87135237d`. The judged
+  pixels are unchanged (frame sha in the verdict == `combined.png` on disk); no install rides on
+  this verdict — the deliverable build gets its own round on the final frozen tree. Lesson kept:
+  nothing is written into the tree while a panel sits, not even an instrument's output.
